@@ -38,3 +38,5 @@ body[data-state="idle"] .cube-scene,body[data-state="loading"] .cube-scene,body[
 .alignment{position:fixed;inset:0;pointer-events:none;z-index:7}.alignment h2{position:absolute;top:20px;left:84px;font-size:18px;font-weight:400;margin:0}.alignment>p{position:absolute;left:28px;right:28px;bottom:92px;margin:0;font-size:17px;text-align:center}.alignment #align-status{bottom:54px;font-size:14px;color:#999}.alignment strong{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);font-size:clamp(90px,15vh,160px);font-weight:300;line-height:1}
 body[data-theme="hold"] .alignment{color:#000}.scene-context{padding-top:26px;background:linear-gradient(transparent,var(--bg) 52%)}
 @media(max-width:700px){body[data-state="idle"] .cube-scene,body[data-state="loading"] .cube-scene,body[data-state="scanning"] .cube-scene{left:50%;top:42%;--cube:clamp(210px,50vw,300px)}#cube-guidance{top:74%;max-width:88vw;width:88vw}#cube-guidance .menu-hint{font-size:13px}.alignment>p{font-size:15px}.alignment h2{font-size:15px;left:65px}.briefing{padding-top:68px}.brief-instruction{max-width:100%}}
+
+#cube-scene{-webkit-user-select:none;user-select:none}

@@ -42,7 +42,7 @@ function translate(){
 function fitCube(){const width=$('cube').offsetWidth||230,base=width*.215,ctx=document.createElement('canvas').getContext('2d');ctx.font=`700 ${base}px Helvetica,Arial,"Noto Sans JP","Noto Sans Arabic",sans-serif`;document.querySelectorAll('.cube-face span').forEach((el,i)=>el.style.fontSize=Math.min(base,base*width*.98/Math.max(1,ctx.measureText(title(FACE_SCENES[i])).width))+'px');}
 function updateCubeCaption(){const scene=FACE_SCENES[ui.cube.face];text('cube-caption',title(scene));$('cube-scene').setAttribute('aria-label',title(scene)+' · '+words[ui.language].grip);}
 function cleanup(){ui.session++;ui.worker?.terminate();ui.worker=null;ui.visionReady=false;ui.busy=false;ui.booting=false;ui.stream?.getTracks().forEach(t=>t.stop());ui.stream=null;$('camera').srcObject=null;ui.tracker=new BodyTracker();ui.pose=[];ui.hands=[];ui.mask=null;}
-function stop(){cleanup();ui.demo=false;ui.scene='';ui.metric=null;ui.cards=[];renderer.reset('');renderer.cells=[];setState('idle');}
+function stop(){cleanup();ui.cube=new GestureCube();ui.demo=false;ui.scene='';ui.metric=null;ui.cards=[];renderer.reset('');renderer.cells=[];setState('idle');}
 function menu(){if(!ui.stream&&!ui.demo){stop();return;}ui.scene='';ui.metric=null;ui.cards=[];ui.elapsed=0;ui.cube.reset();ui.exitHold=0;renderer.reset('');setState('scanning');}
 function error(type,message){console.error('[BODY / DATA]',type,message);cleanup();ui.errorType=type;setState('error');}
 async function startCamera(){
