@@ -1,0 +1,14 @@
+<!doctype html><html><meta charset="utf-8"><title>Vision smoke test</title><style>body{font:20px monospace;background:#111;color:#eee;padding:30px}img{max-width:40vw}pre{white-space:pre-wrap}</style><h1>VISION SMOKE TEST</h1><img id="image" src="./pose.jpg"><pre id="log">Initializing…</pre><script type="module">
+const log=document.querySelector('#log');const append=text=>log.textContent+='\n'+text;
+const image=document.querySelector('img');await image.decode();
+const worker=new Worker('../vision-worker.js');let frames=0;
+async function frame(){const bitmap=await createImageBitmap(image,{resizeWidth:384,resizeHeight:288});worker.postMessage({type:'frame',bitmap,timestamp:performance.now()},[bitmap]);}
+worker.onmessage=({data:r})=>{
+ if(r.type==='ready'){append('CORE MODELS READY');frame();}
+ else if(r.type==='result'){
+  const pixels=r.mask?.reduce((n,x)=>n+(x>0),0)||0;
+  append(JSON.stringify({frame:++frames,landmarks:r.landmarks.length,mask:[r.width,r.height],personPixels:pixels,appearance:r.appearance,elapsed:r.elapsed}));
+  if(frames<4)setTimeout(frame,1800);else {append(r.landmarks.length===33&&pixels>100?'PASS':'FAIL');worker.terminate();}
+ }else append(JSON.stringify(r));
+};worker.onerror=e=>append('FAIL '+e.message);worker.postMessage({type:'init'});
+</script></html>

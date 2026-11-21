@@ -1,0 +1,2250 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--ip null 처리 함수 -->
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+
+	
+	<title>국민 삶의 질 지표</title>
+	
+	
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">	
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="/potal/mainNew/img/common/favicon_KOSTAT16x16.ico">
+<link rel="stylesheet" href="/potal/common/css/base.css" type="text/css">
+<link rel="stylesheet" href="/potal/common/css/layout.css" type="text/css">
+<link rel="stylesheet" href="/potal/common/css/webfont.css" type="text/css">
+<link rel="stylesheet" href="/potal/common/css/icon/xeicon.min.css" type="text/css">
+<link rel="stylesheet" href="/potal/sub/css/layout.css" type="text/css">
+<link rel="stylesheet" href="/potal/sub/css/design.css" type="text/css">
+<link rel="stylesheet" href="/potal/sub/css/media.css" type="text/css">
+
+<link rel="stylesheet" href="/potal/sub/css/sttsTable.css" type="text/css">
+<link rel="stylesheet" href="/potal/main/css/font-awesome/css/font-awesome.min.css" type="text/css">
+
+<script type="text/javascript" src="/ext/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="/ext/js/jquery.js"></script>
+<script type="text/javascript" src="/potal/sub/js/script.js"></script>
+
+<script type="text/javascript" src="/ext/js/JCheckData.js"></script>
+<script type="text/javascript" src="/potal/sub/js/potalSubCommon.js"></script>
+<script type="text/javascript">
+var clasCd = "8";
+var tag = "";
+var filterWords = [];
+$(document).ready(function(){
+	fn_depthSearch();
+	
+	$(".snb").addClass("top0");
+	fn_statChange('N');//통계표조회
+	fn_graphChange('N');//그래프조회
+	fn_filterKeywords();//필터링 대상 키워드 조회
+	var msg = "";
+	var popup = "";
+	var parent = $("#menuList"); 
+	if(msg == "" || msg == null){
+		if(popup == "Y"){
+			$(".sub_contents").css('margin','0 auto');
+			$(".sub_contents").css('margin-left','50px');
+		}else{
+			var upCd = "4";
+// 			if(clasCd == "2"){//국가발전지표
+// 				$("#progress").parent()[0].classList.add("on");
+// 				parent.find("li."+$("#progress").parent()[0].classList[0]).detach().prependTo(parent);
+// 			}else if(clasCd == "8"){//국민삶의질지표
+// 				$("#life").parent()[0].classList.add("on");
+// 				parent.find("li."+$("#life").parent()[0].classList[0]).detach().prependTo(parent);
+// 			}else if(clasCd == "10"){//사회지표
+// 				$("#social").parent()[0].classList.add("on");
+// 				parent.find("li."+$("#social").parent()[0].classList[0]).detach().prependTo(parent);
+// 			}
+			$("#"+upCd).addClass("on");	//좌측메뉴 on 표시
+		}
+	}else{
+		alert(msg);
+		if(popup == "Y"){
+			window.close();
+		}else{
+			return history.back();
+		}
+	}
+	
+	
+	
+	//메뉴 영역 마우스 이벤트
+	$("#1LvArea").mouseleave(function(){
+		setTimeout(function(){
+			$("#lv1Btn").removeClass('on');
+		}, 200);
+	});
+	$("#2LvArea").mouseleave(function(){
+		setTimeout(function(){
+			$("#lv2Btn").removeClass('on');
+		}, 200);
+	});
+	$("#3LvArea").mouseleave(function(){
+		setTimeout(function(){
+			$("#lv3Btn").removeClass('on');
+		}, 200);
+	});
+	
+	sessionStorage.removeItem('head');
+	sessionStorage.removeItem('side');
+});
+
+/* 필터링 대상 키워드 목록 */
+function fn_filterKeywords(){
+	$.ajax({
+	    type: "post",
+	    url: "/unity/potal/com/SelectFilterKeywordList.do",
+	    dataType : "json",
+	    async : false,
+	    success: function (data) {	
+	    	filterWords = data.resultList;
+	    }
+	})
+}
+
+/* 상단 부처기관별 명칭 조회*/
+function fn_depthSearch(){
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/indicator/initMenuList.do",
+		data: {"idxCd" : "8014", "idxClasCd" : "8", "upCd" : "4"},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			var htmls = "";
+			//부단위 명칭
+			$.each(data.depth1Nm, function(i, v){
+				$("#dep1Nm").html(v.idxSysKornm);
+			});
+
+			$.each(data.lv1List, function(i, v){
+				htmls += "<li>";
+				htmls += "	<a href=\"javascript:fn_changeDepth1('"+v.idxSysCd+"', '"+v.idxClasCd+"', '"+v.idxSysKornm+"');\" id=\"1LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxSysKornm +"</a>";
+				htmls += "</li>";
+			});
+
+			$("ul[id=1LvArea]").html(htmls);
+
+			if("8" != '8') {
+				htmls = "";
+				$.each(data.lv2List, function(i, v){
+					htmls += "<li>";
+					htmls += "	<a href=\"javascript:fn_changeDepth2('"+v.idxSysCd+"', '"+v.idxClasCd+"', '"+v.upSysCd+"', '"+v.idxSysKornm+"');\" id=\"2LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxSysKornm +"</a>";
+					htmls += "</li>"
+				});
+				
+				$("ul[id=2LvArea]").html(htmls);
+			}
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+}
+
+function fn_changeDepth1(idxSysCd, idxClasCd, idxKornm){
+	var htmls = "";
+	$("#dep1Nm").html(idxKornm);
+	
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/indicator/change1LvList.do",
+		data: {"idxClasCd" : idxClasCd, "upCd" : idxSysCd},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			htmls = "";
+			
+			$.each(data.lv1List, function(i, v){
+				htmls += "<li>";
+				htmls += "	<a href=\"javascript:fn_changeDepth1('"+v.idxSysCd+"', '"+v.idxClasCd+"', '"+v.idxSysKornm+"');\" id=\"1LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxSysKornm +"</a>";
+				htmls += "</li>";
+			});
+			
+			$("ul[id='1LvArea']").html(htmls);
+			htmls = "";
+			if("8" != '8') {
+				$("#dep2Nm").html('영역 상세 선택');
+				$.each(data.lv2List, function(i, v){
+					htmls += "<li>";
+					htmls += "	<a href=\"javascript:fn_changeDepth2('"+v.idxSysCd+"', '"+v.idxClasCd+"', '"+v.upSysCd+"', '"+v.idxSysKornm+"');\" id=\"2LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxSysKornm +"</a>";
+					htmls += "</li>"
+				});
+				$("#dep3Nm").html('지표 선택');
+				$("ul[id='2LvArea']").html(htmls);
+				$("ul[id='3LvArea']").html('');
+			}else {
+				$("#dep3Nm").html('지표 선택');
+				$.each(data.lv3List, function(i, v){
+					htmls += "<li>";
+					htmls += "	<a href=\"javascript:fn_selectIndxDtl('"+v.idxClasCd+"', '"+v.idxCd+"', '"+v.idxSysCd+"');\" id=\"3LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxKornm +"</a>";
+					htmls += "</li>"
+				});
+				$("ul[id='3LvArea']").html(htmls);
+			}
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+}
+
+/* 기관 코드 변경이벤트(depth2)
+ * code : 기관코드
+ * codeNm : 기관코드명
+ * 지표 리스트 변경
+ */
+function fn_changeDepth2(idxSysCd, idxClasCd, upSysCd, idxKornm){
+	var htmls = "";
+	$("#dep2Nm").html(idxKornm);
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/indicator/change2LvList.do",
+		data: {"idxClasCd" : idxClasCd, "upCd" : upSysCd, "idxSysCd" : idxSysCd},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			//지표명
+			htmls = "";
+			
+			$.each(data.lv2List, function(i, v){
+				htmls += "<li>";
+				htmls += "	<a href=\"javascript:fn_changeDepth2('"+v.idxSysCd+"', '"+v.idxClasCd+"', '"+v.upSysCd+"', '"+v.idxSysKornm+"');\" id=\"2LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxSysKornm +"</a>";
+				htmls += "</li>"
+			});
+			
+			$("ul[id='2LvArea']").html(htmls);
+			$("#dep3Nm").html('지표 선택');
+			$("ul[id='3LvArea']").html('');
+			
+			htmls = "";
+			$.each(data.lv3List, function(i, v){
+				htmls += "<li>";
+				if("8" != '8') {//&& "8 != 12"
+					htmls += "	<a href=\"javascript:fn_selectIndxDtl('"+v.idxClasCd+"', '"+v.idxCd+"', '"+v.upSysCd+"');\" id=\"3LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxKornm +"</a>";
+				}else {
+					htmls += "	<a href=\"javascript:fn_selectIndxDtl('"+v.idxClasCd+"', '"+v.idxCd+"', '"+v.idxSysCd+"');\" id=\"3LvId_"+v.idxSysCd+"\" data-a=\""+v.idxSysKornm+"\" data-b=\""+v.idxSysCd+"\" data-c=\""+v.idxClasCd+"\">"+ v.idxKornm +"</a>";
+				}
+				htmls += "</li>"
+			});
+			$("ul[id='3LvArea']").html(htmls);
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+}
+
+
+function fn_selectIndxDtl(divide1, idxCd, idxSysCd){
+	//alert(divide1 + '_' + idxCd);
+	var linkURL = "";
+	switch (divide1) {
+		case "1" :linkURL = "/unity/potal/main/EachDtlPageDetail.do?idx_cd="+idxCd;
+			break;
+		case "2": linkURL = "/unity/potal/indicator/IndexInfo.do?clasCd=2&idxCd="+idxCd+"&upCd="+idxSysCd;
+			break;
+		case "8": linkURL = "/unity/potal/indicator/IndexInfo.do?clasCd=8&idxCd="+idxCd+"&upCd="+idxSysCd;
+			break;
+		case "10": linkURL = "/unity/potal/indicator/IndexInfo.do?cdNo=2&clasCd=10&idxCd="+idxCd+"&upCd="+idxSysCd;
+			break;
+		case "11" :linkURL = "/unity/potal/SDGIndicatorService.do?idxCd="+idxCd;
+			break;
+		case "12" :linkURL = "/unity/potal/indicator/IndexInfo.do?clasCd=12&idxCd="+idxCd+"&upCd="+idxSysCd;
+			break;
+	default: {alert("서비스 예정입니다")
+		return false;	
+	}
+		break;
+	}
+	window.location.href = linkURL;
+	//window.open(linkURL);
+}
+
+/*좌측 메뉴 눌렀을때 이동*/
+function fn_clasCdInfo(upCd, flag){
+	$("input[name=upCd]").val(upCd);
+	
+	var form = document.frm;
+	var url = "";
+	if(clasCd == "2"){
+		url = "ProgressIndicator.do?cdNo=210&lrgeClasCd=010&upcd="+upCd+"";
+	}else if(clasCd == "8"){
+		url = "LifeIndicator.do?cdNo=210&lrgeClasCd=018&viewType=btn_list&upcd="+upCd+"";
+	}else if(clasCd == "10"){
+		url = "SocialIndicator.do?cdNo=210&lrgeClasCd=017&upcd="+upCd+"";
+	}
+	form.action = "/unity/potal/indicator/"+url+"";
+	form.submit();
+}
+
+//관련파일 파일다운로드(파일경로, 파일이름, 파일실제이름)
+function fn_fileDown(filePath,fileTitle,fileNm){
+	var url = "/unity/index/IndexPolicyFileDownload.do?filePath="+filePath+"&fileTitle="+fileTitle+"&fileNm="+fileNm+"";
+	window.open(url,"FileDownload");
+}
+
+/*파일 다운로드*/
+function fn_fileDownAll(){
+	//document.frm.action = "/unity/potal/eNara/sub/EnaraIdxServiceExcelDown.do";
+	//document.frm.submit();
+	let paramArr = new Array();
+	let paramMap = document.getElementById("showStblGams").contentWindow.returnExcelDownParam();
+	paramArr.push(paramMap);	
+	/*파라미터 JSON 파싱*/
+	var jsondata = JSON.stringify(paramArr);
+	jsondata = jsondata.replace(/&quot;/g,'"');
+	var idxKor = "최저주거기준 미달가구 비율";
+	/*JSON 파라미터 엑셀 다운 Bean 전송 */
+	document.excelIntgrfrm.jsondata.value =jsondata;
+	document.excelIntgrfrm.idxKornm.value = idxKor;	
+	document.excelIntgrfrm.action = "/unity/potal/com/IntgrIdxExcelDown.do"; 
+	document.excelIntgrfrm.submit();
+}
+
+/* 팝업 호출 지표 상세보기
+ * 타겟 지표코드
+ * 팝업 유무
+ */
+function fn_popIndexInfo(popIdxCd, popup){
+	$("input[name=popIdxCd]").val(popIdxCd);
+	$("input[name=popup]").val(popup);
+	
+	//location.href = contextPath + "/unity/potal/indicator/IndexInfo.do?cdNo=2&clasCd="+$("input[name=clasCd]").val()+"&idxCd="+idxCd;
+	
+	
+	var url = "/unity/potal/indicator/IndexInfo.do?popup=Y&clasCd="+$("input[name=clasCd]").val()+"&idxCd="+popIdxCd+"";
+  	var popup = window.open(url, 'popupView', 'location=no,directories=no,resizable=yes,status=no,toolbar=no,menubar=no,width=1170,height=668,scrollbars=yes');
+	/* var frm = document.popFrm;
+	frm.action = url;
+	frm.target = "popupView";
+	frm.method = "post";
+	frm.submit(); */
+}
+
+/*엔터 이벤트*/
+function fn_keySubmit() {
+	if(event.keyCode == 13) {
+		fn_search();
+    }
+}
+
+/*서비스 만족도 저장*/
+function fn_idxEvalSave(){
+	if($("input[name='chk_survey']").is(':checked')) {
+
+		/* 필터링 대상 키워드  */
+		for(i=0; i<filterWords.length; i++){
+			if($("#usrTxt").val().indexOf(filterWords[i]) >= 0){
+				alert("부적절한 단어가 포함되어있습니다. " +filterWords[i]);
+				return false;
+			}
+		}
+		
+		var param_data = {
+				idxCd: $("form[name=frm] input[name=idxCd]").val(),
+				usrName: $('input[name=usrName]').val(),
+				usrPw: $('input[name=usrPw]').val(),
+				evalVal: $('input[name=chk_survey]:checked').attr('data-a'),
+				usrTxt: $("#usrTxt").val()
+			};
+			$.post("/unity/potal/indicator/InsertIdxEval.do", param_data, function(data) {
+				if(data=='saved') {
+					alert('저장되었습니다.');
+					location.reload(true);
+				} 
+				else if(data=='error-idxcd') alert('지표가 올바르지 않습니다.');
+				else if(data=='error-sameip') alert('동일한 아이피가 있습니다.');
+				else if(data=='error-samename') alert('동일한 아이피의 같은 이름이 있습니다.');
+				else if(data=='error-noname') alert('이름을 입력해주세요.');
+				else if(data=='error-nopw') alert('비밀번호를 입력해주세요.');
+				else alert('Error');
+			});
+	}else {
+		alert('별점을 선택해 주세요.');
+		return;
+	}
+}
+
+/*서비스 만족도 수정 팝업*/
+function fn_popIdxEval(){
+	var url = "/unity/potal/indicator/SelectIdxEval.do?idxCd=" + $("form[name=frm] input[name=idxCd]").val() +"";
+  	win = window.open(url, "지표평가수정","location=no,directories=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,width=920,height=120,top=50,left=200");
+}
+
+/*그래프 선택박스 변경 이벤트*/
+function fn_graphChange(Gubun){
+	var value = $("#graph_box :selected").val().split(",");
+ 	var sDate = $("#StattDescList_2 :selected").val();
+	var eDate = $("#EndDescList_2 :selected").val(); 
+	var freq = $("#freq_box_2 :selected").val();
+	var sttsCd = value[0];
+	var chartOrd = value[1];
+	$("input[name=sttsCd]").val(sttsCd);
+	$("input[name=chartOrd]").val(chartOrd);
+	
+	
+ 	/*그래프 변경시에만 재 조회*/
+	if(Gubun == 'N'){
+		/*시점정보 조회*/
+		 $.ajax({
+			type:"POST",
+			url : "/unity/index/IndexTblGraphAjax.do",
+			data: {"sttsCd" : sttsCd, "chartOrd" : chartOrd},
+			dataType:"json",
+			async:false,
+			success:function(data){
+				var resultList = data.resultList;
+				var resultLength = resultList == 'undefined' ? 0 : resultList.length-1;
+				sDate = resultList[0].descDt;
+				eDate = resultList[resultLength].descDt;
+			}
+		})
+		
+		/*기간정보 조회*/
+		$.ajax({
+			type:"POST",
+			url : "/unity/potal/eNara/ajax/SelectChangeCiSttsCd.do",
+			data: {"sttsCd" : sttsCd, "freqVal" : "NEW", "chartOrd" : chartOrd},
+			dataType:"json",
+			async:false,
+			success:function(data){
+				htmls = "";
+
+				//시점 콤보 수정	
+				StartHtmls = "";
+				EndHtmls   = "";
+				/*pc버전*/
+				$("select[name=StattDescList_2] option").remove();
+				$("select[name=EndDescList_2] option").remove();
+			
+				/*모바일버전*/
+				$("select[name=m_StattDescList_2] option").remove();
+				$("select[name=m_EndDescList_2] option").remove();
+
+				for(i=0; i < data.ciChartGamsFreqInfo.length; i++){
+					var descDt = data.ciChartGamsFreqInfo[i].descDt;
+					var descNm = data.ciChartGamsFreqInfo[i].descNm;
+					var startSelected = '';
+					var endSelected = '';
+
+					//if(i==0){Sdesc = descDt;}
+					//if(i+1==data.ciChartGamsFreqInfo.length){Edesc = descDt;}
+					if(descDt == sDate){startSelected = 'selected';}//기간선택 시작 연도
+					if(descDt == eDate){endSelected = 'selected';}//기간선택 종료 연도
+					
+					StartHtmls  += "<option value="+descDt+" "+startSelected+">"+descNm+"</option>";
+					EndHtmls    += "<option value="+descDt+" "+endSelected+">"+descNm+"</option>";
+				}
+				
+				/*pc버전*/
+				$("select[name=StattDescList_2]").append(StartHtmls);
+				$("select[name=EndDescList_2]").append(EndHtmls); 
+				/*모바일버전*/
+				$("select[name=m_StattDescList_2]").append(StartHtmls);
+				$("select[name=m_EndDescList_2]").append(EndHtmls);
+				
+			},
+			error:function(request, status, error){
+				alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+			}
+		})
+		 $("#graph_area").load("/unity/potal/eNara/sub/ChartInfo.do", {idxCd : "8014", sttsCd : sttsCd, chartOrd : chartOrd, freq : freq});
+	}
+}
+
+/* 통계표 선택박스 변경 이벤트
+ * gubun : N > 초기 조회 / Y > 선택 조회
+ */
+function fn_statChange(gubun){
+	$("#spinner").show();
+	
+	var value = $("#stat_box :selected").val();
+	var freq = $("#"+value+"_freq").val();
+	var unit = $("#"+value+"_unit").val();
+	
+	var sttsCd = $("#stat_box :selected").val();
+	var pType = $("#freq_box :selected").val();
+	var Sdesc = $("#StattDescList :selected").val();
+	var Edesc = $("#EndDescList :selected").val();
+	var sDate = $("#StattDescList :selected").val();
+	var eDate = $("#EndDescList :selected").val();
+	
+	var stblObj = document.getElementById("showStblGams");// 통계표 iFrame
+	if(gubun == 'N'){
+		//통계표 초기조회     *소스코드 보안진단
+		stblObj.src="/unity/potal/eNara/sub/showStblGams3.do?stts_cd="+value+"&idx_cd=8014&freq="+pType+"&period=N";
+	}else{
+		//통계표 시점조회     *소스코드 보안진단     
+		stblObj.src="/unity/potal/eNara/sub/showStblGams3.do?stts_cd="+value+"&idx_cd=8014&freq="+pType+"&period="+Sdesc+":"+Edesc;
+	}
+	
+	/*통계표 변경시에만 재 조회*/
+	if(gubun=='N'){
+		
+		/* 통계표 전체 기간 & 주기*/
+		 $.ajax({
+			type:"POST",
+			url : "/unity/potal/eNara/ajax/SelectChangeSttsCd.do",
+			data: {"sttsCd" : sttsCd},
+			dataType:"json",
+			async:false,
+			success:function(data){
+				var resultList = data.sttsPdInfo;
+				var resultLength = resultList == 'undefined' ? 0 : resultList.length-1;
+				freq = data.selectFreqBox[0].freq; 
+				freqNum = data.sttsPdInfo[0].freqNum;
+				pType = freq;
+		 		sDate = resultList[resultLength].descDt;
+		 		eDate = resultList[0].descDt;
+			}
+		})
+
+		/* 통계표 초기날짜 조회 */
+		$.ajax({
+			type:"POST",
+			url : "/unity/potal/eNara/ajax/SelectChangeSttsCd.do",
+			data: {"sttsCd" : sttsCd, "freqVal" : "NEW", "freq" : freq},
+			dataType:"json",
+			async:false,
+			success:function(data){
+				var resultList = data.sttsDescInfo;
+				var resultLength = resultList == 'undefined' ? 0 : resultList.length-1;
+				var lastyear = data.sttsDescInfo[resultLength].descDt.substr(0,4); 	//마지막 년도 추출
+				
+				//분기&반기일 경우 시작 시점 구하기
+				if(data.sttsDescInfo[0].freq == 'Q' || data.sttsDescInfo[0].freq == 'H'){
+					sDate = null;
+					for(var i=0; i<data.sttsDescInfo.length; i++){
+						if(data.sttsDescInfo[i].descDt.startsWith(lastyear - freqNum)){
+							if(sDate === null || data.sttsDescInfo[i] < sDate){ sDate = data.sttsDescInfo[i].descDt; }
+						}
+					}
+				}
+				
+				//불연속일 경우 시작 시점 구하기
+				if(data.sttsPdInfo[0].freqNum == "9999"){
+					sDate = null;
+					var parts = data.selectFreqBox[0].freqTrm.split('@');
+					for(var i=0; i<parts.length; i++){
+						var number = parseInt(parts[i]);
+						if(!isNaN(number)){	sDate = number;	break; }  
+					}
+				}
+				
+				htmls = "";
+
+				/*행렬전환버튼 표시/미표시 기능*/
+				var switchYn = data.sttsData.switchYn;
+				if(switchYn == "N"){
+					$("#switchBtn").css("display", "none");
+				}else{
+					$("#switchBtn").css("display", "inline-block");
+				}
+				
+				//주기 콤보 변경
+				$("select[name=freq_box] option").remove();
+				$("select[name=freq_box_2] option").remove();
+				$.each(data.sttsFreqInfo, function(i,v){
+					var freqSelected = '';
+					if(v.freq == freq){freqSelected = 'selected';}
+					htmls += "<option value="+v.freq+" "+freqSelected+">"+v.freqNm+"</option>";
+				})
+				$("select[name=freq_box]").append(htmls);
+				$("select[name=freq_box_2]").append(htmls);
+				if(gubun=='N'){
+					pType =data.sttsFreqInfo[0].freq;
+				}
+				
+				//시점 콤보 수정		
+				StartHtmls = "";
+				EndHtmls   = "";
+				$("select[name=StattDescList] option").remove();
+				$("select[name=EndDescList] option").remove();
+				
+				for(i=0; i < data.sttsDescInfo.length; i++){
+					var descDt = data.sttsDescInfo[i].descDt;
+					var descNm = data.sttsDescInfo[i].descNm;
+					var startSelected = '';
+					var endSelected = '';
+
+					//불연속
+					if(data.sttsPdInfo[0].freqNum == "9999"){
+						if(descDt == sDate){startSelected = 'selected';}				//통계표 시작 시점
+						if(descDt == parts[parts.length-1]){endSelected = 'selected';}	//통계표 종료 시점
+					}//분기/반기
+					else if(data.sttsDescInfo[0].freq == 'Q' || data.sttsDescInfo[0].freq == 'H'){
+						if(descDt == sDate){startSelected = 'selected';}
+						if(descDt == eDate){endSelected = 'selected';}
+					}else{
+						if(descDt == sDate){startSelected = 'selected';}				
+						if(descDt == eDate){endSelected = 'selected';}					
+					}
+					
+					StartHtmls  += "<option value="+descDt+" "+startSelected+">"+descNm+"</option>";
+					EndHtmls    += "<option value="+descDt+" "+endSelected+">"+descNm+"</option>";
+ 				}
+				
+				$("select[name=StattDescList]").append(StartHtmls);
+				$("select[name=EndDescList]").append(EndHtmls);
+			},
+			error:function(request, status, error){
+				alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+			}
+		})
+	}
+}
+
+function fn_freqChange(){
+	var dp = "";
+
+	if($(".head_hidden").css("display") == "block"){
+		dp = "m";
+	}else{
+		dp = "";
+	}
+
+	var sttsCd = $("#stat_box :selected").val();
+	var pType = dp == "" ? $("#freq_box :selected").val() : $("#m_freq_box :selected").val();
+	var htmls = "";
+	var StartHtmls = "";
+	var EndHtmls = "";
+
+	/*기간정보 조회*/
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/eNara/ajax/SelectChangeSttsCd.do",
+		data: {"sttsCd" : sttsCd, "freqVal" : pType},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			htmls = "";
+
+			//시점 콤보 수정		
+			StartHtmls = "";
+			EndHtmls   = "";
+			/*pc버전*/
+			$("select[name=StattDescList] option").remove();
+			$("select[name=EndDescList] option").remove();
+
+			/*모바일버전*/
+			$("select[name=m_StattDescList] option").remove();
+			$("select[name=m_EndDescList] option").remove();
+
+			for(i=0; i < data.sttsDescInfo.length; i++){
+				if(i==0){
+					StartHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" ' selected>"+data.sttsDescInfo[i].descNm+"</option>";
+					EndHtmls += "<option value="+data.sttsDescInfo[i].descDt+">"+data.sttsDescInfo[i].descNm+"</option>";
+				}else{
+					StartHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" >"+data.sttsDescInfo[i].descNm+"</option>";
+					if(i+1==data.sttsDescInfo.length){
+						EndHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" ' selected>"+data.sttsDescInfo[i].descNm+"</option>";
+					}else{
+						EndHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" >"+data.sttsDescInfo[i].descNm+"</option>";
+					}
+				}
+			}
+			/*pc버전*/
+			$("select[name=StattDescList]").append(StartHtmls);
+			$("select[name=EndDescList]").append(EndHtmls);
+			/*모바일버전*/
+			$("select[name=m_StattDescList]").append(StartHtmls);
+			$("select[name=m_EndDescList]").append(EndHtmls);
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+} 
+ 
+function fn_freqChange2(){
+	var dp = "";
+
+	if($(".head_hidden").css("display") == "block"){
+		dp = "m";
+	}else{
+		dp = "";
+	}
+
+	var sttsCd = $("#stat_box :selected").val();
+	var pType = dp == "" ? $("#freq_box_2 :selected").val() : $("#m_freq_box_2 :selected").val();
+	var htmls = "";
+	var StartHtmls = "";
+	var EndHtmls = "";
+
+	/*기간정보 조회*/
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/eNara/ajax/SelectChangeSttsCd.do",
+		data: {"sttsCd" : sttsCd, "freqVal" : pType},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			htmls = "";
+
+			//시점 콤보 수정		
+			StartHtmls = "";
+			EndHtmls   = "";
+			/*pc버전*/
+			$("select[name=StattDescList_2] option").remove();
+			$("select[name=EndDescList_2] option").remove();
+
+			for(i=0; i < data.sttsDescInfo.length; i++){
+				if(i==0){
+					StartHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" ' selected>"+data.sttsDescInfo[i].descNm+"</option>";
+					EndHtmls += "<option value="+data.sttsDescInfo[i].descDt+">"+data.sttsDescInfo[i].descNm+"</option>";
+				}else{
+					StartHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" >"+data.sttsDescInfo[i].descNm+"</option>";
+					if(i+1==data.sttsDescInfo.length){
+						EndHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" ' selected>"+data.sttsDescInfo[i].descNm+"</option>";
+					}else{
+						EndHtmls  += "<option value="+data.sttsDescInfo[i].descDt+" >"+data.sttsDescInfo[i].descNm+"</option>";
+					}
+				}
+			}
+			/*pc버전*/
+			$("select[name=StattDescList_2]").append(StartHtmls);
+			$("select[name=EndDescList_2]").append(EndHtmls);
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+} 
+ 
+ /*차트 기간조회 이벤트
+  * Gubun :  N > 초기 조회
+  * 	     Y > 선택 조회
+  */
+ function fn_chartChange(Gubun){
+ 	var dp = "";
+ 	
+ 	if($(".head_hidden").css("display") == "block"){
+ 		dp = "m";
+ 	}else{
+ 		dp = "";
+ 	}
+ 	
+	var value = $("#graph_box :selected").val().split(",");
+	var freq = $("#freq_box_2 :selected").val();
+	
+	var sttsCd = value[0];
+	var chartOrd = value[1];
+	$("input[name=sttsCd]").val(sttsCd);
+	$("input[name=chartOrd]").val(chartOrd);
+ 	
+	var sDesc = $("#StattDescList_2 :selected").val();
+	var eDesc = $("#EndDescList_2 :selected").val();
+ 	
+ 	if(Gubun == 'N'){
+ 		//그래프 초기조회    *소스코드 보안진단
+ 		$(".graph").load("/unity/potal/eNara/sub/ChartInfo.do", {idxCd : $("form[name=frm] input[name=idxCd]").val(), sttsCd : sttsCd, chartOrd : chartOrd, freq : freq});
+ 	}else{
+ 		//그래프 시점조회    *소스코드 보안진단
+ 		$(".graph").load("/unity/potal/eNara/sub/ChartInfo.do", {idxCd : $("form[name=frm] input[name=idxCd]").val(), sttsCd : sttsCd, chartOrd : chartOrd, sDate : sDesc, eDate : eDesc, freq : freq});
+ 	}
+ } 
+
+ 
+/* 통계표 분석
+* 클릭시 검색 & 히트맵 등 통계표 분석 버튼 활성화 or 비활성화
+*/
+/* function fn_statAnal(){
+ 	var stat = frames['showStblGams'].document.getElementById("ti_btn").style.display;
+ 	if(stat=="none"){
+ 		frames['showStblGams'].document.getElementById("ti_btn").style.display = "";
+ 	}else{
+		frames['showStblGams'].document.getElementById("ti_btn").style.display = "none";
+	}
+} */
+ 
+/*시계열 조회*/
+function fn_popTimeSeries(idxCd, clas_div, idx_sys_cd, sttsCd) {
+    var w = window.open("/unity/potal/indicator/PotalIdxSearch.do?idxCd="+idxCd+"&sttsCd="+sttsCd,"시계열조회",'width=900,height=600,scrollbars=yes,resizable=yes,status=no,center:yes');
+}
+
+/*중요지표*/
+function fn_importIdx(){
+	var userId = "";
+	if(userId == "" || userId == "guest"){
+		if(confirm("로그인이 필요합니다.\n통합 회원 아이디로 로그인 하시겠습니까?")) {
+			fn_login();
+		}else{
+			return false;	
+		}
+	}
+	
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/eNara/ajax/insertImportIdx.do",
+		data: { "idxCd" : "8014"
+			  , "userId" : userId},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			var msg = data.msg;
+			if(msg != null){
+				alert(msg);
+			}else{
+				var result = data.sResult;
+				if(result > 0){
+					alert("중요지표로 추천하셨습니다.");
+					location.reload();//페이지 새로고침
+				}else{
+					alert("다시 시도하세요.");
+				}
+			}
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+}
+
+/*URL 복사 이벤트*/
+function fn_urlCopy(){
+	var cUrl = "";
+	var textarea = document.createElement("textarea");
+	document.body.appendChild(textarea);
+	cUrl = window.document.location.href;
+	textarea.value = cUrl;
+	textarea.select();
+	document.execCommand("copy");
+	document.body.removeChild(textarea);
+	
+	alert("URL이 복사되었습니다.");
+}
+
+/*관심지표 등록*/
+function fn_bookmarkIdx(){
+	if("" != "" && "" != null){ // 로그인 되어 있을 경우
+		$('.myIndex_popup').css('display','block');
+		fn_readGroup();		
+	}else{
+		if(confirm("로그인이 필요합니다.\n통합 회원 아이디로 로그인 하시겠습니까?")) {
+			fn_login();
+		}else{
+			return false;
+		}
+	}
+}
+
+/* 관심지표 > 분류 그룹 조회*/
+function fn_readGroup(){
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/eNara/ajax/selectMyIdxGroup.do",
+		data: {"userId" : ""},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			$(".group_list ul").empty();
+			var htmls = "";
+			$.each(data.idxGroupList, function(i,v){
+				htmls += "<li><i class='xi-folder' style='color: #f2ce58;'></i><a id='gr_"+v.grpId+"' href=\"javascript:fn_clickFolder('"+v.grpId+"');\">"+v.grpNm+"</a></li>";
+			})
+			$(".group_list ul").append(htmls);
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+}
+
+/** 관심지표 > 그룹 클릭 이벤트
+ * grpId : 그룹 번호
+ */
+function fn_clickFolder(grpId){
+	 $(".group_list li a").css("color", "");
+	$("#gr_"+grpId).css("color", "#3658e3");
+	$("#grpId").val(grpId);
+}
+	
+/* 관심지표 > 분류그룹 추가 저장*/
+function fn_saveGroup(){
+	let grpNm = $("#grpNm").val();
+	if(JStrLen(JTrim(grpNm)) == 0 ){
+		alert("그룹명을 입력하여 주십시오");
+		$("#grpNm").focus();
+	}else if(JStrLen(JTrim(grpNm)) > 20){
+		alert("그룹명 입력 길이를 초과 하였습니다. \n한글 10자, 영문 20자를 초과 할 수 없습니다.");
+		$("#grpNm").focus();
+		return false;
+	}else{
+		let changeStatus = false;
+	
+		/*나의 관심지표 그룹 array 생성*/
+		let idxGrpNmArr = new Array();
+			
+		idxGrpNmArr.forEach(element => {
+			if(element == grpNm){  //이미 있는 분류 이름 구분
+				changeStatus = true;
+			}
+		});
+		
+		if(changeStatus){
+			alert("이미 등록된 분류그룹입니다");
+			$("#grpNm").focus();
+			return false;
+		}else{
+			$.ajax({
+				type:"POST",
+				url : "/unity/potal/eNara/ajax/insertMyIdxGroup.do",
+				data: {"userId" : ""
+					 , "grpNm" : $("#grpNm").val()},
+				dataType:"json",
+				async:false,
+				success:function(data){
+					if(data.result > 0){
+						alert("분류 그룹이 추가 되었습니다.");
+						$("#grpNm").val("");
+						$('.myIndex_popup .popCont .popBtm .group_btn .group_add').css('display','none');
+						fn_readGroup();
+					}
+				},
+				error:function(request, status, error){
+					alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+				}
+			})
+		}
+	}
+}
+
+/*관심지표 > 등록 저장이벤트*/
+function fn_confirm(){
+	if($("#grpId").val() == ""){
+		alert("선택된 그룹이 없습니다.");
+		return false;
+	}
+	$.ajax({
+		type:"POST",
+		url : "/unity/potal/eNara/ajax/insertMyIdx.do",
+		data: { "idxCd" : "8014"
+			  , "grpId" : $("#grpId").val()
+			  , "userId" : ""},
+		dataType:"json",
+		async:false,
+		success:function(data){
+			if(data.result > 0){
+				alert("관심지표로 등록하였습니다. 등록하신 지표는 우층상단 \n 지표누리 > 마이페이지 > 나의 관심지표에서\n 확인하실 수 있습니다.");
+				$('.myIndex_popup').css('display','none');
+			}else{
+				alert("선택하신 분류그룹 내 이미 등록왼 지표 입니다!")
+				return false;
+			}
+		},
+		error:function(request, status, error){
+			alert(request.status + " / " + status + " 처리도중 에러가 발생해였습니다.");
+		}
+	})
+}
+
+/* 부분 토글
+ * t : this
+ */
+function fn_partToggle(t){
+	var part = t.part.value
+	
+	if($(t).hasClass("off")) {
+        $(t).addClass("on").removeClass("off");
+        $("#"+part+"_area").css("display", "none");
+        $("[part="+part+"]").attr("title", "펼침");
+    } else {
+        $(t).addClass("off").removeClass("on");
+        $("#"+part+"_area").css("display", "");
+        $("[part="+part+"]").attr("title", "닫음");
+    }
+}
+	
+/**서비스 만족도 조사 > 평가내용 > keydown이벤트
+ * 글자수 카운트
+ */
+function fn_countTextLength(t){
+	var cont = $(t).val();
+	$("#textLength").text(cont.length + " / 50");
+	
+	if(cont.length > 50){
+		alert("최대 50자까지 입력가능합니다.");
+		$(t).val(cont.substring(0, 50));
+		$("#textLength").text("50 / 50");
+	}
+	
+}
+
+/*행열전환 수행*/
+function fn_switch(headInfoList, sideInfoList){
+	switchStatYn = "Y";
+	swichHeadInfoList = headInfoList;
+	swichSideInfoList = sideInfoList;
+		 
+	var sttsCd = $("#stat_box :selected").val();	
+	var pType = $("#freq_box :selected").val();
+	var Sdesc = $("#StattDescList :selected").val();
+	var Edesc = $("#EndDescList :selected").val();
+	
+	var stblObj = document.getElementById("showStblGams");// 통계표 iFrame	 */
+	 
+	//통계표 시점조회        *소스코드 보안진단
+	stblObj.src = "/unity/potal/eNara/sub/showStblGams3.do?stts_cd="+sttsCd+"&idx_cd=8014&freq="+pType+"&period="+Sdesc+":"+Edesc+"&switchStatYn=Y&headInfo="+headInfoList+"&sideInfo="+sideInfoList;
+}
+
+function setSession(head,side) {
+	sessionStorage.setItem('head', head);
+	sessionStorage.setItem('side', side);
+}
+
+function getHead() {
+	return sessionStorage.getItem('head');
+}
+
+function getSide() {
+	return sessionStorage.getItem('side');
+}
+
+function removeSession() {
+	sessionStorage.clear();
+}
+</script>
+</head>
+<body style="overflow-x:hidden;">
+<form name="searchForm" method="post" action="/unity/potal/indicator/search.do">
+	<input name="subSearch"    	type="hidden"/>
+	<input name="btnStr"       	type="hidden"/>
+	<input name="firstPage"    	type="hidden"/>
+	<input name="morePage"    	type="hidden"/>
+	<input name="sortValue" 	type="hidden"/>
+</form>
+<form id="timeFrm" name="timeFrm" action="/unify/idx-info.do?idxCd=8014" method="post">
+	<input type="hidden" name="idxCd" value="">
+	<input type="hidden" name="sttsCd" value="">
+</form>
+<form id="popFrm" name="popFrm" action="/unify/idx-info.do?idxCd=8014" method="post">
+	<input type="hidden" name="popup" value="N">
+	<input type="hidden" name="popIdxCd" value="">
+</form>
+<div class="myIndex_popup">
+	<input type="hidden" name="grpId" id="grpId">
+	<div class="popCont">
+		<a href="javascript:void(0);" class="close" title="닫기"><i class="xi-close"></i>닫기</a>
+		<p class="popTit">분류그룹</p>
+		<div class="popBtm">
+			<div class="listWrap">
+				<div class="group_list">
+					<ul>
+						<li><a href="javascript:void(0);"><i class="xi-folder" style="color: #f2ce58; "></i>기본그룹</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="group_btn">
+				<div class="group_add">
+					<label for="grpNm">그룹명</label>
+					<input id="grpNm" class="groupTit" type="text" placeholder="추가하실 그룹명을 입력해주세요." onkeydown="javascript:if(event.keyCode ==13){fn_saveGroup()}">
+					<button class="addGroup" type="button" onclick="javascript:fn_saveGroup()">추가</button>
+					<a href="javascript:void(0);" class="return" title="취소">취소</a>
+				</div>
+				<a href="javascript:void(0);" class="add" title="그룹추가">그룹추가</a>
+				<a href="javascript:fn_confirm();" title="확인">확인</a>
+				<a href="javascript:void(0);" class="cancel" title="취소">취소</a>
+			</div>
+		</div>
+	</div>
+</div>
+<form id="frm" name="frm" action="/unify/idx-info.do?idxCd=8014" method="post">
+	<input type="hidden" name="dup_idxCd" value="8014">
+	<input type="hidden" name="idxCd" value="8014">
+	<input name="idxClas" value="kindex" type="hidden">
+	<input name="userId" value="" type="hidden"><!--소스코드 보안진단 -->
+	<input type="hidden" name="upCd" value="4">
+	<input type="hidden" name="clasCd" value="8">
+	<input type="hidden" name="sttsCd" value="801401">
+	<input type="hidden" name="chartOrd" value="1">
+	<input type="hidden" name="graphColrNm"	value="">
+	<input type="hidden" name="imgNm"		value="">
+
+	
+		<div id="wrap" class="new_wrap sub_wrap life_wrap">
+	
+	
+	
+
+	
+		<!--  header -->
+		
+		<!--  header -->
+			
+
+
+
+
+
+
+
+<!-- 구글애널리틱스 -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKBQ2XYKZG"></script>
+
+<script type="text/javaScript">
+//구글애널리틱스
+if(0 < window.location.href.indexOf("index.go.kr")){
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-WKBQ2XYKZG');
+}
+
+if(0 < window.location.href.indexOf("index.go.kr") && window.location.href.indexOf("index.go.kr") == 8){
+	location.href = "https://www.index.go.kr" + window.location.pathname;
+}
+$(function(){
+
+	var url = window.location.href;
+	if(url.indexOf('LifeIndicator') > -1 || url.indexOf('SocialIndicator') > -1 || url.indexOf('lbirth') > -1 || url.indexOf('LowbirthIndicator') > -1 || url.indexOf('ProgressIndicator') > -1) {
+		$("#hrefChangeTag").attr('href', '#container');
+	}else {
+		$("#hrefChangeTag").attr('href', '#subContainer');
+	}
+	
+	//gnb 메뉴 수정 스크립트 - 220915 SY
+	$('#header .gnb .gnb_wrap li').mouseover(function(){
+		$('#header dl.gnb_sublist').css('display','block');
+		$('#header .nav_bg').css('display','block');
+		$('#header').css('background','#fff');
+		$('#header .center').css('background','#fff');
+		
+	});
+	$('#header .gnb .gnb_wrap li').mouseleave(function(){
+		$('#header dl.gnb_sublist').css('display','none');
+		$('#header .nav_bg').css('display','none');
+		$('#header').css('background','#fff');
+		$('#header .center').css('background','#fff');
+	});
+	
+	// Quick menu 221206 SY Add
+	$('.quickBtn').click(function(){
+		$('.quickList').toggleClass('open');
+		return false;
+	});
+	
+	getTitleName();
+})
+//화면크기 조정
+var scale = 1;
+/* 화면 크기 +
+ * 1.2배 만큼 증가
+ */
+function fn_zoomIn(){
+	scale *= 1.2;
+	zoom();
+}
+
+/* 화면 크기 -
+ * 1.2배 만큼 감소
+ */
+function fn_zoomOut(){
+	scale /= 1.2;
+	zoom();
+}
+
+/* 화면 크기 적용
+ * body 크기 scale로 조정
+ */
+function zoom(){
+	document.body.style.zoom = scale;
+	if(document.getElementById("showStblGams") != null){
+		document.getElementById("showStblGams").contentWindow.document.getElementById("stat_frame").style.zoom = scale;
+	}
+}
+
+//지표체계 경로 구분 용도 변수
+function fn_ineIdUrlTpye(){
+	const search = window.location.search;
+	const lrgeClasCd = search.substr(search.indexOf('lrgeClasCd')+11,3);
+	let locVal;
+
+	switch(lrgeClasCd){
+		case '010'://국가지표체계
+			locVal='Kindex';
+			break;
+		case '013'://지속가능한발전목표
+			locVal='sdg';
+			break;
+		case '015'://SDG
+			locVal='sdgEn';
+			break;
+		case '017'://한국의사회지표
+			locVal='social';
+			break;
+		case '018'://국민삶의질지표
+			locVal='life';
+			break;
+		case '016'://저출생통계지표안
+			locVal='lbirth';
+			break;
+		default:
+			locVal='Kindex';
+			break;
+	}
+	return locVal;
+}
+
+/*
+ * 통합회원 로그인
+ */
+function fn_login(){
+	const locVal = fn_ineIdUrlTpye();
+
+	document.frmSend.SYS_CD.value	= "E";
+	document.frmSend.method			= "post";
+	document.frmSend.SYS_URL.value	= "https://www.index.go.kr/unity/potal/actionLogin.do?loc="+locVal;
+	document.frmSend.CUR_URL.value	= "https://www.index.go.kr/unity/potal/actionLogin.do?loc="+locVal;
+	document.frmSend.action			= "https://kosis.kr/oneid/cmmn/login/LoginView.do";
+	document.frmSend.submit();
+}
+
+/*회원가입*/
+function fn_join_member(){
+	const locVal = fn_ineIdUrlTpye();
+
+	document.frmSend.method			= "post";
+	document.frmSend.SYS_CD.value	= "E";
+	document.frmSend.LOGIN_YN.value	= "";
+	document.frmSend.action			= "https://kosis.kr/oneid/cmmn/login/MemberType.do";
+	document.frmSend.SYS_URL.value	= "https://www.index.go.kr/unity/potal/actionLogin.do?loc="+locVal;
+	document.frmSend.CUR_URL.value	= "https://www.index.go.kr/unity/potal/actionLogin.do?loc="+locVal;
+	document.frmSend.submit();
+}
+
+/*
+ * 통합회원 로그아웃
+ */
+function fn_logout(){
+	const locVal = fn_ineIdUrlTpye();
+
+	document.frmSend.method			= "post";
+	document.frmSend.action			= "/unity/potal/actionLogout.do?logout=2&loc="+locVal;
+	document.frmSend.submit();
+}
+
+function receiveMessage(event){
+	if(event.data === "closed" && event.origin === "https://kosis.kr"){
+		alert("30분동안 미사용으로 통합회원 로그아웃되었습니다.");
+		fn_logout();
+	}
+}
+/*검색 이벤트*/
+ function fn_search(){
+	var query = document.getElementById("searchKey").value;
+	if(query ==""){
+		alert("검색어를 입력해 주십시오.")
+		return false;
+	}else{
+		var lrgeClasCd = '018';
+		var divide1;
+		switch (lrgeClasCd) {
+		case '010'://국가발전지표
+			divide1 = 2;
+			break;
+		case '013'://지속가능한발전목표
+			divide1 = 11;
+			break;
+		case '015'://SDG
+			divide1 = 15;
+			break;
+		case '017'://한국의사회
+			divide1 = 10;
+			break;
+		case '018'://국민삶의질
+			divide1 = 8;
+			break;
+		case '016'://저출생
+			divide1 = 12;
+			break;
+		}
+
+		document.intgtSearchForm.query.value = query;
+		document.getElementById("searchKey").value = "";
+		document.intgtSearchForm.action = "/unity/potal/search/search.do?divide1="+divide1;
+		document.intgtSearchForm.submit();
+	}
+}
+
+/*로그인 여부 체크(마아페이지)*/
+function fn_checkLogin(cdNo, lrgeClasCd){
+
+	var sessionUserId = '';
+
+	if(sessionUserId != "" && sessionUserId != null){ // 로그인 되어 있을 경우
+		if(cdNo == "520"){ // 나의 관심지표
+			window.location.href ='/unity/potal/mypage/selectPoMyPSttsGrpListClasCd.do?cdNo=520&lrgeClasCd='+lrgeClasCd;
+		}else if(cdNo == "530"){ //참여내역
+			window.location.href ='/unity/potal/mypage/selectPoMyCnQhistoryClasCd.do?cdNo=530&lrgeClasCd='+lrgeClasCd;
+		}else if(cdNo == "540"){//통합회원 나의정보
+			document.frmSend.method = "post";
+			document.frmSend.LOGIN_YN.value = "";
+			document.frmSend.action = "https://kosis.kr/oneid/cmmn/member/GoToMemberInfoMod.do";
+			document.frmSend.SYS_URL.value = "https://www.index.go.kr/unity/potal/actionUserInfoUpdate.do";
+			document.frmSend.CUR_URL.value = "https://www.index.go.kr/unity/potal/actionUserInfoUpdate.do";
+			document.frmSend.submit();
+		}else if(cdNo == "550"){//통합회원 회원탈퇴
+			document.frmSend.method = "post";
+			document.frmSend.LOGIN_YN.value = "";
+			document.frmSend.action = "https://kosis.kr/oneid/cmmn/login/GoToMemberDrop.do";
+			document.frmSend.SYS_URL.value = "https://www.index.go.kr/unity/potal/actionLogout.do";
+			document.frmSend.CUR_URL.value = "https://www.index.go.kr/unity/potal/actionLogout.do";
+			document.frmSend.submit();
+		}else{
+			return false;
+		}
+	}else{
+		if(confirm("로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?")){
+			window.location.href = '/unity/potal/potalLogin.do';
+		}else{
+			return false;
+		}	
+	}
+}
+
+window.addEventListener("message",receiveMessage);
+
+/* 브라우저 상단 탭 타이틀 변경 이벤트  */
+function getTitleName() {
+
+	var lrgeClasCd = '018';
+
+	if($("input[name='clasCd']").val() == '2' || $("input[name='lrgeClasCd']").val() == '010' || lrgeClasCd == '010') {
+		document.title = '지표누리 | 국가발전지표';
+	}else if($("input[name='clasCd']").val() == '8' || $("input[name='lrgeClasCd']").val() == '018' || lrgeClasCd == '018') {
+		document.title = '지표누리 | 국민 삶의 질 지표';
+	}else if($("input[name='clasCd']").val() == '10' || $("input[name='lrgeClasCd']").val() == '017' || lrgeClasCd == '017') {
+		document.title = '지표누리 | 한국의 사회지표'
+	}else if($("input[name='clasCd']").val() == '11' || $("input[name='lrgeClasCd']").val() == '013' || lrgeClasCd == '013') {
+		document.title = '지표누리 | 지속가능발전목표'
+	}else if($("input[name='clasCd']").val() == '12' || $("input[name='lrgeClasCd']").val() == '016' || lrgeClasCd == '016') {
+		document.title = '지표누리 | 저출생 통계지표'
+	}else if($("input[name='clasCd']").val() == '15' || $("input[name='lrgeClasCd']").val() == '015' || lrgeClasCd == '015') {
+		document.title = '지표누리 | SDG'
+	}
+}
+</script>
+
+<form name="emptyFrm">
+</form>
+
+<form name="frmSend" id="frmSend" method="post" action="/unity/potal/main.do">
+	<input type="hidden" id="SEND_SYS_URL"	name="SYS_URL"		value="" />
+	<input type="hidden" id="CUR_URL"		name="CUR_URL"		value="" />
+	<input type="hidden" id="SEND_SYS_CD"	name="SYS_CD"		value="E" />
+	<input type="hidden" id="SID_IP_ADDR"	name="SID_IP_ADDR"	value="" />
+	<input type="hidden" id="SSN_INFO"		name="SSN_INFO"		value="" />
+	<input type="hidden" id="LOGIN_YN"		name="LOGIN_YN"		value="" />
+	<input type="hidden" id="USR_SN"		name="USR_SN"		value="" />
+	<input type="hidden" id="USR_ID"		name="USR_ID"		value="" />
+	<input type="hidden" id="USR_NAME"		name="USR_NAME"		value="" />
+	<input type="hidden" id="USR_EMAIL"		name="USR_EMAIL"	value="" />
+	<input type="hidden" id="USR_GUBUN"		name="USR_GUBUN"	value="" />
+	<input type="hidden" id="SYS_USR_ID"	name="SYS_USR_ID"	value="" />
+	<input type="hidden" id="SYS_USR_PW"	name="SYS_USR_PW"	value="" />
+</form>
+
+<form id="command" name="intgtSearchForm" action="/unify/idx-info.do?idxCd=8014" method="post">
+	<input type="hidden" name="query" value=""/>
+</form>
+
+<div id="skip">
+	<a id="hrefChangeTag">본문 바로가기</a>
+	<a href="#gnb">대메뉴 바로가기</a>
+</div>
+
+<!-- header -->
+<header class="common_header">
+	<div class="tnb">
+		<div class="center">
+			<div class="nurizip">
+				<span>이 누리집은 대한민국 공식 전자정부 누리집입니다.</span>
+			</div>
+
+			<div class="lnb">
+				<ul>
+					<li class="login">
+						
+							
+							
+								<a href="/unity/potal/potalLogin.do">로그인</a>
+							
+						
+					</li>
+					
+						<li class="join"><a href="javascript:fn_join_member();">회원가입</a></li>
+					
+					<li class="sitemap"><a href="/unity/potal/intro/KindicatorSitemap.do?cdNo=700&lrgeClasCd=018">사이트맵</a></li>
+					<li class="zoom">
+						<span>화면크기</span>
+						<button type="button" class="btn zoom_btn" onclick="fn_zoomOut();">
+							<i class="xi-minus"></i><span class="txt_blind">화면 축소</span>
+						</button>
+						<button type="button" class="btn zoom_btn" onclick="fn_zoomIn();">
+							<i class="xi-plus"></i><span class="txt_blind">화면 확대</span>
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div id="header">
+		<div class="center">
+
+			<div class="logo">
+				<h1 class="logo1">
+					<a href="/unity/potal/main.do" class="logo_total"><span class="txt_blind">지표누리</span></a>
+						
+							
+							
+							
+							
+							
+								<a href="/unity/potal/indicator/LifeIndicator.do?cdNo=000&lrgeClasCd=018" class="logo_sub">
+								<span>국민 삶의 질 지표</span>
+							
+							
+						
+					</a>
+				</h1>
+				<span class="logo2 slogan">
+					<em class="txt_blind">다시 대한민국! 새로운 국민의 나라</em>
+				</span>
+			</div>
+
+			<div id="gnb" class="gnb">
+				<div class="gnb_wrap">
+					<ul>
+						<li class="">
+							
+								
+								
+								
+									<a href="/unity/potal/intro/LifeIntro.do?cdNo=110&lrgeClasCd=018" class="gnb_title"><span>소개마당</span></a>
+								
+								
+							
+							<ul class="gnb_sublist">
+								
+									
+									
+									
+										<li class="sub_menu"><a href="/unity/potal/intro/LifeIntro.do?cdNo=110&lrgeClasCd=018">국민 삶의 질 지표 소개</a></li>
+									
+									
+								
+								<li class="sub_menu">
+									<a href="/unity/potal/sub/com/SelectGuide.do?cdNo=120&lrgeClasCd=018">이용안내</a>
+								</li>
+							</ul>
+						</li>
+						<li class="">
+							<a href="/unity/potal/selectAllIndicator.do?cdNo=210&lrgeClasCd=018" class="gnb_title"><span>지표 활용</span></a>
+							<ul class="gnb_sublist">
+								<li class="sub_menu"><a href="/unity/potal/selectAllIndicator.do?cdNo=210&lrgeClasCd=018">전체지표</a></li>	
+								<li class="sub_menu"><a href="/unity/potal/selectSearchIndex.do?cdNo=220&lrgeClasCd=018">지표찾기</a></li>
+								<li class="sub_menu"><a href="/unity/potal/selectNewIndicator.do?cdNo=230&lrgeClasCd=018">최신지표</a></li>
+								<li class="sub_menu"><a href="/unity/potal/selectPopIndicator.do?cdNo=240&lrgeClasCd=018">인기지표</a></li>
+								
+									<li class="sub_menu"><a href="/unity/potal/selectGoodIndicator.do?cdNo=250&lrgeClasCd=018">개선지표</a></li>
+									<li class="sub_menu"><a href="/unity/potal/selectBadIndicator.do?cdNo=260&cateNm=qol&divide1=8&lrgeClasCd=018">악화지표</a></li>
+									<li class="sub_menu"><a href="/unity/potal/selectSosoIndicator.do?cdNo=270&cateNm=qol&divide1=8&lrgeClasCd=018">동일지표</a></li>
+								
+								
+							</ul>
+						</li>
+						<li class="">
+							<a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=310&lrgeClasCd=018" class="gnb_title"><span>알림마당</span></a>
+							<ul class="gnb_sublist">
+								<li class="sub_menu"><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=310&lrgeClasCd=018">공지사항</a></li>
+								<li class="sub_menu"><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=320&lrgeClasCd=018">정보자료실</a></li>
+								
+									<li class="sub_menu"><a href="/unity/potal/sub/com/selectKIndxQolforum.do?cdNo=330&cateNm=qol&lrgeClasCd=018">삶의 질 측정 포럼</a></li>
+									<li class="sub_menu" style="display:none;"><a href="/unity/potal/sub/com/TrendAbroad.do?cdNo=340&cateNm=qol&divide1=8&lrgeClasCd=018">해외사례</a></li>
+								
+							</ul>
+						</li>
+						<li class="">
+							<a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=410&lrgeClasCd=018" class="gnb_title"><span>참여마당</span></a>
+							<ul class="gnb_sublist">
+								<li class="sub_menu"><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=410&lrgeClasCd=018">자주하는 질문</a></li>
+								<li class="sub_menu"><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=420&lrgeClasCd=018">묻고 답하기</a></li>
+							</ul>
+						</li>
+						<li class="">
+							<a href="/unity/potal/mypage/myCnctLogPageClasCd.do?cdNo=510&lrgeClasCd=018" class="gnb_title"><span>마이페이지</span></a><!--back cookie 살리고 /경로 + fn_checkLogin -->
+							<ul class="gnb_sublist">
+								<li class="sub_menu"><a href="/unity/potal/mypage/myCnctLogPageClasCd.do?cdNo=510&lrgeClasCd=018">내가 본 지표</a></li>
+								<li class="sub_menu"><a href="javascript:fn_checkLogin('520', &#039;018&#039;)">나의 관심지표</a></li>
+								<li class="sub_menu"><a href="javascript:fn_checkLogin('530', &#039;018&#039;)">나의 참여내역</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
+				<!-- search -->
+				<div id="main_search" class="main_search">
+
+					<!-- mobile search btn -->
+					<button type="button" class="btn btn_search btn_mo_search">
+						<span class="txt_blind">검색</span>
+					</button>
+					
+					<div class="search_box">
+						<div class="search_form">
+							<label for="searchKey" class="txt_blind">검색</label>
+							<input type="text" id="searchKey" name="searchKey" class="search_input"  placeholder="검색어를 입력하세요" title="검색어를 입력하세요" onkeypress="if(event.keyCode==13) {fn_search(); return false;}">
+							<button type="submit" class="btn btn_search" onclick="fn_search();">
+								<span class="txt_blind">검색</span>
+							</button>
+						</div>
+						<button type="button" class="btn btn_close">
+							<i class="xi-close"></i>
+							<span class="txt_blind">검색 닫기</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- burger_menu -->
+				<div class="burger_menu">
+					<button type="button" class="btn sitemap_btn open" id="sitemap_open">
+						<i class="xi-bars"></i>
+						<span class="txt_blind">전체메뉴 열기</span>
+					</button>
+
+					<div class="sideBg">
+						<div class="side_menu">
+							<div class="head">
+								<a href="/unity/potal/main.do" class="logo_total"><span class="txt_blind">지표누리</span></a>
+								
+									
+									
+									
+										<a href="/unity/potal/indicator/LifeIndicator.do?cdNo=000&lrgeClasCd=018" class="logo_sub">국민 삶의 질 지표</a>
+									
+									
+								
+							</div>
+							<div class="body">
+								<ul>
+									<li>
+										<a href="javascript:void(0);">소개마당</a>
+										<ul>
+											
+												
+												
+												
+													<li><a href="/unity/potal/intro/LifeIntro.do?cdNo=110&lrgeClasCd=018">국민 삶의 질 지표 소개</a></li>
+												
+												
+											
+											<li><a href="/unity/potal/sub/com/SelectGuide.do?cdNo=120&lrgeClasCd=018">이용안내</a></li>
+										</ul>
+									</li>
+									<li>
+										<a href="javascript:void(0);">지표 활용</a>
+										<ul>
+											<li><a href="/unity/potal/selectAllIndicator.do?cdNo=210&lrgeClasCd=018">전체지표</a></li>
+											<li><a href="/unity/potal/selectSearchIndex.do?cdNo=220&lrgeClasCd=018">지표찾기</a></li>
+											
+											<li><a href="/unity/potal/selectNewIndicator.do?cdNo=230&lrgeClasCd=018">최신지표</a></li>
+											<li><a href="/unity/potal/selectPopIndicator.do?cdNo=240&lrgeClasCd=018">인기지표</a></li>
+											
+												<li class="sub_menu"><a href="/unity/potal/selectGoodIndicator.do?cdNo=250&lrgeClasCd=018">개선지표</a></li>
+												<li class="sub_menu"><a href="/unity/potal/selectBadIndicator.do?cdNo=260&cateNm=qol&divide1=8&lrgeClasCd=018">악화지표</a></li>
+												<li class="sub_menu"><a href="/unity/potal/selectSosoIndicator.do?cdNo=270&cateNm=qol&divide1=8&lrgeClasCd=018">동일지표</a></li>
+											
+											
+										</ul>
+									</li>
+									<li>
+										<a href="javascript:void(0);">알림마당</a>
+										<ul>
+											<li><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=310&lrgeClasCd=018">공지사항</a></li>
+											<li><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=320&lrgeClasCd=018">정보자료실</a></li>
+											
+												<li><a href="/unity/potal/sub/com/selectKIndxQolforum.do?cdNo=330&cateNm=qol&lrgeClasCd=018">삶의 질 측정 포럼</a></li>
+												<li style="display:none;"><a href="/unity/potal/sub/com/TrendAbroad.do?cdNo=340&cateNm=qol&divide1=8&lrgeClasCd=018">해외사례</a></li>
+											
+										</ul>
+									</li>
+									<li>
+										<a href="javascript:void(0);">참여마당</a>
+										<ul>
+											<li><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=410&lrgeClasCd=018">자주하는 질문</a></li>
+											<li><a href="/unity/potal/sub/com/SelectComBBS.do?cdNo=420&lrgeClasCd=018">묻고 답하기</a></li>
+										</ul>
+									</li>
+									<li>
+										<a href="javascript:void(0);">마이페이지</a>
+										<ul>
+											<li><a href="/unity/potal/mypage/myCnctLogPageClasCd.do?cdNo=510&lrgeClasCd=018">내가 본 지표</a></li>
+											<li><a href="javascript:fn_checkLogin('520',018)">나의 관심지표</a></li>
+											<li><a href="javascript:fn_checkLogin('530',018)">나의 참여내역</a></li>
+											
+										</ul>
+									</li>
+								</ul>
+							</div>
+							<div class="foot">
+								<a href="/unity/potal/potalLogin.do">로그인</a>
+								<a href="javascript:fn_join_member();">회원가입</a>
+								<a href="/unity/potal/intro/KindicatorSitemap.do?cdNo=700&lrgeClasCd=018">사이트맵</a>
+							</div>
+							<button type="button" class="btn sitemap_btn close" id="sitemap_close">
+								<i class="xi-close"></i>
+								<span class="txt_blind">전체메뉴 닫기</span>
+							</button>
+						</div>
+					</div>
+				</div>
+				<!-- // burger_menu -->
+
+			</div>
+
+		</div>
+
+		<div class="nav_bg"></div>
+	</div>
+
+</header>
+<!-- //header -->
+
+ 
+	
+	
+	
+	
+
+
+
+		
+		<!--// header -->
+		<!-- container -->
+		<div id="subContainer">
+			<div class="sub_bg">
+				
+					
+						
+							<div class="indicator_nav type2">
+						
+						
+					
+								<div class="m_cont_layout">
+									<ol>
+										<li class="home">
+											
+												
+												
+												
+													<a href="/unity/potal/indicator/LifeIndicator.do?cdNo=000&lrgeClasCd=018"><i class="xi-home"></i><span class="txt_blind">홈</span></a>
+												
+												
+											
+										</li>
+										<li class="depth depth1">
+											<button type="button" class="btn btn_menu_select" id="lv1Btn" title="펼치기">
+												<strong class="title" id="dep1Nm"></strong>
+												<span class="txt_blind">영역 선택</span>
+											</button>
+											<ul id="1LvArea">
+												<!-- 선택 시 title='선택됨' 필요 -->
+											</ul>
+										</li>
+										
+			 							<li class="depth depth3">
+			 								<button type="button" class="btn btn_menu_select" id="lv3Btn" title="펼치기"> 
+												<strong class="title" id="dep3Nm">최저주거기준 미달가구 비율</strong> 
+												<span class="txt_blind">지표 선택</span>
+											</button>
+											<ul id="3LvArea">
+												
+													
+														
+														
+															<li onclick="javascript:fn_selectIndxDtl('8','8013','4');"><a>1인당 주거면적</a></li>
+														
+													
+												
+													
+														
+														
+															<li onclick="javascript:fn_selectIndxDtl('8','8069','4');"><a>주거환경만족도</a></li>
+														
+													
+												
+													
+														
+														
+															<li onclick="javascript:fn_selectIndxDtl('8','8093','4');"><a>주택임대료비율(소득 대비)</a></li>
+														
+													
+												
+													
+														
+														
+															<li onclick="javascript:fn_selectIndxDtl('8','8092','4');"><a>자가점유가구비율</a></li>
+														
+													
+												
+													
+														
+														
+															<li onclick="javascript:fn_selectIndxDtl('8','8014','4');"><a>최저주거기준 미달가구 비율</a></li>
+														
+													
+												
+													
+														
+														
+															<li onclick="javascript:fn_selectIndxDtl('8','8094','4');"><a>통근시간</a></li>
+														
+													
+												
+											</ul>
+										</li>
+									</ol>
+								</div>
+				</div>
+				
+				<!-- indicator_details nav -->
+				
+				<!-- content -->				
+				<div class="m_cont_layout indicator_details"><!-- 241007 개발자확인 : 지표상세보기에서 클래스 indicator_details 추가됩니다. (확인 후 주석 삭제) -->
+					<div class="inner_box">
+						<div class="service_top_btn">
+							
+							 
+                				
+                				<a href="javascript:fn_importIdx();" class="important" title="중요지표 추천">
+                			
+								<!--<i class="xi-bookmark-o"></i>-->
+								<img src="/potal/sub/img/etc/icon_recommend.svg" alt="추천">
+								<span class="txt_blind">중요지표 추천</span>
+								<strong class="num"><span class="txt_blind">총</span>0 <span class="txt_blind">건</span></strong>
+							</a>
+							<a href="javascript:fn_bookmarkIdx();" class="register"><i class="xi-bookmark-o"></i>관심지표등록</a><a href="javascript:window.print();"><i class="xi-print"></i>이미지 인쇄</a>
+							<a href="javascript:fn_fileDownAll();"><i class="xi-download"></i>파일다운로드</a>
+							<a href="javascript:fn_urlCopy();"><i class="xi-link"></i>URL복사</a>
+						</div>
+						
+							<div class="right_tit">
+								<span class="tit"><span class="star"></span>최근갱신일 : 2026-01-05 (입력 예정일 : 2026-12-31)</span>
+								<span class="tit"><span class="star"></span>공표주기 : 
+									
+										
+										년
+									
+								</span>
+								
+							</div>
+						
+						
+						<!-- service_top -->
+						<div class="service_top">
+							<h2 class="pageTitle">최저주거기준 미달가구 비율</h2>
+						
+							<div class="indicator_tab">
+								<ul>
+									<li class="on"><a href="#indicator_tab01" class="">그래프</a></li>
+									<li><a href="#indicator_tab02">통계표</a></li>
+									<li><a href="#indicator_tab03">정의</a></li>
+									
+										<li><a href="#indicator_tab04">해설</a></li>
+									
+									
+										<li><a href="#indicator_tab05">관련용어</a></li>
+									
+									
+										
+											
+											
+												<li><a href="#indicator_tab06">관련파일</a></li>
+											
+										
+									
+									
+									
+									<li><a href="#indicator_tab09">만족도 조사</a></li>
+								</ul>
+							</div>
+						</div>
+						<!-- // service_top -->
+						
+						<!-- 그래프 -->
+						<div id="indicator_tab01" class="sub_box">
+							<h3 class="common_tit">그래프</h3>
+							
+							<div class="sub_conts">
+								
+								<div class="sub_title">
+									<div class="selectWrap">
+										<label for="graph_box">그래프명</label>
+										<select name="graph_box" id="graph_box" onchange="javascript:fn_graphChange('N');">
+											
+												<option value="801401,1" selected="selected">최저주거기준 미달가구 비율</option>
+											
+										</select>
+									</div>	 
+
+									<div class="period_select selectWrap">
+										<label for="StattDescList_2">기간선택</label>
+										<select name="freq_box_2" id="freq_box_2" onchange="javascript:fn_freqChange2();" title="주기">
+											
+			                            		<option value="Y" selected="selected">연도</option>
+			                                
+										</select>
+										<select name="StattDescList_2" id="StattDescList_2" title="시작 시점">
+											
+			                            		<option value="2006" selected="selected">2006</option>
+			                                
+			                            		<option value="2008" >2008</option>
+			                                
+			                            		<option value="2010" >2010</option>
+			                                
+			                            		<option value="2012" >2012</option>
+			                                
+			                            		<option value="2014" >2014</option>
+			                                
+			                            		<option value="2016" >2016</option>
+			                                
+			                            		<option value="2017" >2017</option>
+			                                
+			                            		<option value="2018" >2018</option>
+			                                
+			                            		<option value="2019" >2019</option>
+			                                
+			                            		<option value="2020" >2020</option>
+			                                
+			                            		<option value="2021" >2021</option>
+			                                
+			                            		<option value="2022" >2022</option>
+			                                
+			                            		<option value="2023" >2023</option>
+			                                
+			                            		<option value="2024" >2024</option>
+			                                
+										</select>
+										<span> ~ </span>
+										<label for="EndDescList_2" class="txt_blind">종료시점</label>
+										<select name="EndDescList_2" id="EndDescList_2" title="종료 시점">
+											
+			                            		<option value="2006" >2006</option>
+			                                
+			                            		<option value="2008" >2008</option>
+			                                
+			                            		<option value="2010" >2010</option>
+			                                
+			                            		<option value="2012" >2012</option>
+			                                
+			                            		<option value="2014" >2014</option>
+			                                
+			                            		<option value="2016" >2016</option>
+			                                
+			                            		<option value="2017" >2017</option>
+			                                
+			                            		<option value="2018" >2018</option>
+			                                
+			                            		<option value="2019" >2019</option>
+			                                
+			                            		<option value="2020" >2020</option>
+			                                
+			                            		<option value="2021" >2021</option>
+			                                
+			                            		<option value="2022" >2022</option>
+			                                
+			                            		<option value="2023" >2023</option>
+			                                
+			                            		<option value="2024" selected="selected">2024</option>
+			                                
+										</select>
+									</div>
+									
+									<a class="btn_base btn_bl" href="javascript:fn_chartChange('Y');">조회</a>
+								</div>
+								
+									
+										<div id="graph_area" class="graph sub_conts_inner">
+											
+										</div>
+									
+									
+								
+							</div>
+						</div>
+						<!-- // 그래프 -->
+						
+						<!-- 통계표 -->
+						
+							<div id="indicator_tab02" class="sub_box">
+								<h3 class="common_tit">통계표</h3>
+								
+								<div class="sub_conts" id="stat_area">
+								
+									<!-- sub_title -->
+									<div class="sub_title"><!-- 241007 개발자확인 : .sub_conts 내부로 위치이동, 내부 태그 수정되었습니다. (확인 후 주석 삭제)-->
+										<div class="index_select selectWrap">
+											<label for="stat_box">통계명</label>
+											<select id="stat_box" onchange="javascript:fn_statChange('N');" 이게 왜 있지?>
+												
+													<option value="801401" selected="selected">최저주거기준 미달가구 비율</option>
+												
+											</select>
+										</div>
+										
+			                               	<input type="hidden" id="801401_freq" value="Y">
+			                               	<input type="hidden" id="801401_unit" value="%">
+			                            
+										
+										<div class="period_select selectWrap">
+											<label for="freq_box">기간선택</label>
+											<select name="freq_box" id="freq_box" onchange="javascript:fn_freqChange();" title="주기">
+												
+				                            		<option value="Y" selected="selected">연도</option>
+				                                
+											</select>
+											<label for="StattDescList" class="txt_blind">통계표시작시점</label>
+											<select name="StattDescList" id="StattDescList" title="시작 시점">
+												
+				                            		<option value="2006" selected="selected">2006</option>
+				                                
+				                            		<option value="2008" >2008</option>
+				                                
+				                            		<option value="2010" >2010</option>
+				                                
+				                            		<option value="2012" >2012</option>
+				                                
+				                            		<option value="2014" >2014</option>
+				                                
+				                            		<option value="2016" >2016</option>
+				                                
+				                            		<option value="2017" >2017</option>
+				                                
+				                            		<option value="2018" >2018</option>
+				                                
+				                            		<option value="2019" >2019</option>
+				                                
+				                            		<option value="2020" >2020</option>
+				                                
+				                            		<option value="2021" >2021</option>
+				                                
+				                            		<option value="2022" >2022</option>
+				                                
+				                            		<option value="2023" >2023</option>
+				                                
+				                            		<option value="2024" >2024</option>
+				                                
+											</select>
+											<span> ~ </span>
+											<label for="EndDescList" class="txt_blind">통계표종료시점</label>
+											<select name="EndDescList" id="EndDescList" title="종료 시점">
+												
+				                            		<option value="2006" >2006</option>
+				                                
+				                            		<option value="2008" >2008</option>
+				                                
+				                            		<option value="2010" >2010</option>
+				                                
+				                            		<option value="2012" >2012</option>
+				                                
+				                            		<option value="2014" >2014</option>
+				                                
+				                            		<option value="2016" >2016</option>
+				                                
+				                            		<option value="2017" >2017</option>
+				                                
+				                            		<option value="2018" >2018</option>
+				                                
+				                            		<option value="2019" >2019</option>
+				                                
+				                            		<option value="2020" >2020</option>
+				                                
+				                            		<option value="2021" >2021</option>
+				                                
+				                            		<option value="2022" >2022</option>
+				                                
+				                            		<option value="2023" >2023</option>
+				                                
+				                            		<option value="2024" selected="selected">2024</option>
+				                                
+											</select>
+										</div>
+									
+										<a class="btn_base btn_bl" href="javascript:fn_statChange('Y');">조회</a>
+										<!--<a class="btn_base btn_bl" href="javascript:fn_openSwitch();">행렬전환</a>--><!-- 241007 개발자확인 : 위치 #ti_btn 내부로 변경되었습니다. (확인 후 주석 삭제)-->
+									</div>
+									<!-- //sub_title -->
+								
+									<div id="statTable_area" class="sub_conts_inner"><!-- 241007 개발자확인 : div 요소 추가 (확인 후 주석 삭제)-->
+										<div class="fa fa-spinner fa-spin" id="spinner" style="color: rgb(110, 110, 110); position: fixed; z-index: 1031; top: 50%; right: 48%; font-size: 80px; display: none;"></div>
+										<!-- <a href="javascript:document.getElementById('showStblGams').contentWindow.excelDown();">통계표 다운로드</a>
+										<a href="javascript:fn_statAnal();">통계표 분석</a> -->
+										
+										<iframe lang="ko" title="입력통계표" name="showStblGams" id="showStblGams" class="frame" style="width: 100%; border: 0;" ></iframe>
+									</div>
+								</div>
+							</div>
+						
+						<!-- // 통계표 -->
+						
+						<!-- 정의 -->
+						
+							<div id="indicator_tab03" class="sub_box">
+								<h3 class="common_tit">정의</h3>
+								
+								<div class="sub_conts" id="def_area">
+									총가구 중 최저주거기준에 미달하는 주택에 거주하는 가구의 비율
+								</div>
+							</div>
+						
+						<!-- // 정의 -->
+						
+						<!-- 해설 -->
+						
+						<div id="indicator_tab04" class="sub_box">
+							<h3 class="common_tit">해설</h3>
+							
+							<div class="sub_conts" id="mean_area">
+								
+									<span>주거는 개인이 생활을 유지하는데 있어 가장 중요한 부분 중 하나로 1인당 주거면적이 양적인 측면을 보여준다면, 최저주거기준 미달 가구는 양적인 크기 뿐 아니라 다양한 기준을 반영하여 주거의 질적인 측면을 측정한다. 최저주거기준 미달가구의 비율은 주거취약계층의 규모를 파악하는데 도움이 된다.<br/><br/>최저주거기준 미달가구 비율은 2006년 16.6%에서 2014년 5.4%로 급격히 감소한 이후 5%대에서 정체를 보이다 2020년 이후로 꾸준히 감소세를 보여주고 있었으나 2024년에는 3.8%로 소폭 증가하였다. 최저주거기준 미달가구의 비율은 수도권에서 상대적으로 높고, 광역시 지역이 2.8%로 가장 낮다. 수도권 지역은 2006년 12.8%에서 2024년 4.4%로 감소하였고, 같은 기간 광역시는 17.7%에서 2.8%, 도 지역은 21.6%에서 3.4로 감소하였다. 이는 도 지역의 주거시설이 큰 폭으로 개선되었음을 보여주고 있다.</span><br/>
+								
+							</div>
+						</div>
+						
+						<!-- // 해설 -->
+						
+						<!-- 관련용어 -->
+						
+							<div id="indicator_tab05" class="sub_box">
+								<h3 class="common_tit">관련용어</h3>
+								
+								<div class="sub_conts" id="word_area">
+									
+										<span class="tit bold">최저주거기준</span>
+										<div class="wordDesc">가구원수에 따른 면적, 침실, 시설을 기준으로 1인가구의 경우 14㎡의 방 1개에 입식부엌, 전용 수세식 화장실, 목욕시설이 있어야 함</div>
+									
+								</div>
+							</div>
+						
+						<!-- // 관련용어 -->
+						
+						<!-- 관련파일(국가발전지표 제외) -->
+						
+							
+								<div id="indicator_tab06" class="sub_box">
+								
+									
+									
+										<h3 class="common_tit">관련파일</h3>
+									
+								
+									<div class="sub_conts" id="file_area">
+										
+											
+												<a href="javascript:fn_fileDown('/8014','07004 최저주거기준미달가구비율_202512.xlsx','20260105200336893.xlsx')">
+													<img src="/ext/img/file_icon.gif" alt='첨부파일' style="margin-right:5px;">
+													
+														
+														07004 최저주거기준미달가구비율_202512.xlsx
+													
+												</a>
+											
+										
+									</div>
+								</div>
+							
+						
+						<!-- // 관련파일(국가발전지표 제외) -->
+						
+						<!-- 연관지표 -->
+						
+						
+						<!-- 보조지표 및 국제통계 -->
+						
+						<!-- // 보조지표 및 국제통계 -->
+						
+						<!-- 서비스 만족도 조사-->
+						<div id="indicator_tab09" class="sub_box">
+							<h3 class="common_tit">서비스 만족도 조사</h3>
+							
+							<div class="sub_conts" id="survey_area"><!-- 241007 개발자확인 : 내부 태그 변경되었습니다. (확인 후 주석 확인) -->
+								<div class="description">
+									<span><span class="star"></span>지표관련 질문은 [참여마당]-[묻고 답하기] 게시판을 이용해주세요.</span>
+									<span><span class="star"></span>제출한 평가내용을 수정을 원하시면, <a href="javascript:fn_popIdxEval();" class="new_win">[여기]</a>를 클릭하여 주세요.</span>
+								</div>
+								<div class="form_wrap">
+									<ul class="radio_list">
+										<li>
+											<span class="radio_box">
+												<input type="radio" name="chk_survey" id="star5" onclick="javascritp:fn_starClick('5');" data-a='5'>
+												<label for="star5">매우만족</label>
+											</span>
+										</li><li>
+											<span class="radio_box">
+												<input type="radio" name="chk_survey" id="star4" onclick="javascritp:fn_starClick('4');" data-a='4'>
+												<label for="star4">만족</label>
+											</span>
+										</li><li>
+											<span class="radio_box">
+												<input type="radio" name="chk_survey" id="star3" onclick="javascritp:fn_starClick('3');" data-a='3'>
+												<label for="star3">보통</label>
+											</span>
+										</li><li>
+											<span class="radio_box">
+												<input type="radio" name="chk_survey" id="star2" onclick="javascritp:fn_starClick('2');" data-a='2'>
+												<label for="star2">불만족</label>
+											</span>
+										</li><li>
+											<span class="radio_box">
+												<input type="radio" name="chk_survey" id="star1" onclick="javascritp:fn_starClick('1');" data-a='1'>
+												<label for="star1">매우불만족</label>
+											</span>
+										</li>
+									</ul>
+									
+									<div class="input_box">
+										<span class="name">
+											<label for="usrName">이름</label>
+											<input type="text" id="usrName" name="usrName" title="평가자이름">
+										</span>
+										<span class="password">
+											<label for="usrPw">비밀번호</label>
+											<input type="password" id="usrPw" name="usrPw" title="평가자비밀번호">
+										</span>
+										<span>
+											<label for="usrTxt">내용</label>
+											<input type="text" id="usrTxt" name="usrTxt" onkeyup="javascript:fn_countTextLength(this);" title="평가의견" placeholder="의견이 있으시면 자유롭게 작성하여 주세요.(한글 50자 이내)">
+										</span>
+									</div>
+									
+									<a href="javascript:fn_idxEvalSave();" class="btn_base">
+										<span id="idxEval">평가하기</span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- //서비스 만족도 조사-->
+					</div>
+					<!-- // inner_box-->
+				</div>
+				<!-- //content -->
+			</div>
+		</div>
+		
+			
+
+
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	fn_offcList();
+});
+
+/*화면 사이즈 조절*/
+  $(window).resize(function(){
+	fn_widthChck();
+}); 
+
+/*화면 크기별 css 조정
+모바일 > pc  버튼 복구 임시적용 */
+ function fn_widthChck(){	
+	if( window.innerWidth >= 980){		
+		$('.top_btn i').removeClass("dis_n");
+		$('.top_btn span').addClass("txt_blind");
+	}else{
+		$('.top_btn i').addClass("dis_n");
+		$('.top_btn span').removeClass("txt_blind");
+	}
+} 
+
+function fn_offcList(){
+	$.ajax({
+	    type: "post",
+	    url: "/unity/potal/selectOfficeSiteList.do",
+	    dataType : "json",
+	    success: function (data) {
+	    	var htmls = "";
+	    	$.each(data.resultList, function(i, v){
+	    		if(data.resultList[i].offcGrpCd == 'B'){
+	    			htmls += "<li><a href='"+v.offcUrl+"' target='_blank' title='새창열림'>"+v.offcNm+"</a></li>";
+		    	}
+	    	});
+	    	$('#footer-list-b').html(htmls);
+	    }
+	})
+}
+</script>
+<a href="javascript:void(0);" class="top_btn">
+	<i class="xi-arrow-top"></i>
+	<span class="txt_blind">top</span>
+</a>
+<!-- footer -->
+<footer id="footer_wrap">
+	
+	<div class="footer_menu">
+		<div class="m_cont_layout foot_menu">
+			<ul class="fnb">
+				<li><a href="/unity/potal/privacy_policy.do?policyCd=policy&lrgeClasCd=018" class="ftm_tit policy">개인정보처리방침</a></li>
+				<li><a href="/unity/potal/Policy.do?policyCd=policy_02&lrgeClasCd=018" class="ftm_tit">이메일무단수집거부</a></li>
+				<li><a href="/unity/potal/Policy.do?policyCd=policy_03&lrgeClasCd=018" class="ftm_tit">이용약관</a></li>
+				<li><a href="/unity/potal/Policy.do?policyCd=policy_04&lrgeClasCd=018" class="ftm_tit">저작권정책</a></li>
+			</ul>
+			
+			<div class="f_site_wrap">
+				<div class="f_site">
+					<button type="button" class="btn tog_btn">통계정보사이트</button>
+					<ul id="footer-list-b">
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="m_cont_layout foot_address">
+		<div class="address_inner">
+			<div class="address">(35208) 대전광역시 서구 청사로 189 (둔산동, 정부대전청사3동)<span class="gap">|</span>TEL : 02-2012-9114, 국번없이 110</div>
+			<div class="copyright">Copyright Ministry of Data and Statistics. All Rights Reserved.</div>
+		</div>
+		<div class="foot_logo">
+			<img src="/potal/common/img/footer_logo_color.png" alt="국가데이터처">
+		</div>
+	</div>
+</footer>
+<!--// footer -->
+		
+	</div>
+</form>
+	<form id="excelIntgrfrm" name="excelIntgrfrm" action="/unify/idx-info.do?idxCd=8014" method="post">
+			<input type="hidden" name="idx"/>	   
+			<input type="hidden" name="jsondata"/>
+			<input type="hidden" name="idxKornm"/>
+	</form>
+</body>
+</html>

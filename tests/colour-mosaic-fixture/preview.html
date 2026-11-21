@@ -1,0 +1,17 @@
+<!doctype html><html><meta charset="utf-8"><title>Photographic mosaic check</title><style>body{font:16px Helvetica;background:#000;color:#fff;padding:24px}canvas{width:384px;height:288px}a{color:white;display:block;margin:24px 0}pre{white-space:pre-wrap}</style><h1>Photographic mosaic check</h1><canvas id="input" width="384" height="288"></canvas><pre id="log">Preparing original-colour input</pre><a id="save" hidden download="preview-person.json">Save preview</a><script type="module">
+import {colourMosaic} from '../src/visual-system.js';
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d');
+const image=new Image();image.src='./pose.jpg';await image.decode();
+ctx.drawImage(image,330,200,340,255,0,0,384,288);
+const worker=new Worker('../vision-worker.js'),log=document.querySelector('pre');
+worker.onmessage=async({data:r})=>{
+ if(r.type==='ready'){const bitmap=await createImageBitmap(canvas);worker.postMessage({type:'frame',bitmap,timestamp:performance.now()},[bitmap]);}
+ else if(r.type==='result'){
+  const small=document.createElement('canvas');small.width=208;small.height=156;const sc=small.getContext('2d');sc.drawImage(canvas,0,0,208,156);
+  const cells=colourMosaic(sc.getImageData(0,0,208,156).data,208,156,{data:r.mask,width:r.width,height:r.height});
+  const result={source:'MediaPipe official pose.jpg, cropped upper-body fixture. Preview only.',sourceURL:'https://storage.googleapis.com/mediapipe-assets/pose.jpg',columns:52,rows:39,pose:r.landmarks,cells};
+  const link=document.querySelector('#save');link.href=URL.createObjectURL(new Blob([JSON.stringify(result)],{type:'application/json'}));link.hidden=false;
+  log.textContent=JSON.stringify({status:'PASS',landmarks:r.landmarks.length,colourBlocks:cells.length,elapsed:r.elapsed});worker.terminate();
+ }else log.textContent+= '\n'+JSON.stringify(r);
+};worker.onerror=e=>log.textContent+='\nFAIL '+e.message;worker.postMessage({type:'init'});
+</script></html>

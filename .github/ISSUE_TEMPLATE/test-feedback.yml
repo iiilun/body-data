@@ -1,0 +1,39 @@
+name: 同學測試回報
+description: 操作、視覺、數據理解與效能回饋
+title: "[測試] "
+body:
+  - type: input
+    id: environment
+    attributes:
+      label: 電腦、瀏覽器與鏡頭
+      placeholder: 例如 MacBook M4 / Chrome / 內建鏡頭
+    validations:
+      required: true
+  - type: dropdown
+    id: scene
+    attributes:
+      label: 測試位置
+      options:
+        - 首頁方塊
+        - 姿勢對位與倒數
+        - SHELTER
+        - HOLD
+        - SPACE
+        - THIRST
+        - OFFLINE
+        - VACANT
+        - 語言與數據
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: 發生了什麼，以及如何重現？
+      description: 請描述預期效果與實際看到的情況。
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: 你記住了什麼數據？
+      description: 它代表誰、單位是什麼，以及對互動的感受。

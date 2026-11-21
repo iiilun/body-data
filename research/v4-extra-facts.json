@@ -1,0 +1,3158 @@
+{
+  "verifiedAt": "2026-11-21",
+  "cards": [
+    {
+      "scene": "hold",
+      "locale": "zh",
+      "value": 3.03,
+      "format": "hours",
+      "labelKey": "unpaidTotalHours",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "MOHW,2024 Survey of Women15-64",
+      "url": "https://www.mohw.gov.tw/dl-96609-c79fe586-f992-49e1-8ab8-add082022198.html",
+      "note": "表15，印刷頁14／PDF第22頁；113年6月底。包含未從事該活動者。總計含志工；各子項勿再加上總計。4.41僅有配偶／同居伴侶婦女，非全部婦女。"
+    },
+    {
+      "scene": "hold",
+      "locale": "zh",
+      "value": 1.51,
+      "format": "hours",
+      "labelKey": "houseworkHours",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "MOHW,2024 Survey of Women15-64",
+      "url": "https://www.mohw.gov.tw/dl-96609-c79fe586-f992-49e1-8ab8-add082022198.html",
+      "note": "表15，印刷頁14／PDF第22頁；113年6月底。包含未從事該活動者。總計含志工；各子項勿再加上總計。4.41僅有配偶／同居伴侶婦女，非全部婦女。"
+    },
+    {
+      "scene": "hold",
+      "locale": "zh",
+      "value": 1.47,
+      "format": "hours",
+      "labelKey": "directCareHours",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "MOHW,2024 Survey of Women15-64",
+      "url": "https://www.mohw.gov.tw/dl-96609-c79fe586-f992-49e1-8ab8-add082022198.html",
+      "note": "表15，印刷頁14／PDF第22頁；113年6月底。包含未從事該活動者。總計含志工；各子項勿再加上總計。4.41僅有配偶／同居伴侶婦女，非全部婦女。"
+    },
+    {
+      "scene": "hold",
+      "locale": "zh",
+      "value": 0.05,
+      "format": "hours",
+      "labelKey": "volunteerHours",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "MOHW,2024 Survey of Women15-64",
+      "url": "https://www.mohw.gov.tw/dl-96609-c79fe586-f992-49e1-8ab8-add082022198.html",
+      "note": "表15，印刷頁14／PDF第22頁；113年6月底。包含未從事該活動者。總計含志工；各子項勿再加上總計。4.41僅有配偶／同居伴侶婦女，非全部婦女。"
+    },
+    {
+      "scene": "hold",
+      "locale": "zh",
+      "value": 1.16,
+      "format": "hours",
+      "labelKey": "childCareUnder12Hours",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "MOHW,2024 Survey of Women15-64",
+      "url": "https://www.mohw.gov.tw/dl-96609-c79fe586-f992-49e1-8ab8-add082022198.html",
+      "note": "表15，印刷頁14／PDF第22頁；113年6月底。包含未從事該活動者。總計含志工；各子項勿再加上總計。4.41僅有配偶／同居伴侶婦女，非全部婦女。"
+    },
+    {
+      "scene": "hold",
+      "locale": "zh",
+      "value": 0.22,
+      "format": "hours",
+      "labelKey": "olderCare65PlusHours",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "MOHW,2024 Survey of Women15-64",
+      "url": "https://www.mohw.gov.tw/dl-96609-c79fe586-f992-49e1-8ab8-add082022198.html",
+      "note": "表15，印刷頁14／PDF第22頁；113年6月底。包含未從事該活動者。總計含志工；各子項勿再加上總計。4.41僅有配偶／同居伴侶婦女，非全部婦女。"
+    },
+    {
+      "scene": "hold",
+      "locale": "zh",
+      "value": 4.41,
+      "format": "hours",
+      "labelKey": "partneredWomenUnpaidHours",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "MOHW,2024 Survey of Women15-64",
+      "url": "https://www.mohw.gov.tw/dl-96609-c79fe586-f992-49e1-8ab8-add082022198.html",
+      "note": "表15，印刷頁14／PDF第22頁；113年6月底。包含未從事該活動者。總計含志工；各子項勿再加上總計。4.41僅有配偶／同居伴侶婦女，非全部婦女。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 41.46,
+      "format": "percent",
+      "labelKey": "mortgageBurdenPercent",
+      "scope": "Taiwan",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格之房貸月還本付息／中位數月家戶可支配所得。標準化20年、貸款七成、利率2.318%；非實際家庭受壓人數比例。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 9.47,
+      "format": "ratio",
+      "labelKey": "housePriceIncomeRatio",
+      "scope": "Taiwan",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格／中位數家戶年可支配所得；不是個人薪水倍數。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 55.3,
+      "format": "percent",
+      "labelKey": "mortgageBurdenPercent",
+      "scope": "New Taipei City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格之房貸月還本付息／中位數月家戶可支配所得。標準化20年、貸款七成、利率2.318%；非實際家庭受壓人數比例。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 12.63,
+      "format": "ratio",
+      "labelKey": "housePriceIncomeRatio",
+      "scope": "New Taipei City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格／中位數家戶年可支配所得；不是個人薪水倍數。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 64.41,
+      "format": "percent",
+      "labelKey": "mortgageBurdenPercent",
+      "scope": "Taipei City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格之房貸月還本付息／中位數月家戶可支配所得。標準化20年、貸款七成、利率2.318%；非實際家庭受壓人數比例。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 14.72,
+      "format": "ratio",
+      "labelKey": "housePriceIncomeRatio",
+      "scope": "Taipei City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格／中位數家戶年可支配所得；不是個人薪水倍數。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 36.89,
+      "format": "percent",
+      "labelKey": "mortgageBurdenPercent",
+      "scope": "Taoyuan City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格之房貸月還本付息／中位數月家戶可支配所得。標準化20年、貸款七成、利率2.318%；非實際家庭受壓人數比例。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 8.43,
+      "format": "ratio",
+      "labelKey": "housePriceIncomeRatio",
+      "scope": "Taoyuan City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格／中位數家戶年可支配所得；不是個人薪水倍數。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 49.67,
+      "format": "percent",
+      "labelKey": "mortgageBurdenPercent",
+      "scope": "Taichung City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格之房貸月還本付息／中位數月家戶可支配所得。標準化20年、貸款七成、利率2.318%；非實際家庭受壓人數比例。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 11.35,
+      "format": "ratio",
+      "labelKey": "housePriceIncomeRatio",
+      "scope": "Taichung City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格／中位數家戶年可支配所得；不是個人薪水倍數。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 38.33,
+      "format": "percent",
+      "labelKey": "mortgageBurdenPercent",
+      "scope": "Tainan City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格之房貸月還本付息／中位數月家戶可支配所得。標準化20年、貸款七成、利率2.318%；非實際家庭受壓人數比例。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 8.76,
+      "format": "ratio",
+      "labelKey": "housePriceIncomeRatio",
+      "scope": "Tainan City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格／中位數家戶年可支配所得；不是個人薪水倍數。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 40.9,
+      "format": "percent",
+      "labelKey": "mortgageBurdenPercent",
+      "scope": "Kaohsiung City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格之房貸月還本付息／中位數月家戶可支配所得。標準化20年、貸款七成、利率2.318%；非實際家庭受壓人數比例。"
+    },
+    {
+      "scene": "space",
+      "locale": "zh",
+      "value": 9.35,
+      "format": "ratio",
+      "labelKey": "housePriceIncomeRatio",
+      "scope": "Kaohsiung City",
+      "year": "2026Q1",
+      "source": "MOI, Housing Affordability Statistics",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050",
+      "note": "中位數住宅價格／中位數家戶年可支配所得；不是個人薪水倍數。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "en",
+      "value": 2100000000,
+      "format": "compact",
+      "labelKey": "withoutSafeWaterPeople",
+      "scope": "World",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP,2025 report",
+      "url": "https://data.unicef.org/resources/jmp-report-2025/",
+      "note": "2024同一年服務階梯；21億包含其餘各類，不可重複相加。安全管理須住處可及、需要時可用且無污染。公開數字已四捨五入。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "en",
+      "value": 106000000,
+      "format": "compact",
+      "labelKey": "surfaceWaterPeople",
+      "scope": "World",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP,2025 report",
+      "url": "https://data.unicef.org/resources/jmp-report-2025/",
+      "note": "2024同一年服務階梯；21億包含其餘各類，不可重複相加。安全管理須住處可及、需要時可用且無污染。公開數字已四捨五入。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "en",
+      "value": 287000000,
+      "format": "compact",
+      "labelKey": "limitedWaterPeople",
+      "scope": "World",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP,2025 report",
+      "url": "https://data.unicef.org/resources/jmp-report-2025/",
+      "note": "2024同一年服務階梯；21億包含其餘各類，不可重複相加。安全管理須住處可及、需要時可用且無污染。公開數字已四捨五入。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "en",
+      "value": 302000000,
+      "format": "compact",
+      "labelKey": "unimprovedWaterPeople",
+      "scope": "World",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP,2025 report",
+      "url": "https://data.unicef.org/resources/jmp-report-2025/",
+      "note": "2024同一年服務階梯；21億包含其餘各類，不可重複相加。安全管理須住處可及、需要時可用且無污染。公開數字已四捨五入。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "en",
+      "value": 1400000000,
+      "format": "compact",
+      "labelKey": "basicOnlyWaterPeople",
+      "scope": "World",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP,2025 report",
+      "url": "https://data.unicef.org/resources/jmp-report-2025/",
+      "note": "2024同一年服務階梯；21億包含其餘各類，不可重複相加。安全管理須住處可及、需要時可用且無污染。公開數字已四捨五入。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "zh",
+      "value": 95.78,
+      "format": "percent",
+      "labelKey": "tapWaterCoveragePercent",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "National Council for Sustainable Development / WRA",
+      "url": "https://ncsd.ndc.gov.tw/_ofu/FileDatabase/c755e6d4-c380-4f83-910e-6d05f3773c42/2024%E8%87%BA%E7%81%A3%E6%B0%B8%E7%BA%8C%E7%99%BC%E5%B1%95%E7%9B%AE%E6%A8%99%E5%B9%B4%E5%BA%A6%E6%AA%A2%E8%A8%8E%E5%A0%B1%E5%91%8AV2.pdf",
+      "note": "自來水供水普及率；分母為人口。與JMP安全管理飲水不同，不代表未接管者喝到不安全水。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "zh",
+      "value": 389000,
+      "format": "compact",
+      "labelKey": "householdsWithoutTapConnection",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "National Council for Sustainable Development / WRA",
+      "url": "https://ncsd.ndc.gov.tw/_ofu/FileDatabase/c755e6d4-c380-4f83-910e-6d05f3773c42/2024%E8%87%BA%E7%81%A3%E6%B0%B8%E7%BA%8C%E7%99%BC%E5%B1%95%E7%9B%AE%E6%A8%99%E5%B9%B4%E5%BA%A6%E6%AA%A2%E8%A8%8E%E5%A0%B1%E5%91%8AV2.pdf",
+      "note": "未接入自來水系統的戶數38.9萬；單位戶而非人；可能採簡易自來水等來源，不能標成缺安全飲水人數。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "zh",
+      "value": 11.99,
+      "format": "percent",
+      "labelKey": "waterLeakagePercent",
+      "scope": "Taiwan Water Corporation service area",
+      "year": 2024,
+      "source": "National Council for Sustainable Development / Taiwan Water Corporation",
+      "url": "https://ncsd.ndc.gov.tw/_ofu/FileDatabase/c755e6d4-c380-4f83-910e-6d05f3773c42/2024%E8%87%BA%E7%81%A3%E6%B0%B8%E7%BA%8C%E7%99%BC%E5%B1%95%E7%9B%AE%E6%A8%99%E5%B9%B4%E5%BA%A6%E6%AA%A2%E8%A8%8E%E5%A0%B1%E5%91%8AV2.pdf",
+      "note": "台灣自來水公司漏水率；不含臺北自來水事業處轄區，不能誤稱全臺漏水率。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "zh",
+      "value": 10.27,
+      "format": "percent",
+      "labelKey": "waterLeakagePercent",
+      "scope": "Taipei Water Department service area",
+      "year": 2024,
+      "source": "National Council for Sustainable Development / Taipei Water Department",
+      "url": "https://ncsd.ndc.gov.tw/_ofu/FileDatabase/c755e6d4-c380-4f83-910e-6d05f3773c42/2024%E8%87%BA%E7%81%A3%E6%B0%B8%E7%BA%8C%E7%99%BC%E5%B1%95%E7%9B%AE%E6%A8%99%E5%B9%B4%E5%BA%A6%E6%AA%A2%E8%A8%8E%E5%A0%B1%E5%91%8AV2.pdf",
+      "note": "臺北自來水事業處漏水率；與台水轄區分開，不可直接相加／平均。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "zh",
+      "value": 3178000000,
+      "format": "compact",
+      "labelKey": "annualDomesticWaterM3",
+      "scope": "Taiwan",
+      "year": 2024,
+      "source": "WRA,Annual Water Consumption Report2024",
+      "url": "https://web.wra.gov.tw/wralib/WraLib/wSite/books_97917",
+      "note": "全年生活用水31.78億立方公尺。這是用水量，不是缺水量。"
+    },
+    {
+      "scene": "offline",
+      "locale": "en",
+      "value": 2000000000,
+      "format": "compact",
+      "labelKey": "offlinePeople",
+      "scope": "World",
+      "year": 2026,
+      "source": "ITU,Facts and Figures2026",
+      "url": "https://www.itu.int/en/mediacentre/Pages/PR-2026-11-03-Facts-and-Figures.aspx",
+      "note": "2026全球估計，2026-11-03發布。網路使用通常以最近3個月曾使用為準，與基地台覆蓋／持有手機不同；總數四捨五入。"
+    },
+    {
+      "scene": "offline",
+      "locale": "en",
+      "value": 6300000000,
+      "format": "compact",
+      "labelKey": "onlinePeople",
+      "scope": "World",
+      "year": 2026,
+      "source": "ITU,Facts and Figures2026",
+      "url": "https://www.itu.int/en/mediacentre/Pages/PR-2026-11-03-Facts-and-Figures.aspx",
+      "note": "2026全球估計，2026-11-03發布。網路使用通常以最近3個月曾使用為準，與基地台覆蓋／持有手機不同；總數四捨五入。"
+    },
+    {
+      "scene": "offline",
+      "locale": "en",
+      "value": 76,
+      "format": "percent",
+      "labelKey": "internetUsersPercent",
+      "scope": "World",
+      "year": 2026,
+      "source": "ITU,Facts and Figures2026",
+      "url": "https://www.itu.int/en/mediacentre/Pages/PR-2026-11-03-Facts-and-Figures.aspx",
+      "note": "2026全球估計，2026-11-03發布。網路使用通常以最近3個月曾使用為準，與基地台覆蓋／持有手機不同；總數四捨五入。"
+    },
+    {
+      "scene": "offline",
+      "locale": "en",
+      "value": 82,
+      "format": "percent",
+      "labelKey": "urbanInternetUsersPercent",
+      "scope": "World urban residents",
+      "year": 2026,
+      "source": "ITU,Facts and Figures2026",
+      "url": "https://www.itu.int/en/mediacentre/Pages/PR-2026-11-03-Facts-and-Figures.aspx",
+      "note": "2026全球估計，2026-11-03發布。網路使用通常以最近3個月曾使用為準，與基地台覆蓋／持有手機不同；總數四捨五入。"
+    },
+    {
+      "scene": "offline",
+      "locale": "en",
+      "value": 63,
+      "format": "percent",
+      "labelKey": "ruralInternetUsersPercent",
+      "scope": "World rural residents",
+      "year": 2026,
+      "source": "ITU,Facts and Figures2026",
+      "url": "https://www.itu.int/en/mediacentre/Pages/PR-2026-11-03-Facts-and-Figures.aspx",
+      "note": "2026全球估計，2026-11-03發布。網路使用通常以最近3個月曾使用為準，與基地台覆蓋／持有手機不同；總數四捨五入。"
+    },
+    {
+      "scene": "offline",
+      "locale": "en",
+      "value": 79,
+      "format": "percent",
+      "labelKey": "maleInternetUsersPercent",
+      "scope": "World men",
+      "year": 2026,
+      "source": "ITU,Facts and Figures2026",
+      "url": "https://www.itu.int/en/mediacentre/Pages/PR-2026-11-03-Facts-and-Figures.aspx",
+      "note": "2026全球估計，2026-11-03發布。網路使用通常以最近3個月曾使用為準，與基地台覆蓋／持有手機不同；總數四捨五入。"
+    },
+    {
+      "scene": "offline",
+      "locale": "en",
+      "value": 74,
+      "format": "percent",
+      "labelKey": "femaleInternetUsersPercent",
+      "scope": "World women",
+      "year": 2026,
+      "source": "ITU,Facts and Figures2026",
+      "url": "https://www.itu.int/en/mediacentre/Pages/PR-2026-11-03-Facts-and-Figures.aspx",
+      "note": "2026全球估計，2026-11-03發布。網路使用通常以最近3個月曾使用為準，與基地台覆蓋／持有手機不同；總數四捨五入。"
+    },
+    {
+      "scene": "offline",
+      "locale": "zh",
+      "value": 90.3,
+      "format": "percent",
+      "labelKey": "everInternetUsersPercent",
+      "scope": "Taiwan residents12+",
+      "year": 2025,
+      "source": "MODA,Digital Access Survey2025",
+      "url": "https://www-api.moda.gov.tw/File/Get/moda/zh-tw/UtFPqDu90WXGz2h",
+      "note": "114年調查；2026-01-13發布。個人對象為臺灣22縣市12歲以上本國籍人口；個人上網率為曾使用網路，與ITU近3月口徑不同。年齡／性別見附錄4表B-1（PDF第368頁）。家戶連網率分母為戶。"
+    },
+    {
+      "scene": "offline",
+      "locale": "zh",
+      "value": 93.4,
+      "format": "percent",
+      "labelKey": "householdInternetAccessPercent",
+      "scope": "Taiwan households",
+      "year": 2025,
+      "source": "MODA,Digital Access Survey2025",
+      "url": "https://www-api.moda.gov.tw/File/Get/moda/zh-tw/UtFPqDu90WXGz2h",
+      "note": "114年調查；2026-01-13發布。個人對象為臺灣22縣市12歲以上本國籍人口；個人上網率為曾使用網路，與ITU近3月口徑不同。年齡／性別見附錄4表B-1（PDF第368頁）。家戶連網率分母為戶。"
+    },
+    {
+      "scene": "offline",
+      "locale": "zh",
+      "value": 63.3,
+      "format": "percent",
+      "labelKey": "olderInternetUsersPercent",
+      "scope": "Taiwan residents65+",
+      "year": 2025,
+      "source": "MODA,Digital Access Survey2025",
+      "url": "https://www-api.moda.gov.tw/File/Get/moda/zh-tw/UtFPqDu90WXGz2h",
+      "note": "114年調查；2026-01-13發布。個人對象為臺灣22縣市12歲以上本國籍人口；個人上網率為曾使用網路，與ITU近3月口徑不同。年齡／性別見附錄4表B-1（PDF第368頁）。家戶連網率分母為戶。"
+    },
+    {
+      "scene": "offline",
+      "locale": "zh",
+      "value": 41.4,
+      "format": "percent",
+      "labelKey": "oldestInternetUsersPercent",
+      "scope": "Taiwan residents75+",
+      "year": 2025,
+      "source": "MODA,Digital Access Survey2025",
+      "url": "https://www-api.moda.gov.tw/File/Get/moda/zh-tw/UtFPqDu90WXGz2h",
+      "note": "114年調查；2026-01-13發布。個人對象為臺灣22縣市12歲以上本國籍人口；個人上網率為曾使用網路，與ITU近3月口徑不同。年齡／性別見附錄4表B-1（PDF第368頁）。家戶連網率分母為戶。"
+    },
+    {
+      "scene": "offline",
+      "locale": "zh",
+      "value": 92.5,
+      "format": "percent",
+      "labelKey": "maleEverInternetUsersPercent",
+      "scope": "Taiwan men12+",
+      "year": 2025,
+      "source": "MODA,Digital Access Survey2025",
+      "url": "https://www-api.moda.gov.tw/File/Get/moda/zh-tw/UtFPqDu90WXGz2h",
+      "note": "114年調查；2026-01-13發布。個人對象為臺灣22縣市12歲以上本國籍人口；個人上網率為曾使用網路，與ITU近3月口徑不同。年齡／性別見附錄4表B-1（PDF第368頁）。家戶連網率分母為戶。"
+    },
+    {
+      "scene": "offline",
+      "locale": "zh",
+      "value": 88.2,
+      "format": "percent",
+      "labelKey": "femaleEverInternetUsersPercent",
+      "scope": "Taiwan women12+",
+      "year": 2025,
+      "source": "MODA,Digital Access Survey2025",
+      "url": "https://www-api.moda.gov.tw/File/Get/moda/zh-tw/UtFPqDu90WXGz2h",
+      "note": "114年調查；2026-01-13發布。個人對象為臺灣22縣市12歲以上本國籍人口；個人上網率為曾使用網路，與ITU近3月口徑不同。年齡／性別見附錄4表B-1（PDF第368頁）。家戶連網率分母為戶。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "zh",
+      "value": 1662000,
+      "format": "compact",
+      "labelKey": "idleDwellings",
+      "scope": "Taiwan",
+      "year": 2020,
+      "source": "DGBAS,Population and Housing Census2020 final report",
+      "url": "https://ws.dgbas.gov.tw/001/Upload/463/relfile/11064/230649/0b703c3e-23af-471f-a1f6-555315ca0ce2.pdf",
+      "note": "正式綜合報告，2022-12出版，印刷頁63／PDF第69頁。166.2萬為正式結果，初步結果166.4萬已更新。空閒=偶爾自住+目前未使用；各數以萬宅四捨五入，細項和可有差。不是低度用電住宅，也不是可立即出租宅數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "zh",
+      "value": 18.5,
+      "format": "percent",
+      "labelKey": "idleDwellingPercent",
+      "scope": "Taiwan",
+      "year": 2020,
+      "source": "DGBAS,Population and Housing Census2020 final report",
+      "url": "https://ws.dgbas.gov.tw/001/Upload/463/relfile/11064/230649/0b703c3e-23af-471f-a1f6-555315ca0ce2.pdf",
+      "note": "正式綜合報告，2022-12出版，印刷頁63／PDF第69頁。166.2萬為正式結果，初步結果166.4萬已更新。空閒=偶爾自住+目前未使用；各數以萬宅四捨五入，細項和可有差。不是低度用電住宅，也不是可立即出租宅數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "zh",
+      "value": 1174000,
+      "format": "compact",
+      "labelKey": "currentlyUnusedDwellings",
+      "scope": "Taiwan",
+      "year": 2020,
+      "source": "DGBAS,Population and Housing Census2020 final report",
+      "url": "https://ws.dgbas.gov.tw/001/Upload/463/relfile/11064/230649/0b703c3e-23af-471f-a1f6-555315ca0ce2.pdf",
+      "note": "正式綜合報告，2022-12出版，印刷頁63／PDF第69頁。166.2萬為正式結果，初步結果166.4萬已更新。空閒=偶爾自住+目前未使用；各數以萬宅四捨五入，細項和可有差。不是低度用電住宅，也不是可立即出租宅數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "zh",
+      "value": 13.1,
+      "format": "percent",
+      "labelKey": "currentlyUnusedDwellingPercent",
+      "scope": "Taiwan",
+      "year": 2020,
+      "source": "DGBAS,Population and Housing Census2020 final report",
+      "url": "https://ws.dgbas.gov.tw/001/Upload/463/relfile/11064/230649/0b703c3e-23af-471f-a1f6-555315ca0ce2.pdf",
+      "note": "正式綜合報告，2022-12出版，印刷頁63／PDF第69頁。166.2萬為正式結果，初步結果166.4萬已更新。空閒=偶爾自住+目前未使用；各數以萬宅四捨五入，細項和可有差。不是低度用電住宅，也不是可立即出租宅數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "zh",
+      "value": 489000,
+      "format": "compact",
+      "labelKey": "occasionalOwnUseDwellings",
+      "scope": "Taiwan",
+      "year": 2020,
+      "source": "DGBAS,Population and Housing Census2020 final report",
+      "url": "https://ws.dgbas.gov.tw/001/Upload/463/relfile/11064/230649/0b703c3e-23af-471f-a1f6-555315ca0ce2.pdf",
+      "note": "正式綜合報告，2022-12出版，印刷頁63／PDF第69頁。166.2萬為正式結果，初步結果166.4萬已更新。空閒=偶爾自住+目前未使用；各數以萬宅四捨五入，細項和可有差。不是低度用電住宅，也不是可立即出租宅數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "zh",
+      "value": 102000,
+      "format": "compact",
+      "labelKey": "idleDwellingIncreaseTenYears",
+      "scope": "Taiwan",
+      "year": 2020,
+      "source": "DGBAS,Population and Housing Census2020 final report",
+      "url": "https://ws.dgbas.gov.tw/001/Upload/463/relfile/11064/230649/0b703c3e-23af-471f-a1f6-555315ca0ce2.pdf",
+      "note": "正式綜合報告，2022-12出版，印刷頁63／PDF第69頁。166.2萬為正式結果，初步結果166.4萬已更新。空閒=偶爾自住+目前未使用；各數以萬宅四捨五入，細項和可有差。不是低度用電住宅，也不是可立即出租宅數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 9002000,
+      "format": "compact",
+      "labelKey": "vacantDwellings",
+      "scope": "Japan",
+      "year": 2023,
+      "source": "Statistics Bureau of Japan,Housing and Land Survey2023",
+      "url": "https://www.stat.go.jp/english/info/news/20241030.html",
+      "note": "2024-09公布的基本集計正式結果：900.2萬戶；包含待租、待售、第二住宅與其他空屋。不得當成全部可租供給。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 13.8,
+      "format": "percent",
+      "labelKey": "vacantDwellingPercent",
+      "scope": "Japan",
+      "year": 2023,
+      "source": "Statistics Bureau of Japan,Housing and Land Survey2023",
+      "url": "https://www.stat.go.jp/english/info/news/20241030.html",
+      "note": "同份正式集計空屋／全部住宅；點時調查，非長期棄置住宅率。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 3837328,
+      "format": "compact",
+      "labelKey": "vacantDwellings",
+      "scope": "Spain",
+      "year": "2021-01-01",
+      "source": "INE,Census2021(2023release)",
+      "url": "https://www.ine.es/prensa/censo_2021_jun.pdf",
+      "note": "依2020全年用電紀錄分類：無供電合約或用電低於當地平均住宅住15日的門檻。2023發布值，原稿標暫定；不能等同臺灣低度用電估空屋方法，也不作整個西語圈合計。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 14.4,
+      "format": "percent",
+      "labelKey": "vacantDwellingPercent",
+      "scope": "Spain",
+      "year": "2021-01-01",
+      "source": "INE,Census2021(2023release)",
+      "url": "https://www.ine.es/prensa/censo_2021_jun.pdf",
+      "note": "空屋占全部住宅；與低用電943924戶及偶爾使用2514511戶分開分類。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 2962000,
+      "format": "compact",
+      "labelKey": "vacantDwellings",
+      "scope": "France excluding Mayotte",
+      "year": "2025-01-01",
+      "source": "INSEE,Insee Focus359",
+      "url": "https://www.insee.fr/fr/statistiques/8640662",
+      "note": "2025暫定估計296.2萬；排除Mayotte；vacant含待租售、等待承接／繼承等，不含第二住宅。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 7.7,
+      "format": "percent",
+      "labelKey": "vacantDwellingPercent",
+      "scope": "France excluding Mayotte",
+      "year": "2025-01-01",
+      "source": "INSEE,Insee Focus359",
+      "url": "https://www.insee.fr/fr/statistiques/8640662",
+      "note": "2025暫定估計，空屋／全部住宅；非僅法國本土7.6%，範圍不可混用。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 7.6,
+      "format": "percent",
+      "labelKey": "rentalVacancyPercent",
+      "scope": "United States",
+      "year": "2026Q3",
+      "source": "US Census Bureau,Housing Vacancy Survey",
+      "url": "https://www.census.gov/housing/hvs/current/index.html",
+      "note": "租賃空置率=待租空屋／出租及待租住宅；分母不是全部住宅，不能與各國總空屋率直接比較。2026-10-28發布。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 1.2,
+      "format": "percent",
+      "labelKey": "homeownerVacancyPercent",
+      "scope": "United States",
+      "year": "2026Q3",
+      "source": "US Census Bureau,Housing Vacancy Survey",
+      "url": "https://www.census.gov/housing/hvs/current/index.html",
+      "note": "自有住宅市場空置率，分母為自有已住及待售住宅；與租賃空置率不能相加。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "ja",
+      "value": 9002000,
+      "format": "compact",
+      "labelKey": "vacantDwellings",
+      "scope": "Japan",
+      "year": 2023,
+      "source": "Statistics Bureau of Japan,Housing and Land Survey2023",
+      "url": "https://www.stat.go.jp/english/info/news/20241030.html",
+      "note": "2024-09公布的基本集計正式結果：900.2萬戶；包含待租、待售、第二住宅與其他空屋。不得當成全部可租供給。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "ja",
+      "value": 13.8,
+      "format": "percent",
+      "labelKey": "vacantDwellingPercent",
+      "scope": "Japan",
+      "year": 2023,
+      "source": "Statistics Bureau of Japan,Housing and Land Survey2023",
+      "url": "https://www.stat.go.jp/english/info/news/20241030.html",
+      "note": "同份正式集計空屋／全部住宅；點時調查，非長期棄置住宅率。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "es",
+      "value": 3837328,
+      "format": "compact",
+      "labelKey": "vacantDwellings",
+      "scope": "Spain",
+      "year": "2021-01-01",
+      "source": "INE,Census2021(2023release)",
+      "url": "https://www.ine.es/prensa/censo_2021_jun.pdf",
+      "note": "依2020全年用電紀錄分類：無供電合約或用電低於當地平均住宅住15日的門檻。2023發布值，原稿標暫定；不能等同臺灣低度用電估空屋方法，也不作整個西語圈合計。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "es",
+      "value": 14.4,
+      "format": "percent",
+      "labelKey": "vacantDwellingPercent",
+      "scope": "Spain",
+      "year": "2021-01-01",
+      "source": "INE,Census2021(2023release)",
+      "url": "https://www.ine.es/prensa/censo_2021_jun.pdf",
+      "note": "空屋占全部住宅；與低用電943924戶及偶爾使用2514511戶分開分類。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "fr",
+      "value": 2962000,
+      "format": "compact",
+      "labelKey": "vacantDwellings",
+      "scope": "France excluding Mayotte",
+      "year": "2025-01-01",
+      "source": "INSEE,Insee Focus359",
+      "url": "https://www.insee.fr/fr/statistiques/8640662",
+      "note": "2025暫定估計296.2萬；排除Mayotte；vacant含待租售、等待承接／繼承等，不含第二住宅。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "fr",
+      "value": 7.7,
+      "format": "percent",
+      "labelKey": "vacantDwellingPercent",
+      "scope": "France excluding Mayotte",
+      "year": "2025-01-01",
+      "source": "INSEE,Insee Focus359",
+      "url": "https://www.insee.fr/fr/statistiques/8640662",
+      "note": "2025暫定估計，空屋／全部住宅；非僅法國本土7.6%，範圍不可混用。"
+    },
+    {
+      "scene": "thirst",
+      "locale": "es",
+      "value": 62.68329881823862,
+      "format": "percent",
+      "labelKey": "safeWaterPercent",
+      "scope": "Spanish-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋12/21地區。整個地區人口，不是說該語言的人口；缺失ARG,BOL,CUB,SLV,GNQ,NIC,PAN,URY,VEN。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 12,
+      "memberCount": 21,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "es",
+      "value": 134577275.6220212,
+      "format": "compact",
+      "labelKey": "withoutSafeWaterPeople",
+      "scope": "Spanish-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋12/21地區。整個地區人口，不是說該語言的人口；缺失ARG,BOL,CUB,SLV,GNQ,NIC,PAN,URY,VEN。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 12,
+      "memberCount": 21,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "es",
+      "value": 97.3434818678153,
+      "format": "percent",
+      "labelKey": "basicWaterPercent",
+      "scope": "Spanish-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋18/21地區。整個地區人口，不是說該語言的人口；缺失ARG,GNQ,NIC。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 18,
+      "memberCount": 21,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "es",
+      "value": 11334685.69699508,
+      "format": "compact",
+      "labelKey": "withoutBasicWaterPeople",
+      "scope": "Spanish-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋18/21地區。整個地區人口，不是說該語言的人口；缺失ARG,GNQ,NIC。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 18,
+      "memberCount": 21,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "es",
+      "value": 82.18981110874319,
+      "format": "percent",
+      "labelKey": "internetUsersPercent",
+      "scope": "Spanish-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋20/21地區。整個地區人口，不是說該語言的人口；缺失PRI。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 20,
+      "memberCount": 21,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "es",
+      "value": 85128571.47069049,
+      "format": "compact",
+      "labelKey": "offlinePeople",
+      "scope": "Spanish-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋20/21地區。整個地區人口，不是說該語言的人口；缺失PRI。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 20,
+      "memberCount": 21,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "es",
+      "value": 392848231.5293095,
+      "format": "compact",
+      "labelKey": "onlinePeople",
+      "scope": "Spanish-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋20/21地區。整個地區人口，不是說該語言的人口；缺失PRI。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 20,
+      "memberCount": 21,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "fr",
+      "value": 46.314884577572904,
+      "format": "percent",
+      "labelKey": "safeWaterPercent",
+      "scope": "French-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋16/29地區。整個地區人口，不是說該語言的人口；缺失BFA,BDI,CMR,COM,COG,DJI,GNQ,GAB,GIN,HTI,MLI,NER,RWA。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 16,
+      "memberCount": 29,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "fr",
+      "value": 199719086.15821078,
+      "format": "compact",
+      "labelKey": "withoutSafeWaterPeople",
+      "scope": "French-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋16/29地區。整個地區人口，不是說該語言的人口；缺失BFA,BDI,CMR,COM,COG,DJI,GNQ,GAB,GIN,HTI,MLI,NER,RWA。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 16,
+      "memberCount": 29,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "fr",
+      "value": 68.41710614995243,
+      "format": "percent",
+      "labelKey": "basicWaterPercent",
+      "scope": "French-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋27/29地區。整個地區人口，不是說該語言的人口；缺失COG,GNQ。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 27,
+      "memberCount": 29,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "fr",
+      "value": 169160824.13210386,
+      "format": "compact",
+      "labelKey": "withoutBasicWaterPeople",
+      "scope": "French-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋27/29地區。整個地區人口，不是說該語言的人口；缺失COG,GNQ。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 27,
+      "memberCount": 29,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "fr",
+      "value": 44.26699118757302,
+      "format": "percent",
+      "labelKey": "internetUsersPercent",
+      "scope": "French-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋28/29地區。整個地區人口，不是說該語言的人口；缺失VUT。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 28,
+      "memberCount": 29,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "fr",
+      "value": 302912640.90844166,
+      "format": "compact",
+      "labelKey": "offlinePeople",
+      "scope": "French-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋28/29地區。整個地區人口，不是說該語言的人口；缺失VUT。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 28,
+      "memberCount": 29,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "fr",
+      "value": 240594066.0915583,
+      "format": "compact",
+      "labelKey": "onlinePeople",
+      "scope": "French-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋28/29地區。整個地區人口，不是說該語言的人口；缺失VUT。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 28,
+      "memberCount": 29,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ja",
+      "value": 98.72702420773369,
+      "format": "percent",
+      "labelKey": "safeWaterPercent",
+      "scope": "Japan",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/1地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 1,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ja",
+      "value": 1578176.4612023383,
+      "format": "compact",
+      "labelKey": "withoutSafeWaterPeople",
+      "scope": "Japan",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/1地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 1,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ja",
+      "value": 99.18316796754539,
+      "format": "percent",
+      "labelKey": "basicWaterPercent",
+      "scope": "Japan",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/1地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 1,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ja",
+      "value": 1012670.5426824391,
+      "format": "compact",
+      "labelKey": "withoutBasicWaterPeople",
+      "scope": "Japan",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/1地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 1,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ja",
+      "value": 85.54153081,
+      "format": "percent",
+      "labelKey": "internetUsersPercent",
+      "scope": "Japan",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/1地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 1,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ja",
+      "value": 17924940.819223195,
+      "format": "compact",
+      "labelKey": "offlinePeople",
+      "scope": "Japan",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/1地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 1,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ja",
+      "value": 106050430.1807768,
+      "format": "compact",
+      "labelKey": "onlinePeople",
+      "scope": "Japan",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/1地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 1,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ko",
+      "value": 99.28266945756359,
+      "format": "percent",
+      "labelKey": "safeWaterPercent",
+      "scope": "Korean-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/2地區。整個地區人口，不是說該語言的人口；缺失PRK。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 2,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ko",
+      "value": 371226.19528111815,
+      "format": "compact",
+      "labelKey": "withoutSafeWaterPeople",
+      "scope": "Korean-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/2地區。整個地區人口，不是說該語言的人口；缺失PRK。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 2,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ko",
+      "value": 100.0,
+      "format": "percent",
+      "labelKey": "basicWaterPercent",
+      "scope": "Korean-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/2地區。整個地區人口，不是說該語言的人口；缺失PRK。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 2,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ko",
+      "value": 0.0,
+      "format": "compact",
+      "labelKey": "withoutBasicWaterPeople",
+      "scope": "Korean-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/2地區。整個地區人口，不是說該語言的人口；缺失PRK。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 2,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ko",
+      "value": 97.89563777,
+      "format": "percent",
+      "labelKey": "internetUsersPercent",
+      "scope": "Korean-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/2地區。整個地區人口，不是說該語言的人口；缺失PRK。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 2,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ko",
+      "value": 1089029.8654827476,
+      "format": "compact",
+      "labelKey": "offlinePeople",
+      "scope": "Korean-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/2地區。整個地區人口，不是說該語言的人口；缺失PRK。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 2,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ko",
+      "value": 50662035.13451725,
+      "format": "compact",
+      "labelKey": "onlinePeople",
+      "scope": "Korean-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋1/2地區。整個地區人口，不是說該語言的人口；缺失PRK。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 1,
+      "memberCount": 2,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ar",
+      "value": 75.46613522933234,
+      "format": "percent",
+      "labelKey": "safeWaterPercent",
+      "scope": "Arabic-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋13/22地區。整個地區人口，不是說該語言的人口；缺失COM,DJI,LBY,MRT,SAU,SOM,SDN,SYR,YEM。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 13,
+      "memberCount": 22,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ar",
+      "value": 75567381.51233053,
+      "format": "compact",
+      "labelKey": "withoutSafeWaterPeople",
+      "scope": "Arabic-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋13/22地區。整個地區人口，不是說該語言的人口；缺失COM,DJI,LBY,MRT,SAU,SOM,SDN,SYR,YEM。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 13,
+      "memberCount": 22,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ar",
+      "value": 90.27621095814031,
+      "format": "percent",
+      "labelKey": "basicWaterPercent",
+      "scope": "Arabic-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋22/22地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 22,
+      "memberCount": 22,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "ar",
+      "value": 47900613.129232585,
+      "format": "compact",
+      "labelKey": "withoutBasicWaterPeople",
+      "scope": "Arabic-language geographic group",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋22/22地區。整個地區人口，不是說該語言的人口；缺失無。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 22,
+      "memberCount": 22,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ar",
+      "value": 79.64231707751345,
+      "format": "percent",
+      "labelKey": "internetUsersPercent",
+      "scope": "Arabic-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋18/22地區。整個地區人口，不是說該語言的人口；缺失PSE,SDN,SYR,YEM。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 18,
+      "memberCount": 22,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ar",
+      "value": 75652934.8439458,
+      "format": "compact",
+      "labelKey": "offlinePeople",
+      "scope": "Arabic-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋18/22地區。整個地區人口，不是說該語言的人口；缺失PSE,SDN,SYR,YEM。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 18,
+      "memberCount": 22,
+      "estimated": true
+    },
+    {
+      "scene": "offline",
+      "locale": "ar",
+      "value": 295965658.1560542,
+      "format": "compact",
+      "labelKey": "onlinePeople",
+      "scope": "Arabic-language geographic group",
+      "year": 2024,
+      "source": "ITU via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "note": "自訂地區加權統計；同年2024；涵蓋18/22地區。整個地區人口，不是說該語言的人口；缺失PSE,SDN,SYR,YEM。比例按SP.POP.TOTL加權；人數為比例乘人口的估算，需EST.，不是發布的語言圈總數。",
+      "coverageCount": 18,
+      "memberCount": 22,
+      "estimated": true
+    },
+    {
+      "scene": "thirst",
+      "locale": "en",
+      "value": 695808767.8585248,
+      "format": "compact",
+      "labelKey": "withoutBasicWaterPeople",
+      "scope": "World",
+      "year": 2024,
+      "source": "WHO/UNICEF JMP via World Bank WDI",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "note": "估算=2024總人口8140897523×(1−91.4529231464627%基本飲水普及率)，約6.96億；須標EST.。不把四捨五入的287m+302m+106m當精確總和。",
+      "estimated": true
+    },
+    {
+      "scene": "vacant",
+      "locale": "ko",
+      "value": 1599000,
+      "format": "compact",
+      "labelKey": "unoccupiedCensusDwellings",
+      "scope": "Republic of Korea",
+      "year": "2024-11-01",
+      "source": "Statistics Korea,Population and Housing Census2024",
+      "url": "https://mods.go.kr/boardDownload.es?bid=203&list_no=437767&seq=3",
+      "note": "2025-07-29發布。表50／51，印刷頁71–72，PDF第80–81頁。單位千戶已四捨五入。點時未居住住宅，不是法律定義長期廢棄空屋；159.9萬含46.8萬1989年前建成的住宅。僅南韓國別，非韓語圈總量。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "ko",
+      "value": 8.0,
+      "format": "percent",
+      "labelKey": "unoccupiedCensusDwellingPercent",
+      "scope": "Republic of Korea",
+      "year": "2024-11-01",
+      "source": "Statistics Korea,Population and Housing Census2024",
+      "url": "https://mods.go.kr/boardDownload.es?bid=203&list_no=437767&seq=3",
+      "note": "2025-07-29發布。表50／51，印刷頁71–72，PDF第80–81頁。單位千戶已四捨五入。點時未居住住宅，不是法律定義長期廢棄空屋；159.9萬含46.8萬1989年前建成的住宅。僅南韓國別，非韓語圈總量。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "ko",
+      "value": 468000,
+      "format": "compact",
+      "labelKey": "oldUnoccupiedDwellings",
+      "scope": "Republic of Korea",
+      "year": "2024-11-01",
+      "source": "Statistics Korea,Population and Housing Census2024",
+      "url": "https://mods.go.kr/boardDownload.es?bid=203&list_no=437767&seq=3",
+      "note": "2025-07-29發布。表50／51，印刷頁71–72，PDF第80–81頁。單位千戶已四捨五入。點時未居住住宅，不是法律定義長期廢棄空屋；159.9萬含46.8萬1989年前建成的住宅。僅南韓國別，非韓語圈總量。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 1599000,
+      "format": "compact",
+      "labelKey": "unoccupiedCensusDwellings",
+      "scope": "Republic of Korea",
+      "year": "2024-11-01",
+      "source": "Statistics Korea,Population and Housing Census2024",
+      "url": "https://mods.go.kr/boardDownload.es?bid=203&list_no=437767&seq=3",
+      "note": "2025-07-29發布。表50／51，印刷頁71–72，PDF第80–81頁。單位千戶已四捨五入。點時未居住住宅，不是法律定義長期廢棄空屋；159.9萬含46.8萬1989年前建成的住宅。僅南韓國別，非韓語圈總量。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 8.0,
+      "format": "percent",
+      "labelKey": "unoccupiedCensusDwellingPercent",
+      "scope": "Republic of Korea",
+      "year": "2024-11-01",
+      "source": "Statistics Korea,Population and Housing Census2024",
+      "url": "https://mods.go.kr/boardDownload.es?bid=203&list_no=437767&seq=3",
+      "note": "2025-07-29發布。表50／51，印刷頁71–72，PDF第80–81頁。單位千戶已四捨五入。點時未居住住宅，不是法律定義長期廢棄空屋；159.9萬含46.8萬1989年前建成的住宅。僅南韓國別，非韓語圈總量。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 468000,
+      "format": "compact",
+      "labelKey": "oldUnoccupiedDwellings",
+      "scope": "Republic of Korea",
+      "year": "2024-11-01",
+      "source": "Statistics Korea,Population and Housing Census2024",
+      "url": "https://mods.go.kr/boardDownload.es?bid=203&list_no=437767&seq=3",
+      "note": "2025-07-29發布。表50／51，印刷頁71–72，PDF第80–81頁。單位千戶已四捨五入。點時未居住住宅，不是法律定義長期廢棄空屋；159.9萬含46.8萬1989年前建成的住宅。僅南韓國別，非韓語圈總量。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "ar",
+      "value": 1100000,
+      "format": "compact",
+      "labelKey": "urbanVacantDwellings",
+      "scope": "Morocco urban areas",
+      "year": 2024,
+      "source": "HCP,Morocco RGPH2024 urban housing stock study",
+      "url": "https://www.hcp.ma/Parc-logement-urbain-au-Maroc-selon-les-resultats-du-recensement-general-de-la-population-et-de-l-habitat-de-2024_a4226.html",
+      "note": "2025-12官方研究摘要值約110萬。僅都市區住宅；vacant13.4%與secondary/seasonal15.5%分開分類，不能把後者加作空屋。不是摩洛哥全國或阿語圈總數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "ar",
+      "value": 13.4,
+      "format": "percent",
+      "labelKey": "urbanVacantDwellingPercent",
+      "scope": "Morocco urban areas",
+      "year": 2024,
+      "source": "HCP,Morocco RGPH2024 urban housing stock study",
+      "url": "https://www.hcp.ma/Parc-logement-urbain-au-Maroc-selon-les-resultats-du-recensement-general-de-la-population-et-de-l-habitat-de-2024_a4226.html",
+      "note": "2025-12發布，都市區空屋／都市區全部住宅；第二／季節性住宅另列。不可冒充全國空屋率或阿語圈空屋率。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 1100000,
+      "format": "compact",
+      "labelKey": "urbanVacantDwellings",
+      "scope": "Morocco urban areas",
+      "year": 2024,
+      "source": "HCP,Morocco RGPH2024 urban housing stock study",
+      "url": "https://www.hcp.ma/Parc-logement-urbain-au-Maroc-selon-les-resultats-du-recensement-general-de-la-population-et-de-l-habitat-de-2024_a4226.html",
+      "note": "2025-12官方研究摘要值約110萬。僅都市區住宅；vacant13.4%與secondary/seasonal15.5%分開分類，不能把後者加作空屋。不是摩洛哥全國或阿語圈總數。"
+    },
+    {
+      "scene": "vacant",
+      "locale": "en",
+      "value": 13.4,
+      "format": "percent",
+      "labelKey": "urbanVacantDwellingPercent",
+      "scope": "Morocco urban areas",
+      "year": 2024,
+      "source": "HCP,Morocco RGPH2024 urban housing stock study",
+      "url": "https://www.hcp.ma/Parc-logement-urbain-au-Maroc-selon-les-resultats-du-recensement-general-de-la-population-et-de-l-habitat-de-2024_a4226.html",
+      "note": "2025-12發布，都市區空屋／都市區全部住宅；第二／季節性住宅另列。不可冒充全國空屋率或阿語圈空屋率。"
+    }
+  ],
+  "labelDefinitions": {
+    "unpaidTotalHours": "Average daily unpaid care, housework and volunteering, women15-64; hours/day",
+    "houseworkHours": "Average daily unpaid housework, women15-64; hours/day",
+    "directCareHours": "Average daily unpaid care of family, neighbours or friends, women15-64; hours/day",
+    "volunteerHours": "Average daily volunteering, women15-64; hours/day",
+    "childCareUnder12Hours": "Average daily unpaid care of children under12, across all women15-64 including nonparticipants; hours/day",
+    "olderCare65PlusHours": "Average daily unpaid care of people65+, across all women15-64 including nonparticipants; hours/day",
+    "partneredWomenUnpaidHours": "Average daily unpaid care, housework and volunteering among married/cohabiting women15-64; hours/day",
+    "mortgageBurdenPercent": "Modeled monthly mortgage repayment / median monthly household disposable income; percentage points0-100",
+    "housePriceIncomeRatio": "Median dwelling price / median annual household disposable income; times",
+    "withoutSafeWaterPeople": "Estimated people lacking the service, among covered geographies only",
+    "surfaceWaterPeople": "People drinking untreated surface water",
+    "limitedWaterPeople": "People using an improved source requiring a round trip longer than30 minutes",
+    "unimprovedWaterPeople": "People using unprotected wells or springs",
+    "basicOnlyWaterPeople": "People with basic drinking-water services but not safely managed services",
+    "tapWaterCoveragePercent": "Population served by public tap-water systems; percent",
+    "householdsWithoutTapConnection": "Households not connected to public tap-water systems; households",
+    "waterLeakagePercent": "Water leakage as a share of supplied water in the stated utility area; percent",
+    "annualDomesticWaterM3": "Annual domestic water use; cubic metres/year",
+    "offlinePeople": "Estimated people lacking the service, among covered geographies only",
+    "onlinePeople": "People using the Internet",
+    "internetUsersPercent": "Population-weighted percent among covered geographies",
+    "urbanInternetUsersPercent": "Urban residents using the Internet; percent of urban population",
+    "ruralInternetUsersPercent": "Rural residents using the Internet; percent of rural population",
+    "maleInternetUsersPercent": "Men using the Internet; percent of male population",
+    "femaleInternetUsersPercent": "Women using the Internet; percent of female population",
+    "everInternetUsersPercent": "People12+ who have ever used the Internet; percent",
+    "householdInternetAccessPercent": "Households with an Internet connection; percent of households",
+    "olderInternetUsersPercent": "People65+ who have ever used the Internet; percent",
+    "oldestInternetUsersPercent": "People75+ who have ever used the Internet; percent",
+    "maleEverInternetUsersPercent": "Men12+ who have ever used the Internet; percent",
+    "femaleEverInternetUsersPercent": "Women12+ who have ever used the Internet; percent",
+    "idleDwellings": "Dwellings without usual residents, including occasional own use and currently unused dwellings; dwellings",
+    "idleDwellingPercent": "Idle dwellings divided by all dwellings; percent",
+    "currentlyUnusedDwellings": "Dwellings currently unused during the census, including for rent/sale, renovation and other reasons; dwellings",
+    "currentlyUnusedDwellingPercent": "Currently unused dwellings divided by all dwellings; percent",
+    "occasionalOwnUseDwellings": "Dwellings used occasionally by their owners; dwellings",
+    "idleDwellingIncreaseTenYears": "Increase in idle dwellings between2010 and2020; dwellings",
+    "vacantDwellings": "Country observation only; see note for the national vacancy definition and denominator",
+    "vacantDwellingPercent": "Country observation only; see note for the national vacancy definition and denominator",
+    "rentalVacancyPercent": "Country observation only; see note for the national vacancy definition and denominator",
+    "homeownerVacancyPercent": "Country observation only; see note for the national vacancy definition and denominator",
+    "safeWaterPercent": "Population-weighted percent among covered geographies",
+    "basicWaterPercent": "Population-weighted percent among covered geographies",
+    "withoutBasicWaterPeople": "Estimated people lacking at least basic drinking-water services",
+    "unoccupiedCensusDwellings": "Dwellings classified as unoccupied at the census reference point; dwellings",
+    "unoccupiedCensusDwellingPercent": "Unoccupied census dwellings divided by all dwellings; percent",
+    "oldUnoccupiedDwellings": "Unoccupied dwellings constructed in1989or earlier; dwellings",
+    "urbanVacantDwellings": "Vacant dwellings in urban areas only; approximate dwellings",
+    "urbanVacantDwellingPercent": "Urban vacant dwellings divided by all urban dwellings; percent"
+  },
+  "formatConvention": {
+    "percent": "Values are percentage points0-100, not fractions",
+    "hours": "Hours per day; retain population scope",
+    "ratio": "Times, not percent",
+    "compact": "Absolute count; label definition states people,households,dwellings or cubic metres"
+  },
+  "apiStrategy": {
+    "verifiedYear": 2024,
+    "lastUpdated": "2026-11-11",
+    "endpoints": {
+      "SH.H2O.SMDW.ZS": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.SMDW.ZS?format=json&date=2024&per_page=400",
+      "SH.H2O.BASW.ZS": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&date=2024&per_page=400",
+      "IT.NET.USER.ZS": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&date=2024&per_page=400",
+      "SP.POP.TOTL": "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&date=2024&per_page=400"
+    },
+    "conditions": [
+      "Response is [metadata,rows]; require pages=1,total=rows.length,date=2024,finite numeric value.",
+      "Use explicit groups[locale].members ISO3 set. Never sum World/region/income aggregate rows with countries.",
+      "Both service percentage and population must be present for the SAME year. Missing is not zero.",
+      "Weighted percent=sum(countryPopulation*percent/100)/sum(coveredCountryPopulation)*100.",
+      "Estimated people without=sum(coveredCountryPopulation*(1-percent/100)); retain coverage,member count,year andEST.",
+      "Do not mix ITU2026 global release with2024 WDI group data; show year on each card.",
+      "Water safely managed and public tap-water connections are different concepts.",
+      "No universal comparable World Bank vacant-housing indicator found; VACANT uses named country observations only."
+    ],
+    "aggregationScript": "const wanted=new Set(members.map(m=>m.iso3)); const pop=new Map(popRows.filter(r=>wanted.has(r.countryiso3code)&&r.date===String(year)&&typeof r.value===\"number\").map(r=>[r.countryiso3code,r.value])); const valid=serviceRows.filter(r=>wanted.has(r.countryiso3code)&&r.date===String(year)&&typeof r.value===\"number\"&&pop.has(r.countryiso3code)); const denominator=valid.reduce((s,r)=>s+pop.get(r.countryiso3code),0); const onlineOrServed=valid.reduce((s,r)=>s+pop.get(r.countryiso3code)*r.value/100,0); const coveredPercent=100*onlineOrServed/denominator; const estimatedWithout=denominator-onlineOrServed;"
+  },
+  "apiAudits": {
+    "es": {
+      "SH.H2O.SMDW.ZS": {
+        "year": 2024,
+        "coverageCount": 12,
+        "memberCount": 21,
+        "missingISO3": [
+          "ARG",
+          "BOL",
+          "CUB",
+          "SLV",
+          "GNQ",
+          "NIC",
+          "PAN",
+          "URY",
+          "VEN"
+        ],
+        "coveredPopulation": 360635510,
+        "countryDetails": [
+          {
+            "iso3": "CHL",
+            "iso2": "CL",
+            "name": "Chile",
+            "value": 97.8170551998161,
+            "population": 19764771,
+            "year": 2024
+          },
+          {
+            "iso3": "COL",
+            "iso2": "CO",
+            "name": "Colombia",
+            "value": 74.33929919179,
+            "population": 52886363,
+            "year": 2024
+          },
+          {
+            "iso3": "CRI",
+            "iso2": "CR",
+            "name": "Costa Rica",
+            "value": 80.5000742430698,
+            "population": 5129910,
+            "year": 2024
+          },
+          {
+            "iso3": "DOM",
+            "iso2": "DO",
+            "name": "Dominican Republic",
+            "value": 45.3324070681699,
+            "population": 11427557,
+            "year": 2024
+          },
+          {
+            "iso3": "ECU",
+            "iso2": "EC",
+            "name": "Ecuador",
+            "value": 69.8869997038501,
+            "population": 18135478,
+            "year": 2024
+          },
+          {
+            "iso3": "GTM",
+            "iso2": "GT",
+            "name": "Guatemala",
+            "value": 48.7871950677385,
+            "population": 18406359,
+            "year": 2024
+          },
+          {
+            "iso3": "HND",
+            "iso2": "HN",
+            "name": "Honduras",
+            "value": 65.5162211788382,
+            "population": 10825703,
+            "year": 2024
+          },
+          {
+            "iso3": "MEX",
+            "iso2": "MX",
+            "name": "Mexico",
+            "value": 42.9666311513801,
+            "population": 130861007,
+            "year": 2024
+          },
+          {
+            "iso3": "PRY",
+            "iso2": "PY",
+            "name": "Paraguay",
+            "value": 64.3647197417661,
+            "population": 6929153,
+            "year": 2024
+          },
+          {
+            "iso3": "PER",
+            "iso2": "PE",
+            "name": "Peru",
+            "value": 49.4283962319206,
+            "population": 34217848,
+            "year": 2024
+          },
+          {
+            "iso3": "PRI",
+            "iso2": "PR",
+            "name": "Puerto Rico (US)",
+            "value": 98.9402618391431,
+            "population": 3202521,
+            "year": 2024
+          },
+          {
+            "iso3": "ESP",
+            "iso2": "ES",
+            "name": "Spain",
+            "value": 99.4584646653876,
+            "population": 48848840,
+            "year": 2024
+          }
+        ]
+      },
+      "SH.H2O.BASW.ZS": {
+        "year": 2024,
+        "coverageCount": 18,
+        "memberCount": 21,
+        "missingISO3": [
+          "ARG",
+          "GNQ",
+          "NIC"
+        ],
+        "coveredPopulation": 426674509,
+        "countryDetails": [
+          {
+            "iso3": "BOL",
+            "iso2": "BO",
+            "name": "Bolivia",
+            "value": 93.3877494672031,
+            "population": 12413315,
+            "year": 2024
+          },
+          {
+            "iso3": "CHL",
+            "iso2": "CL",
+            "name": "Chile",
+            "value": 99.0811612150969,
+            "population": 19764771,
+            "year": 2024
+          },
+          {
+            "iso3": "COL",
+            "iso2": "CO",
+            "name": "Colombia",
+            "value": 97.0965711084738,
+            "population": 52886363,
+            "year": 2024
+          },
+          {
+            "iso3": "CRI",
+            "iso2": "CR",
+            "name": "Costa Rica",
+            "value": 99.8154123406248,
+            "population": 5129910,
+            "year": 2024
+          },
+          {
+            "iso3": "CUB",
+            "iso2": "CU",
+            "name": "Cuba",
+            "value": 95.1464064347704,
+            "population": 10979783,
+            "year": 2024
+          },
+          {
+            "iso3": "DOM",
+            "iso2": "DO",
+            "name": "Dominican Republic",
+            "value": 97.4571299883182,
+            "population": 11427557,
+            "year": 2024
+          },
+          {
+            "iso3": "ECU",
+            "iso2": "EC",
+            "name": "Ecuador",
+            "value": 92.0708709697554,
+            "population": 18135478,
+            "year": 2024
+          },
+          {
+            "iso3": "SLV",
+            "iso2": "SV",
+            "name": "El Salvador",
+            "value": 91.6199927341916,
+            "population": 6338193,
+            "year": 2024
+          },
+          {
+            "iso3": "GTM",
+            "iso2": "GT",
+            "name": "Guatemala",
+            "value": 93.1845373918033,
+            "population": 18406359,
+            "year": 2024
+          },
+          {
+            "iso3": "HND",
+            "iso2": "HN",
+            "name": "Honduras",
+            "value": 95.7293716551666,
+            "population": 10825703,
+            "year": 2024
+          },
+          {
+            "iso3": "MEX",
+            "iso2": "MX",
+            "name": "Mexico",
+            "value": 99.5413676283293,
+            "population": 130861007,
+            "year": 2024
+          },
+          {
+            "iso3": "PAN",
+            "iso2": "PA",
+            "name": "Panama",
+            "value": 95.2628238815705,
+            "population": 4515577,
+            "year": 2024
+          },
+          {
+            "iso3": "PRY",
+            "iso2": "PY",
+            "name": "Paraguay",
+            "value": 99.6035956651355,
+            "population": 6929153,
+            "year": 2024
+          },
+          {
+            "iso3": "PER",
+            "iso2": "PE",
+            "name": "Peru",
+            "value": 95.6370823826383,
+            "population": 34217848,
+            "year": 2024
+          },
+          {
+            "iso3": "PRI",
+            "iso2": "PR",
+            "name": "Puerto Rico (US)",
+            "value": 100,
+            "population": 3202521,
+            "year": 2024
+          },
+          {
+            "iso3": "ESP",
+            "iso2": "ES",
+            "name": "Spain",
+            "value": 99.9247001396709,
+            "population": 48848840,
+            "year": 2024
+          },
+          {
+            "iso3": "URY",
+            "iso2": "UY",
+            "name": "Uruguay",
+            "value": 99.6326913879836,
+            "population": 3386588,
+            "year": 2024
+          },
+          {
+            "iso3": "VEN",
+            "iso2": "VE",
+            "name": "Venezuela, RB",
+            "value": 93.3316109894304,
+            "population": 28405543,
+            "year": 2024
+          }
+        ]
+      },
+      "IT.NET.USER.ZS": {
+        "year": 2024,
+        "coverageCount": 20,
+        "memberCount": 21,
+        "missingISO3": [
+          "PRI"
+        ],
+        "coveredPopulation": 477976803,
+        "countryDetails": [
+          {
+            "iso3": "ARG",
+            "iso2": "AR",
+            "name": "Argentina",
+            "value": 89.66715228,
+            "population": 45696159,
+            "year": 2024
+          },
+          {
+            "iso3": "BOL",
+            "iso2": "BO",
+            "name": "Bolivia",
+            "value": 79.70469666,
+            "population": 12413315,
+            "year": 2024
+          },
+          {
+            "iso3": "CHL",
+            "iso2": "CL",
+            "name": "Chile",
+            "value": 95.590243,
+            "population": 19764771,
+            "year": 2024
+          },
+          {
+            "iso3": "COL",
+            "iso2": "CO",
+            "name": "Colombia",
+            "value": 79.34543299,
+            "population": 52886363,
+            "year": 2024
+          },
+          {
+            "iso3": "CRI",
+            "iso2": "CR",
+            "name": "Costa Rica",
+            "value": 87.17019653,
+            "population": 5129910,
+            "year": 2024
+          },
+          {
+            "iso3": "CUB",
+            "iso2": "CU",
+            "name": "Cuba",
+            "value": 70.47699738,
+            "population": 10979783,
+            "year": 2024
+          },
+          {
+            "iso3": "DOM",
+            "iso2": "DO",
+            "name": "Dominican Republic",
+            "value": 91.0022446,
+            "population": 11427557,
+            "year": 2024
+          },
+          {
+            "iso3": "ECU",
+            "iso2": "EC",
+            "name": "Ecuador",
+            "value": 77.17273115,
+            "population": 18135478,
+            "year": 2024
+          },
+          {
+            "iso3": "SLV",
+            "iso2": "SV",
+            "name": "El Salvador",
+            "value": 66.47769928,
+            "population": 6338193,
+            "year": 2024
+          },
+          {
+            "iso3": "GNQ",
+            "iso2": "GQ",
+            "name": "Equatorial Guinea",
+            "value": 63.29930115,
+            "population": 1892516,
+            "year": 2024
+          },
+          {
+            "iso3": "GTM",
+            "iso2": "GT",
+            "name": "Guatemala",
+            "value": 60.22140121,
+            "population": 18406359,
+            "year": 2024
+          },
+          {
+            "iso3": "HND",
+            "iso2": "HN",
+            "name": "Honduras",
+            "value": 58.62269974,
+            "population": 10825703,
+            "year": 2024
+          },
+          {
+            "iso3": "MEX",
+            "iso2": "MX",
+            "name": "Mexico",
+            "value": 83.12233799,
+            "population": 130861007,
+            "year": 2024
+          },
+          {
+            "iso3": "NIC",
+            "iso2": "NI",
+            "name": "Nicaragua",
+            "value": 61.39550018,
+            "population": 6916140,
+            "year": 2024
+          },
+          {
+            "iso3": "PAN",
+            "iso2": "PA",
+            "name": "Panama",
+            "value": 72.77149963,
+            "population": 4515577,
+            "year": 2024
+          },
+          {
+            "iso3": "PRY",
+            "iso2": "PY",
+            "name": "Paraguay",
+            "value": 81.57806793,
+            "population": 6929153,
+            "year": 2024
+          },
+          {
+            "iso3": "PER",
+            "iso2": "PE",
+            "name": "Peru",
+            "value": 81.95705992,
+            "population": 34217848,
+            "year": 2024
+          },
+          {
+            "iso3": "ESP",
+            "iso2": "ES",
+            "name": "Spain",
+            "value": 95.7574516,
+            "population": 48848840,
+            "year": 2024
+          },
+          {
+            "iso3": "URY",
+            "iso2": "UY",
+            "name": "Uruguay",
+            "value": 91.99109007,
+            "population": 3386588,
+            "year": 2024
+          },
+          {
+            "iso3": "VEN",
+            "iso2": "VE",
+            "name": "Venezuela, RB",
+            "value": 76.67890167,
+            "population": 28405543,
+            "year": 2024
+          }
+        ]
+      }
+    },
+    "fr": {
+      "SH.H2O.SMDW.ZS": {
+        "year": 2024,
+        "coverageCount": 16,
+        "memberCount": 29,
+        "missingISO3": [
+          "BFA",
+          "BDI",
+          "CMR",
+          "COM",
+          "COG",
+          "DJI",
+          "GNQ",
+          "GAB",
+          "GIN",
+          "HTI",
+          "MLI",
+          "NER",
+          "RWA"
+        ],
+        "coveredPopulation": 372019478,
+        "countryDetails": [
+          {
+            "iso3": "BEL",
+            "iso2": "BE",
+            "name": "Belgium",
+            "value": 99.5471345182049,
+            "population": 11858610,
+            "year": 2024
+          },
+          {
+            "iso3": "BEN",
+            "iso2": "BJ",
+            "name": "Benin",
+            "value": 17.6968322374867,
+            "population": 14462724,
+            "year": 2024
+          },
+          {
+            "iso3": "CAN",
+            "iso2": "CA",
+            "name": "Canada",
+            "value": 96.890322656349,
+            "population": 41262329,
+            "year": 2024
+          },
+          {
+            "iso3": "CAF",
+            "iso2": "CF",
+            "name": "Central African Republic",
+            "value": 6.21748768966731,
+            "population": 5330690,
+            "year": 2024
+          },
+          {
+            "iso3": "TCD",
+            "iso2": "TD",
+            "name": "Chad",
+            "value": 6.34082647389426,
+            "population": 20299123,
+            "year": 2024
+          },
+          {
+            "iso3": "COD",
+            "iso2": "CD",
+            "name": "Congo, Dem. Rep.",
+            "value": 11.8726481819387,
+            "population": 109276265,
+            "year": 2024
+          },
+          {
+            "iso3": "CIV",
+            "iso2": "CI",
+            "name": "Cote d'Ivoire",
+            "value": 36.4489381559953,
+            "population": 31934230,
+            "year": 2024
+          },
+          {
+            "iso3": "FRA",
+            "iso2": "FR",
+            "name": "France",
+            "value": 99.7127014746794,
+            "population": 68551653,
+            "year": 2024
+          },
+          {
+            "iso3": "LUX",
+            "iso2": "LU",
+            "name": "Luxembourg",
+            "value": 99.6530550152333,
+            "population": 677012,
+            "year": 2024
+          },
+          {
+            "iso3": "MDG",
+            "iso2": "MG",
+            "name": "Madagascar",
+            "value": 22.0559944937861,
+            "population": 31964956,
+            "year": 2024
+          },
+          {
+            "iso3": "MCO",
+            "iso2": "MC",
+            "name": "Monaco",
+            "value": 100,
+            "population": 38631,
+            "year": 2024
+          },
+          {
+            "iso3": "SEN",
+            "iso2": "SN",
+            "name": "Senegal",
+            "value": 27.1931407050582,
+            "population": 18501984,
+            "year": 2024
+          },
+          {
+            "iso3": "SYC",
+            "iso2": "SC",
+            "name": "Seychelles",
+            "value": 64.7022316280556,
+            "population": 121354,
+            "year": 2024
+          },
+          {
+            "iso3": "CHE",
+            "iso2": "CH",
+            "name": "Switzerland",
+            "value": 96.6999968881937,
+            "population": 9005582,
+            "year": 2024
+          },
+          {
+            "iso3": "TGO",
+            "iso2": "TG",
+            "name": "Togo",
+            "value": 20.5232352790187,
+            "population": 8406558,
+            "year": 2024
+          },
+          {
+            "iso3": "VUT",
+            "iso2": "VU",
+            "name": "Vanuatu",
+            "value": 19.1970839884387,
+            "population": 327777,
+            "year": 2024
+          }
+        ]
+      },
+      "SH.H2O.BASW.ZS": {
+        "year": 2024,
+        "coverageCount": 27,
+        "memberCount": 29,
+        "missingISO3": [
+          "COG",
+          "GNQ"
+        ],
+        "coveredPopulation": 535609007,
+        "countryDetails": [
+          {
+            "iso3": "BEL",
+            "iso2": "BE",
+            "name": "Belgium",
+            "value": 100,
+            "population": 11858610,
+            "year": 2024
+          },
+          {
+            "iso3": "BEN",
+            "iso2": "BJ",
+            "name": "Benin",
+            "value": 69.5868397867067,
+            "population": 14462724,
+            "year": 2024
+          },
+          {
+            "iso3": "BFA",
+            "iso2": "BF",
+            "name": "Burkina Faso",
+            "value": 49.9986600107497,
+            "population": 23548781,
+            "year": 2024
+          },
+          {
+            "iso3": "BDI",
+            "iso2": "BI",
+            "name": "Burundi",
+            "value": 65.9191041847553,
+            "population": 14047786,
+            "year": 2024
+          },
+          {
+            "iso3": "CMR",
+            "iso2": "CM",
+            "name": "Cameroon",
+            "value": 71.410178711283,
+            "population": 29123744,
+            "year": 2024
+          },
+          {
+            "iso3": "CAN",
+            "iso2": "CA",
+            "name": "Canada",
+            "value": 98.2902608624259,
+            "population": 41262329,
+            "year": 2024
+          },
+          {
+            "iso3": "CAF",
+            "iso2": "CF",
+            "name": "Central African Republic",
+            "value": 36.5040268237207,
+            "population": 5330690,
+            "year": 2024
+          },
+          {
+            "iso3": "TCD",
+            "iso2": "TD",
+            "name": "Chad",
+            "value": 52.2090525523694,
+            "population": 20299123,
+            "year": 2024
+          },
+          {
+            "iso3": "COM",
+            "iso2": "KM",
+            "name": "Comoros",
+            "value": 85.0539278589302,
+            "population": 866628,
+            "year": 2024
+          },
+          {
+            "iso3": "COD",
+            "iso2": "CD",
+            "name": "Congo, Dem. Rep.",
+            "value": 35.6813611952254,
+            "population": 109276265,
+            "year": 2024
+          },
+          {
+            "iso3": "CIV",
+            "iso2": "CI",
+            "name": "Cote d'Ivoire",
+            "value": 77.2470593822361,
+            "population": 31934230,
+            "year": 2024
+          },
+          {
+            "iso3": "DJI",
+            "iso2": "DJ",
+            "name": "Djibouti",
+            "value": 79.661532568521,
+            "population": 1168722,
+            "year": 2024
+          },
+          {
+            "iso3": "FRA",
+            "iso2": "FR",
+            "name": "France",
+            "value": 99.9999974759961,
+            "population": 68551653,
+            "year": 2024
+          },
+          {
+            "iso3": "GAB",
+            "iso2": "GA",
+            "name": "Gabon",
+            "value": 88.5995009085574,
+            "population": 2538952,
+            "year": 2024
+          },
+          {
+            "iso3": "GIN",
+            "iso2": "GN",
+            "name": "Guinea",
+            "value": 74.1924841600776,
+            "population": 14754785,
+            "year": 2024
+          },
+          {
+            "iso3": "HTI",
+            "iso2": "HT",
+            "name": "Haiti",
+            "value": 73.3157500565915,
+            "population": 11772557,
+            "year": 2024
+          },
+          {
+            "iso3": "LUX",
+            "iso2": "LU",
+            "name": "Luxembourg",
+            "value": 100,
+            "population": 677012,
+            "year": 2024
+          },
+          {
+            "iso3": "MDG",
+            "iso2": "MG",
+            "name": "Madagascar",
+            "value": 55.3389608321256,
+            "population": 31964956,
+            "year": 2024
+          },
+          {
+            "iso3": "MLI",
+            "iso2": "ML",
+            "name": "Mali",
+            "value": 86.3633567815443,
+            "population": 24478595,
+            "year": 2024
+          },
+          {
+            "iso3": "MCO",
+            "iso2": "MC",
+            "name": "Monaco",
+            "value": 100,
+            "population": 38631,
+            "year": 2024
+          },
+          {
+            "iso3": "NER",
+            "iso2": "NE",
+            "name": "Niger",
+            "value": 53.4274656286176,
+            "population": 27032412,
+            "year": 2024
+          },
+          {
+            "iso3": "RWA",
+            "iso2": "RW",
+            "name": "Rwanda",
+            "value": 61.392176021167,
+            "population": 14256567,
+            "year": 2024
+          },
+          {
+            "iso3": "SEN",
+            "iso2": "SN",
+            "name": "Senegal",
+            "value": 88.0435670438381,
+            "population": 18501984,
+            "year": 2024
+          },
+          {
+            "iso3": "SYC",
+            "iso2": "SC",
+            "name": "Seychelles",
+            "value": 97.7273290215423,
+            "population": 121354,
+            "year": 2024
+          },
+          {
+            "iso3": "CHE",
+            "iso2": "CH",
+            "name": "Switzerland",
+            "value": 99.9999967819997,
+            "population": 9005582,
+            "year": 2024
+          },
+          {
+            "iso3": "TGO",
+            "iso2": "TG",
+            "name": "Togo",
+            "value": 64.7862455498292,
+            "population": 8406558,
+            "year": 2024
+          },
+          {
+            "iso3": "VUT",
+            "iso2": "VU",
+            "name": "Vanuatu",
+            "value": 87.1200605921327,
+            "population": 327777,
+            "year": 2024
+          }
+        ]
+      },
+      "IT.NET.USER.ZS": {
+        "year": 2024,
+        "coverageCount": 28,
+        "memberCount": 29,
+        "missingISO3": [
+          "VUT"
+        ],
+        "coveredPopulation": 543506707,
+        "countryDetails": [
+          {
+            "iso3": "BEL",
+            "iso2": "BE",
+            "name": "Belgium",
+            "value": 95.77579144,
+            "population": 11858610,
+            "year": 2024
+          },
+          {
+            "iso3": "BEN",
+            "iso2": "BJ",
+            "name": "Benin",
+            "value": 33.98379898,
+            "population": 14462724,
+            "year": 2024
+          },
+          {
+            "iso3": "BFA",
+            "iso2": "BF",
+            "name": "Burkina Faso",
+            "value": 28.25270081,
+            "population": 23548781,
+            "year": 2024
+          },
+          {
+            "iso3": "BDI",
+            "iso2": "BI",
+            "name": "Burundi",
+            "value": 8.595999718,
+            "population": 14047786,
+            "year": 2024
+          },
+          {
+            "iso3": "CMR",
+            "iso2": "CM",
+            "name": "Cameroon",
+            "value": 46.25880051,
+            "population": 29123744,
+            "year": 2024
+          },
+          {
+            "iso3": "CAN",
+            "iso2": "CA",
+            "name": "Canada",
+            "value": 94.353302,
+            "population": 41262329,
+            "year": 2024
+          },
+          {
+            "iso3": "CAF",
+            "iso2": "CF",
+            "name": "Central African Republic",
+            "value": 13.78250027,
+            "population": 5330690,
+            "year": 2024
+          },
+          {
+            "iso3": "TCD",
+            "iso2": "TD",
+            "name": "Chad",
+            "value": 12.62689972,
+            "population": 20299123,
+            "year": 2024
+          },
+          {
+            "iso3": "COM",
+            "iso2": "KM",
+            "name": "Comoros",
+            "value": 32.51750183,
+            "population": 866628,
+            "year": 2024
+          },
+          {
+            "iso3": "COG",
+            "iso2": "CG",
+            "name": "Congo, Rep.",
+            "value": 47.25159836,
+            "population": 6332961,
+            "year": 2024
+          },
+          {
+            "iso3": "COD",
+            "iso2": "CD",
+            "name": "Congo, Dem. Rep.",
+            "value": 19.67350006,
+            "population": 109276265,
+            "year": 2024
+          },
+          {
+            "iso3": "CIV",
+            "iso2": "CI",
+            "name": "Cote d'Ivoire",
+            "value": 41.43219902,
+            "population": 31934230,
+            "year": 2024
+          },
+          {
+            "iso3": "DJI",
+            "iso2": "DJ",
+            "name": "Djibouti",
+            "value": 65.29889679,
+            "population": 1168722,
+            "year": 2024
+          },
+          {
+            "iso3": "GNQ",
+            "iso2": "GQ",
+            "name": "Equatorial Guinea",
+            "value": 63.29930115,
+            "population": 1892516,
+            "year": 2024
+          },
+          {
+            "iso3": "FRA",
+            "iso2": "FR",
+            "name": "France",
+            "value": 88.65381638,
+            "population": 68551653,
+            "year": 2024
+          },
+          {
+            "iso3": "GAB",
+            "iso2": "GA",
+            "name": "Gabon",
+            "value": 68.72090149,
+            "population": 2538952,
+            "year": 2024
+          },
+          {
+            "iso3": "GIN",
+            "iso2": "GN",
+            "name": "Guinea",
+            "value": 33.30469894,
+            "population": 14754785,
+            "year": 2024
+          },
+          {
+            "iso3": "HTI",
+            "iso2": "HT",
+            "name": "Haiti",
+            "value": 47.8614006,
+            "population": 11772557,
+            "year": 2024
+          },
+          {
+            "iso3": "LUX",
+            "iso2": "LU",
+            "name": "Luxembourg",
+            "value": 98.7606147,
+            "population": 677012,
+            "year": 2024
+          },
+          {
+            "iso3": "MDG",
+            "iso2": "MG",
+            "name": "Madagascar",
+            "value": 18.67790031,
+            "population": 31964956,
+            "year": 2024
+          },
+          {
+            "iso3": "MLI",
+            "iso2": "ML",
+            "name": "Mali",
+            "value": 36.80149841,
+            "population": 24478595,
+            "year": 2024
+          },
+          {
+            "iso3": "MCO",
+            "iso2": "MC",
+            "name": "Monaco",
+            "value": 99.04489899,
+            "population": 38631,
+            "year": 2024
+          },
+          {
+            "iso3": "NER",
+            "iso2": "NE",
+            "name": "Niger",
+            "value": 15.55760002,
+            "population": 27032412,
+            "year": 2024
+          },
+          {
+            "iso3": "RWA",
+            "iso2": "RW",
+            "name": "Rwanda",
+            "value": 31.70330048,
+            "population": 14256567,
+            "year": 2024
+          },
+          {
+            "iso3": "SEN",
+            "iso2": "SN",
+            "name": "Senegal",
+            "value": 60.11780167,
+            "population": 18501984,
+            "year": 2024
+          },
+          {
+            "iso3": "SYC",
+            "iso2": "SC",
+            "name": "Seychelles",
+            "value": 87.81800079,
+            "population": 121354,
+            "year": 2024
+          },
+          {
+            "iso3": "CHE",
+            "iso2": "CH",
+            "name": "Switzerland",
+            "value": 97.3443985,
+            "population": 9005582,
+            "year": 2024
+          },
+          {
+            "iso3": "TGO",
+            "iso2": "TG",
+            "name": "Togo",
+            "value": 39.48320007,
+            "population": 8406558,
+            "year": 2024
+          }
+        ]
+      }
+    },
+    "ja": {
+      "SH.H2O.SMDW.ZS": {
+        "year": 2024,
+        "coverageCount": 1,
+        "memberCount": 1,
+        "missingISO3": [],
+        "coveredPopulation": 123975371,
+        "countryDetails": [
+          {
+            "iso3": "JPN",
+            "iso2": "JP",
+            "name": "Japan",
+            "value": 98.7270242077337,
+            "population": 123975371,
+            "year": 2024
+          }
+        ]
+      },
+      "SH.H2O.BASW.ZS": {
+        "year": 2024,
+        "coverageCount": 1,
+        "memberCount": 1,
+        "missingISO3": [],
+        "coveredPopulation": 123975371,
+        "countryDetails": [
+          {
+            "iso3": "JPN",
+            "iso2": "JP",
+            "name": "Japan",
+            "value": 99.1831679675454,
+            "population": 123975371,
+            "year": 2024
+          }
+        ]
+      },
+      "IT.NET.USER.ZS": {
+        "year": 2024,
+        "coverageCount": 1,
+        "memberCount": 1,
+        "missingISO3": [],
+        "coveredPopulation": 123975371,
+        "countryDetails": [
+          {
+            "iso3": "JPN",
+            "iso2": "JP",
+            "name": "Japan",
+            "value": 85.54153081,
+            "population": 123975371,
+            "year": 2024
+          }
+        ]
+      }
+    },
+    "ko": {
+      "SH.H2O.SMDW.ZS": {
+        "year": 2024,
+        "coverageCount": 1,
+        "memberCount": 2,
+        "missingISO3": [
+          "PRK"
+        ],
+        "coveredPopulation": 51751065,
+        "countryDetails": [
+          {
+            "iso3": "KOR",
+            "iso2": "KR",
+            "name": "Korea, Rep.",
+            "value": 99.2826694575636,
+            "population": 51751065,
+            "year": 2024
+          }
+        ]
+      },
+      "SH.H2O.BASW.ZS": {
+        "year": 2024,
+        "coverageCount": 1,
+        "memberCount": 2,
+        "missingISO3": [
+          "PRK"
+        ],
+        "coveredPopulation": 51751065,
+        "countryDetails": [
+          {
+            "iso3": "KOR",
+            "iso2": "KR",
+            "name": "Korea, Rep.",
+            "value": 100,
+            "population": 51751065,
+            "year": 2024
+          }
+        ]
+      },
+      "IT.NET.USER.ZS": {
+        "year": 2024,
+        "coverageCount": 1,
+        "memberCount": 2,
+        "missingISO3": [
+          "PRK"
+        ],
+        "coveredPopulation": 51751065,
+        "countryDetails": [
+          {
+            "iso3": "KOR",
+            "iso2": "KR",
+            "name": "Korea, Rep.",
+            "value": 97.89563777,
+            "population": 51751065,
+            "year": 2024
+          }
+        ]
+      }
+    },
+    "ar": {
+      "SH.H2O.SMDW.ZS": {
+        "year": 2024,
+        "coverageCount": 13,
+        "memberCount": 22,
+        "missingISO3": [
+          "COM",
+          "DJI",
+          "LBY",
+          "MRT",
+          "SAU",
+          "SOM",
+          "SDN",
+          "SYR",
+          "YEM"
+        ],
+        "coveredPopulation": 308012546,
+        "countryDetails": [
+          {
+            "iso3": "DZA",
+            "iso2": "DZ",
+            "name": "Algeria",
+            "value": 69.0291825248964,
+            "population": 46814308,
+            "year": 2024
+          },
+          {
+            "iso3": "BHR",
+            "iso2": "BH",
+            "name": "Bahrain",
+            "value": 98.9039755631804,
+            "population": 1588670,
+            "year": 2024
+          },
+          {
+            "iso3": "EGY",
+            "iso2": "EG",
+            "name": "Egypt, Arab Rep.",
+            "value": 78.9401588327765,
+            "population": 116538258,
+            "year": 2024
+          },
+          {
+            "iso3": "IRQ",
+            "iso2": "IQ",
+            "name": "Iraq",
+            "value": 59.8272461307615,
+            "population": 46042015,
+            "year": 2024
+          },
+          {
+            "iso3": "JOR",
+            "iso2": "JO",
+            "name": "Jordan",
+            "value": 88.9502985282712,
+            "population": 11552876,
+            "year": 2024
+          },
+          {
+            "iso3": "KWT",
+            "iso2": "KW",
+            "name": "Kuwait",
+            "value": 100,
+            "population": 4897263,
+            "year": 2024
+          },
+          {
+            "iso3": "LBN",
+            "iso2": "LB",
+            "name": "Lebanon",
+            "value": 47.7,
+            "population": 5805962,
+            "year": 2024
+          },
+          {
+            "iso3": "MAR",
+            "iso2": "MA",
+            "name": "Morocco",
+            "value": 79.9818072279602,
+            "population": 38081173,
+            "year": 2024
+          },
+          {
+            "iso3": "OMN",
+            "iso2": "OM",
+            "name": "Oman",
+            "value": 91.1011744135751,
+            "population": 5281538,
+            "year": 2024
+          },
+          {
+            "iso3": "PSE",
+            "iso2": "PS",
+            "name": "West Bank and Gaza",
+            "value": 80.6420172046077,
+            "population": 5289152,
+            "year": 2024
+          },
+          {
+            "iso3": "QAT",
+            "iso2": "QA",
+            "name": "Qatar",
+            "value": 95.345241877961,
+            "population": 2857822,
+            "year": 2024
+          },
+          {
+            "iso3": "TUN",
+            "iso2": "TN",
+            "name": "Tunisia",
+            "value": 64.9781072145301,
+            "population": 12277109,
+            "year": 2024
+          },
+          {
+            "iso3": "ARE",
+            "iso2": "AE",
+            "name": "United Arab Emirates",
+            "value": 98.6413172332089,
+            "population": 10986400,
+            "year": 2024
+          }
+        ]
+      },
+      "SH.H2O.BASW.ZS": {
+        "year": 2024,
+        "coverageCount": 22,
+        "memberCount": 22,
+        "missingISO3": [],
+        "coveredPopulation": 492612632,
+        "countryDetails": [
+          {
+            "iso3": "DZA",
+            "iso2": "DZ",
+            "name": "Algeria",
+            "value": 92.4200285933986,
+            "population": 46814308,
+            "year": 2024
+          },
+          {
+            "iso3": "BHR",
+            "iso2": "BH",
+            "name": "Bahrain",
+            "value": 99.9198990209829,
+            "population": 1588670,
+            "year": 2024
+          },
+          {
+            "iso3": "COM",
+            "iso2": "KM",
+            "name": "Comoros",
+            "value": 85.0539278589302,
+            "population": 866628,
+            "year": 2024
+          },
+          {
+            "iso3": "DJI",
+            "iso2": "DJ",
+            "name": "Djibouti",
+            "value": 79.661532568521,
+            "population": 1168722,
+            "year": 2024
+          },
+          {
+            "iso3": "EGY",
+            "iso2": "EG",
+            "name": "Egypt, Arab Rep.",
+            "value": 97.2982426280194,
+            "population": 116538258,
+            "year": 2024
+          },
+          {
+            "iso3": "IRQ",
+            "iso2": "IQ",
+            "name": "Iraq",
+            "value": 98.4076938287767,
+            "population": 46042015,
+            "year": 2024
+          },
+          {
+            "iso3": "JOR",
+            "iso2": "JO",
+            "name": "Jordan",
+            "value": 99.2861089236717,
+            "population": 11552876,
+            "year": 2024
+          },
+          {
+            "iso3": "KWT",
+            "iso2": "KW",
+            "name": "Kuwait",
+            "value": 100,
+            "population": 4897263,
+            "year": 2024
+          },
+          {
+            "iso3": "LBN",
+            "iso2": "LB",
+            "name": "Lebanon",
+            "value": 92.6,
+            "population": 5805962,
+            "year": 2024
+          },
+          {
+            "iso3": "LBY",
+            "iso2": "LY",
+            "name": "Libya",
+            "value": 96.3545440861619,
+            "population": 7381023,
+            "year": 2024
+          },
+          {
+            "iso3": "MRT",
+            "iso2": "MR",
+            "name": "Mauritania",
+            "value": 77.2846491375388,
+            "population": 5169395,
+            "year": 2024
+          },
+          {
+            "iso3": "MAR",
+            "iso2": "MA",
+            "name": "Morocco",
+            "value": 92.2120267209653,
+            "population": 38081173,
+            "year": 2024
+          },
+          {
+            "iso3": "OMN",
+            "iso2": "OM",
+            "name": "Oman",
+            "value": 92.6702187093673,
+            "population": 5281538,
+            "year": 2024
+          },
+          {
+            "iso3": "PSE",
+            "iso2": "PS",
+            "name": "West Bank and Gaza",
+            "value": 98.7717073984261,
+            "population": 5289152,
+            "year": 2024
+          },
+          {
+            "iso3": "QAT",
+            "iso2": "QA",
+            "name": "Qatar",
+            "value": 99.9889721417312,
+            "population": 2857822,
+            "year": 2024
+          },
+          {
+            "iso3": "SAU",
+            "iso2": "SA",
+            "name": "Saudi Arabia",
+            "value": 99.0407817713525,
+            "population": 35300280,
+            "year": 2024
+          },
+          {
+            "iso3": "SOM",
+            "iso2": "SO",
+            "name": "Somalia, Fed. Rep.",
+            "value": 75.2947964571377,
+            "population": 19009151,
+            "year": 2024
+          },
+          {
+            "iso3": "SDN",
+            "iso2": "SD",
+            "name": "Sudan",
+            "value": 64.8917129502851,
+            "population": 50448963,
+            "year": 2024
+          },
+          {
+            "iso3": "SYR",
+            "iso2": "SY",
+            "name": "Syrian Arab Republic",
+            "value": 94.1259941580026,
+            "population": 24672760,
+            "year": 2024
+          },
+          {
+            "iso3": "TUN",
+            "iso2": "TN",
+            "name": "Tunisia",
+            "value": 96.7327873288014,
+            "population": 12277109,
+            "year": 2024
+          },
+          {
+            "iso3": "ARE",
+            "iso2": "AE",
+            "name": "United Arab Emirates",
+            "value": 100,
+            "population": 10986400,
+            "year": 2024
+          },
+          {
+            "iso3": "YEM",
+            "iso2": "YE",
+            "name": "Yemen, Rep.",
+            "value": 75.0357620960457,
+            "population": 40583164,
+            "year": 2024
+          }
+        ]
+      },
+      "IT.NET.USER.ZS": {
+        "year": 2024,
+        "coverageCount": 18,
+        "memberCount": 22,
+        "missingISO3": [
+          "PSE",
+          "SDN",
+          "SYR",
+          "YEM"
+        ],
+        "coveredPopulation": 371618593,
+        "countryDetails": [
+          {
+            "iso3": "DZA",
+            "iso2": "DZ",
+            "name": "Algeria",
+            "value": 77.4178009,
+            "population": 46814308,
+            "year": 2024
+          },
+          {
+            "iso3": "BHR",
+            "iso2": "BH",
+            "name": "Bahrain",
+            "value": 100,
+            "population": 1588670,
+            "year": 2024
+          },
+          {
+            "iso3": "COM",
+            "iso2": "KM",
+            "name": "Comoros",
+            "value": 32.51750183,
+            "population": 866628,
+            "year": 2024
+          },
+          {
+            "iso3": "DJI",
+            "iso2": "DJ",
+            "name": "Djibouti",
+            "value": 65.29889679,
+            "population": 1168722,
+            "year": 2024
+          },
+          {
+            "iso3": "EGY",
+            "iso2": "EG",
+            "name": "Egypt, Arab Rep.",
+            "value": 74.64839935,
+            "population": 116538258,
+            "year": 2024
+          },
+          {
+            "iso3": "IRQ",
+            "iso2": "IQ",
+            "name": "Iraq",
+            "value": 81.47450256,
+            "population": 46042015,
+            "year": 2024
+          },
+          {
+            "iso3": "JOR",
+            "iso2": "JO",
+            "name": "Jordan",
+            "value": 95.62244985,
+            "population": 11552876,
+            "year": 2024
+          },
+          {
+            "iso3": "KWT",
+            "iso2": "KW",
+            "name": "Kuwait",
+            "value": 99.74729919,
+            "population": 4897263,
+            "year": 2024
+          },
+          {
+            "iso3": "LBN",
+            "iso2": "LB",
+            "name": "Lebanon",
+            "value": 80.63400269,
+            "population": 5805962,
+            "year": 2024
+          },
+          {
+            "iso3": "LBY",
+            "iso2": "LY",
+            "name": "Libya",
+            "value": 81.95449829,
+            "population": 7381023,
+            "year": 2024
+          },
+          {
+            "iso3": "MRT",
+            "iso2": "MR",
+            "name": "Mauritania",
+            "value": 45.77939987,
+            "population": 5169395,
+            "year": 2024
+          },
+          {
+            "iso3": "MAR",
+            "iso2": "MA",
+            "name": "Morocco",
+            "value": 91.2,
+            "population": 38081173,
+            "year": 2024
+          },
+          {
+            "iso3": "OMN",
+            "iso2": "OM",
+            "name": "Oman",
+            "value": 95.25174678,
+            "population": 5281538,
+            "year": 2024
+          },
+          {
+            "iso3": "QAT",
+            "iso2": "QA",
+            "name": "Qatar",
+            "value": 98.08540344,
+            "population": 2857822,
+            "year": 2024
+          },
+          {
+            "iso3": "SAU",
+            "iso2": "SA",
+            "name": "Saudi Arabia",
+            "value": 100,
+            "population": 35300280,
+            "year": 2024
+          },
+          {
+            "iso3": "SOM",
+            "iso2": "SO",
+            "name": "Somalia, Fed. Rep.",
+            "value": 27.94020081,
+            "population": 19009151,
+            "year": 2024
+          },
+          {
+            "iso3": "TUN",
+            "iso2": "TN",
+            "name": "Tunisia",
+            "value": 76.5,
+            "population": 12277109,
+            "year": 2024
+          },
+          {
+            "iso3": "ARE",
+            "iso2": "AE",
+            "name": "United Arab Emirates",
+            "value": 100,
+            "population": 10986400,
+            "year": 2024
+          }
+        ]
+      }
+    }
+  },
+  "missing": [
+    "No defensible global vacant-dwelling total; English VACANT shows named country observations.",
+    "No directly comparable whole-language-region vacant stock; do not relabel national figures as full language groups.",
+    "Taiwan tap-water metrics do not identify exact JMP safely-managed access; no synthetic Taiwan JMP value supplied.",
+    "Egypt2017 primary documentation confirms separate closed/vacant/unfinished categories, but no category total has been primary-source verified in this pass. Morocco urban-only RGPH2024 observations supply Arabic VACANT cards instead."
+  ]
+}

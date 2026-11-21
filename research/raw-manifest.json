@@ -1,0 +1,54 @@
+{
+  "korea-housing-source.html": {
+    "bytes": 81873,
+    "sha256": "d0e11639ad8ae09bf040d517e83e0803ec201f3c383edbab42fe5f9872047eb7"
+  },
+  "taiwan-ghg-source.html": {
+    "bytes": 102403,
+    "sha256": "2f958b26a79a7a7d54d3bde90ea146628c0b2679010a659c4ef2025674b13257"
+  },
+  "taiwan-housing-affordability-source.html": {
+    "bytes": 118511,
+    "sha256": "9ce1008c223471fd3f362f2bef71f172aad609af8d115c7ea3c9dbd935523a4f"
+  },
+  "taiwan-living-space-source.html": {
+    "bytes": 65671,
+    "sha256": "9c26988245942ee371a6d1587e64be22e4c923bd151dcd21396a568a35d4c4b3"
+  },
+  "un-care.json": {
+    "bytes": 2791114,
+    "sha256": "df4caa2ec05119128b507cea0151502721f88121028893eb61d82601b7408e0b"
+  },
+  "un-inadequate-housing.json": {
+    "bytes": 3506519,
+    "sha256": "9b82ecc548f31e297a914a07be63dbac97bed0d6e54eeb486337ca1fe19496c0"
+  },
+  "un-slum.json": {
+    "bytes": 1626733,
+    "sha256": "ded5077cccb9030027f8560742bcdee358d0bb82a4e5e849c6166177f01d33a4"
+  },
+  "wb-co2-2024.json": {
+    "bytes": 68590,
+    "sha256": "650b680a9c682fb17179c0b6dd9ee162375f6bd4f852ced1df98868c0cef93dd"
+  },
+  "wb-female-population-2024.json": {
+    "bytes": 55389,
+    "sha256": "18ce48597857f923ebad7b8eb6a4a91f35591ea162c35318081cfd12a0c4a8a9"
+  },
+  "wb-female-under15-2024.json": {
+    "bytes": 57880,
+    "sha256": "f389472f47fcfe14ed2cb4ecd974f1eca96b3e07ce30eb5e08b7ed67ace0e21d"
+  },
+  "wb-male-population-2024.json": {
+    "bytes": 54857,
+    "sha256": "ee33c9c54234e67e0328bbd7f6158e5a9b585ccc43651c9d6a43d8b44665786f"
+  },
+  "wb-male-under15-2024.json": {
+    "bytes": 57354,
+    "sha256": "3a1a5ff739b6ad442427ce4ca8d0014e74a22c1ac3cd95f4a75aef7e292f0c7d"
+  },
+  "wb-urban-2024.json": {
+    "bytes": 53271,
+    "sha256": "0bdb32b58ca9e3e9954464c9ac0c948b66e2487655c23548e812dd49221aa470"
+  }
+}

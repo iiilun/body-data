@@ -1,0 +1,799 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-Hant-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8;" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="google-site-verification" content="_09VD5TX06YF79guSzfsrCN5hvA3xqmxYeMRlqpdWsU" />
+    <meta name="msvalidate.01" content="FCDA81CDC31404AAD8FA931021E72C06" />
+
+    <meta name="generator" content="中華民國內政部不動產資訊平台" />
+    <meta name="DC.Title" content="中華民國內政部不動產資訊平台" />
+    <meta name="DC.Creator" content="內政部國土管理署" />
+    <meta name="DC.Subject" content="中華民國內政部不動產資訊平台" />
+    <meta name="DC.Description" content="提供多元化之住宅及不動產資訊，包含住宅及不動產相關法規、政策、統計資訊與住宅補貼政策宣導等相關訊息" />
+    <meta name="DC.Contributor" content="內政部國土管理署" />
+    <meta name="DC.Type" content="新聞" />
+    <meta name="DC.Format" content="text" />
+    <meta name="DC.Source" content="內政部國土管理署" />
+    <meta name="DC.Language" content="中文" />
+    <meta name="DC.Coverage" content="100/2/25" />
+    <meta name="DC.Publisher" content="內政部國土管理署" />
+    <meta name="DC.Date" content="2016/11/29" />
+    <meta name="DC.Identifier" content="301020000G" />
+    <meta name="DC.Relation" content="關聯" />
+    <meta name="DC.Rights" content="內政部國土管理署" />
+    <meta name="Category.Theme" content="150" />
+    <meta name="Category.Cake" content="860" />
+    <meta name="Category.Service" content="I40" />
+
+                <title>房價負擔能力統計|內政部不動產資訊平台</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YYZL0GV9S5" crossorigin="anonymous" ></script>
+    <script nonce="M0xQRmRvT1FxczE3YzZjbTlCN3Q=">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-YYZL0GV9S5');
+    </script>
+
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css?v=MBffSnbbXwHCuZtgPYiwMQbfE7z-GOZ7fBPCNB06Z98" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/lib/jquery-ui/jquery-ui.min.css?v=Els0hoF6_l1WxcZEDh4lQsp7EqyeeYXMHCWyv6SdmX0" />
+    <link rel="stylesheet" href="/lib/fontawesome5.15.3/css/all.css?v=5a0xpHkTzfwkcKzU4wSYL64rzPYgmIVf7PO4TB5_6jQ" />
+    <link rel="stylesheet" href="/script/css/site_color.css?v=UNDsmseaI-oLbzhaqEzq8lA3nNUbHjYnYakBJ89TgGA" />
+    <link rel="stylesheet" href="/script/css/site.css?v=E4UBOUpn6GV7EvBdT6R-eBx07L_3wsWT34HbfKRvCB8" />
+    
+    <link href="/script/css/info_e1000.css?v=gfanHVzGOglpCW6FzPHaPnRfhPpNz5OOK4TBIFX5B_M" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/script/css/print.css?v=fqleJH6qC3EsZnxhD1mtwViep4Kk15C_4hsBZi1i_MI" media="print" />
+
+
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/script/js/site.js?v=hIWxfEwfXr99LGu36qVBuPREgTpVHIR95DOB46rv7Bo"></script>
+    <script type="text/javascript" nonce="M0xQRmRvT1FxczE3YzZjbTlCN3Q=">
+        //搜尋鍵
+        function setSearchButton() {
+            if ($("#button-search").length > 0) {
+                $("#button-search").on("click", function () {
+                    var keyword = $("#search-keyword").val();
+                    var url = "/Publicize/Info/Z2120" +  "?q=" + keyword;
+                    window.open(url);
+                });
+
+                $("#search-keyword").on("keydown", function (event) {
+                    if (event.keyCode == 13) {
+                        var keyword = $("#search-keyword").val();
+                        var url = "/Publicize/Info/Z2120" +  "?q=" + keyword;
+                        window.open(url);
+                    }
+                });
+            }
+        }
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.3.0/echarts.min.js"></script>
+    <script src="/script/js/info_e1000.js?v=FB8y0kKicLPztT4nrbhVULEqiqhT5P8gSGtzn3K8IUc"></script>
+    <script src="/script/js/myChartOperate.js?v=lUP-joeAOUXF3rw_LbCxq8LFjK2smOeTdhu90SSWPrA"></script>
+    <script type="text/javascript">
+        $(window).on('load', function () {
+        });
+    </script>
+
+
+
+
+
+</head>
+<body>
+    <noscript>
+        <div class="alert alert-danger m-xs-bottom">
+            <p class="text-center strong color-black"><i class="fa fa-info-circle fsinem12 color-red"></i> 您的瀏覽器不支援 JavaScript，若網頁功能無法正常使用時，請開啓瀏覽器 JavaScript 功能。</p>
+        </div>
+    </noscript>
+    <div class="layout-body">
+        <header>
+            <a href="#site_content" id="gotocenter" title="移到主要內容" class="sr-only sr-only-focusable">跳到主要內容</a>
+            <nav class="navbar navbar-expand-lg navbar-toggleable-lg">
+                <div class="myweb-nav">
+                    <div class="space1">
+                        <div class="nav-body">
+                            <div class="nav-quickly navbar-collapse collapse">
+                                <ul class="navbar-nav mb-0">
+                                    <li class="nav-item"><a href="#Accesskey_U" id="Accesskey_U" accesskey="U" title="上方功能區域" class="accesskey english-font-arial">:::</a></li>
+                                    <li class="nav-item"><a href="/Publicize/Info/Index" title="內政部不動產資訊平台首頁"><i class="fas fa-sign-out-alt" aria-hidden="true"></i>首頁</a></li>
+
+                                                    <li class="nav-item dropdown default">
+                                                        <a class="nav-link" href="#" title="&#x672C;&#x7DB2;&#x4ECB;&#x7D39;[下拉式選單]" id="space1_dropdown_MG16" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-info-circle" aria-hidden="true"></i>&#x672C;&#x7DB2;&#x4ECB;&#x7D39;</a>
+                                                        <ul class="dropdown-menu" aria-labelledby="space1_dropdown_MG16">
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2010" title="&#x672C;&#x7AD9;&#x7DE3;&#x8D77;" >&#x672C;&#x7AD9;&#x7DE3;&#x8D77;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2020" title="&#x4E3B;&#x7BA1;&#x6A5F;&#x95DC;" >&#x4E3B;&#x7BA1;&#x6A5F;&#x95DC;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2040" title="&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;" >&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2100" title="&#x5206;&#x773E;&#x5C0E;&#x89BD;" >&#x5206;&#x773E;&#x5C0E;&#x89BD;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2050" title="&#x5E38;&#x898B;&#x554F;&#x984C;" >&#x5E38;&#x898B;&#x554F;&#x984C;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/E5010" title="&#x8CC7;&#x6599;&#x4F86;&#x6E90;&#x8207;&#x66F4;&#x65B0;&#x983B;&#x7387;" >&#x8CC7;&#x6599;&#x4F86;&#x6E90;&#x8207;&#x66F4;&#x65B0;&#x983B;&#x7387;</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="nav-item default"><a href="/Publicize/Info/Z2040" title="&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;" id="space1_dropdown_MG17" ><i class="fas fa-sitemap" aria-hidden="true"></i>&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;</a></li>
+                                                    <li class="nav-item default"><a href="/Publicize/Info/Z2100" title="&#x5206;&#x773E;&#x5C0E;&#x89BD;" id="space1_dropdown_MG18" ><i class="fas fa-project-diagram" aria-hidden="true"></i>&#x5206;&#x773E;&#x5C0E;&#x89BD;</a></li>
+                                                    <li class="nav-item dropdown forever">
+                                                        <a class="nav-link" href="#" title="&#x7DB2;&#x7DB2;&#x76F8;&#x9023;[下拉式選單]" id="space1_dropdown_MG19" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-link" aria-hidden="true"></i>&#x7DB2;&#x7DB2;&#x76F8;&#x9023;</a>
+                                                        <ul class="dropdown-menu" aria-labelledby="space1_dropdown_MG19">
+                                                                        <li><a class="dropdown-item" href="https://easymap.land.moi.gov.tw/W10Web/Normal" title="&#x5730;&#x7C4D;&#x5716;&#x8CC7;&#x7DB2;&#x8DEF;&#x4FBF;&#x6C11;&#x670D;&#x52D9;&#x7CFB;&#x7D71;" target=_blank>&#x5730;&#x7C4D;&#x5716;&#x8CC7;&#x7DB2;&#x8DEF;&#x4FBF;&#x6C11;&#x670D;&#x52D9;&#x7CFB;&#x7D71;</a></li>
+                                                                        <li><a class="dropdown-item" href="https://www.land.nat.gov.tw/" title="&#x5730;&#x653F;&#x96FB;&#x50B3;&#x7CFB;&#x7D71;" target=_blank>&#x5730;&#x653F;&#x96FB;&#x50B3;&#x7CFB;&#x7D71;</a></li>
+                                                                        <li><a class="dropdown-item" href="https://ramdar.nusc.gov.tw/" title="&#x8F3B;&#x5C04;&#x5C4B;&#x67E5;&#x8A62;" target=_blank>&#x8F3B;&#x5C04;&#x5C4B;&#x67E5;&#x8A62;</a></li>
+                                                                        <li><a class="dropdown-item" href="https://www.land.moi.gov.tw/chhtml/landvalue/42" title="&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;&#x67E5;&#x8A62;" target=_blank>&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;&#x67E5;&#x8A62;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2060" title="&#x571F;&#x5730;&#x4F7F;&#x7528;&#x5206;&#x5340;&#x67E5;&#x8A62;" >&#x571F;&#x5730;&#x4F7F;&#x7528;&#x5206;&#x5340;&#x67E5;&#x8A62;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2070" title="&#x4F4F;&#x5B85;&#x53CA;&#x4E0D;&#x52D5;&#x7522;&#x8CC7;&#x8A0A;&#x7DB2;" >&#x4F4F;&#x5B85;&#x53CA;&#x4E0D;&#x52D5;&#x7522;&#x8CC7;&#x8A0A;&#x7DB2;</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2080" title="&#x570B;&#x5167;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)" >&#x570B;&#x5167;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)</a></li>
+                                                                        <li><a class="dropdown-item" href="/Publicize/Info/Z2090" title="&#x570B;&#x5916;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)" >&#x570B;&#x5916;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="nav-item forever"><a href="https://pipsr.nlma.gov.tw/" title="&#x667A;&#x80FD;&#x5C0F;&#x5E6B;&#x624B;" id="space1_dropdown_MG20" ><i class="fab fa-slack" aria-hidden="true"></i>&#x667A;&#x80FD;&#x5C0F;&#x5E6B;&#x624B;</a></li>
+                                                    <li class="nav-item default"><a href="/Publicize/Eng/Index" title="English" id="space1_dropdown_MG21" ><i class="fas fa-language" aria-hidden="true"></i>English</a></li>
+                                                    <li class="nav-item style-survey"><a href="/Publicize/Info/Z3040" title="&#x7DDA;&#x4E0A;&#x6EFF;&#x610F;&#x5EA6;&#x8ABF;&#x67E5;" id="space1_dropdown_MG22" ><i class="fas fa-hand-point-right" aria-hidden="true"></i>&#x7DDA;&#x4E0A;&#x6EFF;&#x610F;&#x5EA6;&#x8ABF;&#x67E5;</a></li>
+                                    <li class="nav-item style-font"><span><i class="fas fa-layer-group" aria-hidden="true"></i>文字</span><a href="#" class="font-sm" title="小字體" role="button">小</a><a href="#" class="font-md" title="中字體" role="button">中</a><a href="#" class="font-lg" title="大字體" role="button">大</a></li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space2">
+                        <div class="nav-body">
+                            <div class="div1 web-logo">
+                                <h1>
+                                    <a href="/Publicize/Info/Index" title="內政部不動產資訊平台首頁">
+                                        <span class="img">
+                                            <img src="/Upload/image/home/moi.png" alt="" />
+                                        </span>
+                                        <span class="text">
+                                            <span class="s1">內政部</span><span class="s2">不動產資訊平台</span>
+                                        </span>
+                                    </a>
+                                </h1>
+                            </div>
+                            <div class="div2">
+                                <div class="web-search input-group">
+                                    <input type="text" id="search-keyword" class="form-control" placeholder="請輸入查詢關鍵字" aria-label="搜尋條件輸入欄位" aria-describedby="button-search" />
+                                    <button class="btn btn-outline-dark" type="button" id="button-search"><i class="fas fa-search" aria-hidden="true"></i><span>搜尋</span></button>
+                                    <a class="btn btn-outline-dark p-2" role="button" title="進階搜尋" href="https://www.google.com.tw/advanced_search?hl=zh-TW&as_q=&num=100&as_sitesearch=pip.moi.gov.tw" target="_blank">進階搜尋</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space3">
+                        <div class="nav-body ">
+                            <div class="nav-collapse-div">
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="r086MainMenu"
+                                        aria-expanded="false" aria-label="主選單的顯示開關">
+                                    <span class="fa fa-bars"></span>
+                                </button>
+                            </div>
+
+                            <div class="navbar-collapse collapse" id="r086MainMenu">
+                                <ul class="navbar-nav">
+
+                                                <li class="nav-item dropdown ">
+                                                    <a id="r086MainNavMG23" title="&#x767E;&#x842C;&#x79DF;&#x5C4B;&#x5BB6;&#x6236;&#x652F;&#x6301;&#x8A08;&#x756B; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x767E;&#x842C;&#x79DF;&#x5C4B;&#x5BB6;&#x6236;&#x652F;&#x6301;&#x8A08;&#x756B;</a>
+                                                    <div class="dropdown-menu default" aria-labelledby="r086MainNavMG23">
+                                                        <div class="bg-white">
+                                                                        <ul>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/B5010" title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;" >&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/B5020" title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;" >&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/B1020" title="300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;" >300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;</a></li>
+
+                                                                        </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item dropdown ">
+                                                    <a id="r086MainNavMG01" title="&#x4F4F;&#x5B85;&#x88DC;&#x8CBC; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;</a>
+                                                    <div class="dropdown-menu mcol2" aria-labelledby="r086MainNavMG01">
+                                                        <div class="bg-white">
+                                                                    <ul>
+                                                                                    <li><a class="dropdown-item text-color-red" href="/Publicize/Info/B1020" title="300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;" >300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;</a></li>
+                                                                                    <li><a class="dropdown-item default" href="/Publicize/Info/B1080" title="&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;" >&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;</a></li>
+                                                                                    <li><a class="dropdown-item default" href="/Publicize/Info/B4050" title="&#x516C;&#x76CA;&#x51FA;&#x79DF;&#x4EBA;" >&#x516C;&#x76CA;&#x51FA;&#x79DF;&#x4EBA;</a></li>
+                                                                                    <li><a class="dropdown-item word-long" href="/Publicize/Info/B4040" title="&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;&#x67E5;&#x6838;&#x7763;&#x5C0E;&#x5C08;&#x5340;" >&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;&#x67E5;&#x6838;&#x7763;&#x5C0E;&#x5C08;&#x5340;</a></li>
+                                                                                    <li><a class="dropdown-item word-long" href="/Publicize/Info/B4030" title="&#x4F4E;&#x6536;&#x5165;&#x6236;&#x53CA;&#x4E2D;&#x4F4E;&#x6536;&#x5165;&#x6236;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;" >&#x4F4E;&#x6536;&#x5165;&#x6236;&#x53CA;&#x4E2D;&#x4F4E;&#x6536;&#x5165;&#x6236;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;</a></li>
+                                                                                    <li><a class="dropdown-item default" href="/Publicize/Info/B4020" title="&#x8EAB;&#x5FC3;&#x969C;&#x7919;&#x8005;&#x623F;&#x5C4B;&#x79DF;&#x91D1;&#x53CA;&#x8CFC;&#x5C4B;&#x8CB8;&#x6B3E;&#x5229;&#x606F;&#x88DC;&#x8CBC;" >&#x8EAB;&#x5FC3;&#x969C;&#x7919;&#x8005;&#x623F;&#x5C4B;&#x79DF;&#x91D1;&#x53CA;&#x8CFC;&#x5C4B;&#x8CB8;&#x6B3E;&#x5229;&#x606F;&#x88DC;&#x8CBC;</a></li>
+                                                                    </ul>
+                                                                    <ul>
+                                                                                    <li><a class="dropdown-item word-long text-color-grey" href="/Publicize/Info/B1030" title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x4E2D;&#x7522;&#x623F;&#x8CB8;&#x652F;&#x6301;&#x5C08;&#x5340;" >&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x4E2D;&#x7522;&#x623F;&#x8CB8;&#x652F;&#x6301;&#x5C08;&#x5340;</a></li>
+                                                                                    <li><a class="dropdown-item word-long text-color-grey" href="/Publicize/Info/B2010" title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x5C08;&#x5340;" >&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x5C08;&#x5340;</a></li>
+                                                                                    <li><a class="dropdown-item word-long text-color-grey" href="/Publicize/Info/B4010" title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x5167;&#x653F;&#x90E8;&#x4E3B;&#x8FA6;4,000&#x5104;&#x5143;&#x512A;&#x60E0;&#x8CFC;&#x5C4B;&#x5C08;&#x6848;&#x8CB8;&#x6B3E;" >&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x5167;&#x653F;&#x90E8;&#x4E3B;&#x8FA6;4,000&#x5104;&#x5143;&#x512A;&#x60E0;&#x8CFC;&#x5C4B;&#x5C08;&#x6848;&#x8CB8;&#x6B3E;</a></li>
+                                                                                    <li><a class="dropdown-item word-long text-color-grey" href="/Publicize/Info/B1060" title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x55AE;&#x8EAB;&#x53CA;&#x5A5A;&#x80B2;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;" >&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x55AE;&#x8EAB;&#x53CA;&#x5A5A;&#x80B2;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;</a></li>
+                                                                    </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item dropdown ">
+                                                    <a id="r086MainNavMG02" title="&#x793E;&#x6703;&#x4F4F;&#x5B85; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x793E;&#x6703;&#x4F4F;&#x5B85;</a>
+                                                    <div class="dropdown-menu default" aria-labelledby="r086MainNavMG02">
+                                                        <div class="bg-white">
+                                                                        <ul>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/B5010" title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;" >&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/B5020" title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;" >&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;</a></li>
+
+                                                                        </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item dropdown ">
+                                                    <a id="r086MainNavMG03" title="&#x4F4F;&#x5B85;&#x5E02;&#x5834; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x4F4F;&#x5B85;&#x5E02;&#x5834;</a>
+                                                    <div class="dropdown-menu mcol3" aria-labelledby="r086MainNavMG03">
+                                                        <div class="bg-white">
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x50F9;&#x683C;&#x884C;&#x60C5;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="https://lvr.land.moi.gov.tw/" target=_blank title="&#x5BE6;&#x969B;&#x6210;&#x4EA4;&#x50F9;&#x683C;">&#x5BE6;&#x969B;&#x6210;&#x4EA4;&#x50F9;&#x683C;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="https://lvr.land.moi.gov.tw/" target=_blank title="&#x5BE6;&#x969B;&#x79DF;&#x91D1;&#x884C;&#x60C5;">&#x5BE6;&#x969B;&#x79DF;&#x91D1;&#x884C;&#x60C5;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/A3010"  title="&#x8CB7;&#x8CE3;&#x5951;&#x7D04;&#x50F9;">&#x8CB7;&#x8CE3;&#x5951;&#x7D04;&#x50F9;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/A5010"  title="&#x6A19;&#x552E;&#x5F97;&#x6A19;&#x50F9;">&#x6A19;&#x552E;&#x5F97;&#x6A19;&#x50F9;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/A6010"  title="&#x62CD;&#x8CE3;&#x62CD;&#x5B9A;&#x50F9;">&#x62CD;&#x8CE3;&#x62CD;&#x5B9A;&#x50F9;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="https://www.land.moi.gov.tw/chhtml/landvalue/42" target=_blank title="&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;">&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/A1030"  title="&#x6B77;&#x53F2;&#x7D71;&#x8A08;&#x8CC7;&#x6599;">&#x6B77;&#x53F2;&#x7D71;&#x8A08;&#x8CC7;&#x6599;</a></dd>
+                                                                            </dl>
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x5F85;&#x62CD;/&#x6A19;&#x552E;/&#x5F85;&#x79DF;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/D1010"  title="&#x62CD;&#x8CE3;">&#x62CD;&#x8CE3;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/D2010"  title="&#x6A19;&#x552E;">&#x6A19;&#x552E;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/D1020"  title="&#x516C;&#x6709;&#x623F;&#x7522;&#x51FA;&#x79DF;">&#x516C;&#x6709;&#x623F;&#x7522;&#x51FA;&#x79DF;</a></dd>
+                                                                            </dl>
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x623F;&#x8CB8;&#x8CC7;&#x8A0A;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/C1010"  title="&#x623F;&#x8CB8;&#x5546;&#x54C1;&#x67E5;&#x8A62;">&#x623F;&#x8CB8;&#x5546;&#x54C1;&#x67E5;&#x8A62;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/C1040"  title="&#x623F;&#x8CB8;&#x8A66;&#x7B97;">&#x623F;&#x8CB8;&#x8A66;&#x7B97;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/C1050"  title="&#x7A05;&#x91D1;&#x8A66;&#x7B97;">&#x7A05;&#x91D1;&#x8A66;&#x7B97;</a></dd>
+                                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item dropdown ">
+                                                    <a id="r086MainNavMG07" title="&#x5C45;&#x4F4F;&#x54C1;&#x8CEA; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x5C45;&#x4F4F;&#x54C1;&#x8CEA;</a>
+                                                    <div class="dropdown-menu default" aria-labelledby="r086MainNavMG07">
+                                                        <div class="bg-white">
+                                                                        <ul>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/J2010" title="&#x4F4F;&#x5B85;&#x6027;&#x80FD;&#x8A55;&#x4F30;" >&#x4F4F;&#x5B85;&#x6027;&#x80FD;&#x8A55;&#x4F30;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/J2020" title="&#x7121;&#x969C;&#x7919;&#x4F4F;&#x5B85;" >&#x7121;&#x969C;&#x7919;&#x4F4F;&#x5B85;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/J2030" title="&#x8010;&#x9707;&#x5F31;&#x5C64;&#x88DC;&#x5F37;" >&#x8010;&#x9707;&#x5F31;&#x5C64;&#x88DC;&#x5F37;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/J1030" title="&#x57FA;&#x672C;&#x5C45;&#x4F4F;&#x6C34;&#x6E96;" >&#x57FA;&#x672C;&#x5C45;&#x4F4F;&#x6C34;&#x6E96;</a></li>
+
+                                                                        </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item dropdown ">
+                                                    <a id="r086MainNavMG08" title="&#x4F4F;&#x5B85;&#x7D71;&#x8A08; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x4F4F;&#x5B85;&#x7D71;&#x8A08;</a>
+                                                    <div class="dropdown-menu mcol3" aria-labelledby="r086MainNavMG08">
+                                                        <div class="bg-white">
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x653F;&#x5E9C;&#x4F4F;&#x5B85;&#x7D71;&#x8A08;&#x7814;&#x7A76;&#x5831;&#x544A;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1080"  title="&#x79DF;&#x91D1;&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;">&#x79DF;&#x91D1;&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1010"  title="&#x4F4F;&#x5B85;&#x9700;&#x6C42;&#x52D5;&#x5411;&#x8ABF;&#x67E5;">&#x4F4F;&#x5B85;&#x9700;&#x6C42;&#x52D5;&#x5411;&#x8ABF;&#x67E5;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1020"  title="&#x90FD;&#x5E02;&#x5730;&#x50F9;&#x6307;&#x6578;">&#x90FD;&#x5E02;&#x5730;&#x50F9;&#x6307;&#x6578;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1030"  title="&#x4F4F;&#x5B85;&#x8CC7;&#x8A0A;&#x7D71;&#x8A08;&#x5F59;&#x5831;">&#x4F4F;&#x5B85;&#x8CC7;&#x8A0A;&#x7D71;&#x8A08;&#x5F59;&#x5831;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1040"  title="&#x4F4E;&#x5EA6;&#x4F7F;&#x7528;(&#x7528;&#x96FB;)&#x4F4F;&#x5B85;&#x3001;&#x5F85;&#x552E;&#x65B0;&#x6210;&#x5C4B;">&#x4F4E;&#x5EA6;&#x4F7F;&#x7528;(&#x7528;&#x96FB;)&#x4F4F;&#x5B85;&#x3001;&#x5F85;&#x552E;&#x65B0;&#x6210;&#x5C4B;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1050"  title="&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;">&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1060"  title="&#x4F4F;&#x5B85;&#x50F9;&#x683C;&#x6307;&#x6578;">&#x4F4F;&#x5B85;&#x50F9;&#x683C;&#x6307;&#x6578;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E1070"  title="&#x4F4F;&#x5B85;&#x5927;&#x4E8B;&#x7D00;">&#x4F4F;&#x5B85;&#x5927;&#x4E8B;&#x7D00;</a></dd>
+                                                                            </dl>
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x5404;&#x9805;&#x6307;&#x6A19;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E2010"  title="&#x50F9;&#x683C;&#x6307;&#x6A19;">&#x50F9;&#x683C;&#x6307;&#x6A19;</a></dd>
+                                                                            </dl>
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E3010"  title="&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x67E5;&#x8A62;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x67E5;&#x8A62;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E4010"  title="&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x67E5;&#x8A62;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x67E5;&#x8A62;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E3030"  title="&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E4040"  title="&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/E5010"  title="&#x7D71;&#x8A08;&#x65B9;&#x6CD5;&#x53CA;&#x5B9A;&#x7FA9;">&#x7D71;&#x8A08;&#x65B9;&#x6CD5;&#x53CA;&#x5B9A;&#x7FA9;</a></dd>
+                                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item dropdown ">
+                                                    <a id="r086MainNavMG12" title="&#x5176;&#x4ED6; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x5176;&#x4ED6;</a>
+                                                    <div class="dropdown-menu mcol3" aria-labelledby="r086MainNavMG12">
+                                                        <div class="bg-white">
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x653F;&#x7B56;&#x8207;&#x7814;&#x7A76;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/F1010"  title="&#x4E0D;&#x52D5;&#x7522;&#x53CA;&#x4F4F;&#x5B85;&#x653F;&#x7B56;">&#x4E0D;&#x52D5;&#x7522;&#x53CA;&#x4F4F;&#x5B85;&#x653F;&#x7B56;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/F2010"  title="&#x7814;&#x7A76;&#x5831;&#x544A;">&#x7814;&#x7A76;&#x5831;&#x544A;</a></dd>
+                                                                            </dl>
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x6CD5;&#x898F;&#x8207;&#x77E5;&#x8B58;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/G1010"  title="&#x4E0D;&#x52D5;&#x7522;&#x6CD5;&#x898F;">&#x4E0D;&#x52D5;&#x7522;&#x6CD5;&#x898F;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/G1020"  title="&#x5951;&#x7D04;&#x66F8;&#x7BC4;&#x672C;">&#x5951;&#x7D04;&#x66F8;&#x7BC4;&#x672C;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="https://resim.moi.gov.tw/" target=_blank title="&#x5167;&#x653F;&#x90E8;&#x4E0D;&#x52D5;&#x7522;&#x670D;&#x52D9;&#x696D;&#x8CC7;&#x8A0A;&#x7CFB;&#x7D71;">&#x5167;&#x653F;&#x90E8;&#x4E0D;&#x52D5;&#x7522;&#x670D;&#x52D9;&#x696D;&#x8CC7;&#x8A0A;&#x7CFB;&#x7D71;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/G2010"  title="&#x7CFE;&#x7D1B;&#x6848;&#x4F8B;&#x53CA;&#x7D71;&#x8A08;">&#x7CFE;&#x7D1B;&#x6848;&#x4F8B;&#x53CA;&#x7D71;&#x8A08;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/G1030"  title="&#x5176;&#x4ED6;">&#x5176;&#x4ED6;</a></dd>
+                                                                            </dl>
+                                                                            <dl>
+                                                                                <dt><i class="fas fa-caret-right" aria-hidden="true"></i>&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;</dt>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/DigitalArchive/Catalog" target=_blank title="&#x4F4F;&#x5B85;&#x696D;&#x52D9;&#x6578;&#x4F4D;&#x5178;&#x85CF;">&#x4F4F;&#x5B85;&#x696D;&#x52D9;&#x6578;&#x4F4D;&#x5178;&#x85CF;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/B5013" target=_blank title="&#x653F;&#x5E9C;&#x5C45;&#x4F4F;&#x5354;&#x52A9;&#x8CC7;&#x683C;&#x6AA2;&#x6838;&#x5C08;&#x5340;">&#x653F;&#x5E9C;&#x5C45;&#x4F4F;&#x5354;&#x52A9;&#x8CC7;&#x683C;&#x6AA2;&#x6838;&#x5C08;&#x5340;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/B3010"  title="&#x5408;&#x5B9C;&#x4F4F;&#x5B85;">&#x5408;&#x5B9C;&#x4F4F;&#x5B85;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="/Publicize/Info/B2020"  title="&#x5F71;&#x97F3;&#x5C08;&#x5340;">&#x5F71;&#x97F3;&#x5C08;&#x5340;</a></dd>
+                                                                                            <dd><a class="dropdown-item default" href="https://www.nta.gov.tw/singlehtml/108" target=_blank title="&#x8CA1;&#x653F;&#x90E8;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x8CFC;&#x5C4B;&#x512A;&#x60E0;&#x8CB8;&#x6B3E;">&#x8CA1;&#x653F;&#x90E8;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x8CFC;&#x5C4B;&#x512A;&#x60E0;&#x8CB8;&#x6B3E;</a></dd>
+                                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item dropdown mobile">
+                                                    <a id="r086MainNavMG16" title="&#x672C;&#x7DB2;&#x4ECB;&#x7D39; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x672C;&#x7DB2;&#x4ECB;&#x7D39;</a>
+                                                    <div class="dropdown-menu default" aria-labelledby="r086MainNavMG16">
+                                                        <div class="bg-white">
+                                                                        <ul>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2010" title="&#x672C;&#x7AD9;&#x7DE3;&#x8D77;" >&#x672C;&#x7AD9;&#x7DE3;&#x8D77;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2020" title="&#x4E3B;&#x7BA1;&#x6A5F;&#x95DC;" >&#x4E3B;&#x7BA1;&#x6A5F;&#x95DC;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2040" title="&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;" >&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2100" title="&#x5206;&#x773E;&#x5C0E;&#x89BD;" >&#x5206;&#x773E;&#x5C0E;&#x89BD;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2050" title="&#x5E38;&#x898B;&#x554F;&#x984C;" >&#x5E38;&#x898B;&#x554F;&#x984C;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/E5010" title="&#x8CC7;&#x6599;&#x4F86;&#x6E90;&#x8207;&#x66F4;&#x65B0;&#x983B;&#x7387;" >&#x8CC7;&#x6599;&#x4F86;&#x6E90;&#x8207;&#x66F4;&#x65B0;&#x983B;&#x7387;</a></li>
+
+                                                                        </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item mobile"><a id="r086MainNavMG17" href="/Publicize/Info/Z2040" title="&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;" class="nav-link" role="button">&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;</a></li>
+                                                <li class="nav-item mobile"><a id="r086MainNavMG18" href="/Publicize/Info/Z2100" title="&#x5206;&#x773E;&#x5C0E;&#x89BD;" class="nav-link" role="button">&#x5206;&#x773E;&#x5C0E;&#x89BD;</a></li>
+                                                <li class="nav-item dropdown mobile">
+                                                    <a id="r086MainNavMG19" title="&#x7DB2;&#x7DB2;&#x76F8;&#x9023; " class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">&#x7DB2;&#x7DB2;&#x76F8;&#x9023;</a>
+                                                    <div class="dropdown-menu forever" aria-labelledby="r086MainNavMG19">
+                                                        <div class="bg-white">
+                                                                        <ul>
+                                                                                        <li><a class="dropdown-item default" href="https://easymap.land.moi.gov.tw/W10Web/Normal" title="&#x5730;&#x7C4D;&#x5716;&#x8CC7;&#x7DB2;&#x8DEF;&#x4FBF;&#x6C11;&#x670D;&#x52D9;&#x7CFB;&#x7D71;" target=_blank>&#x5730;&#x7C4D;&#x5716;&#x8CC7;&#x7DB2;&#x8DEF;&#x4FBF;&#x6C11;&#x670D;&#x52D9;&#x7CFB;&#x7D71;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="https://www.land.nat.gov.tw/" title="&#x5730;&#x653F;&#x96FB;&#x50B3;&#x7CFB;&#x7D71;" target=_blank>&#x5730;&#x653F;&#x96FB;&#x50B3;&#x7CFB;&#x7D71;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="https://ramdar.nusc.gov.tw/" title="&#x8F3B;&#x5C04;&#x5C4B;&#x67E5;&#x8A62;" target=_blank>&#x8F3B;&#x5C04;&#x5C4B;&#x67E5;&#x8A62;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="https://www.land.moi.gov.tw/chhtml/landvalue/42" title="&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;&#x67E5;&#x8A62;" target=_blank>&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;&#x67E5;&#x8A62;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2060" title="&#x571F;&#x5730;&#x4F7F;&#x7528;&#x5206;&#x5340;&#x67E5;&#x8A62;" >&#x571F;&#x5730;&#x4F7F;&#x7528;&#x5206;&#x5340;&#x67E5;&#x8A62;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2070" title="&#x4F4F;&#x5B85;&#x53CA;&#x4E0D;&#x52D5;&#x7522;&#x8CC7;&#x8A0A;&#x7DB2;" >&#x4F4F;&#x5B85;&#x53CA;&#x4E0D;&#x52D5;&#x7522;&#x8CC7;&#x8A0A;&#x7DB2;</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2080" title="&#x570B;&#x5167;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)" >&#x570B;&#x5167;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)</a></li>
+                                                                                        <li><a class="dropdown-item default" href="/Publicize/Info/Z2090" title="&#x570B;&#x5916;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)" >&#x570B;&#x5916;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)</a></li>
+
+                                                                        </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item mobile"><a id="r086MainNavMG20" href="https://pipsr.nlma.gov.tw/" title="&#x667A;&#x80FD;&#x5C0F;&#x5E6B;&#x624B;" class="nav-link" role="button">&#x667A;&#x80FD;&#x5C0F;&#x5E6B;&#x624B;</a></li>
+                                                <li class="nav-item mobile"><a id="r086MainNavMG21" href="/Publicize/Eng/Index" title="English" class="nav-link" role="button">English</a></li>
+                                                <li class="nav-item mobile"><a id="r086MainNavMG22" href="/Publicize/Info/Z3040" title="&#x7DDA;&#x4E0A;&#x6EFF;&#x610F;&#x5EA6;&#x8ABF;&#x67E5;" class="nav-link" role="button">&#x7DDA;&#x4E0A;&#x6EFF;&#x610F;&#x5EA6;&#x8ABF;&#x67E5;</a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="print-only header" aria-hidden="true">
+            <div class="h1"><span><img src="/Upload/image/home/moi.png" alt="內政部不動產資訊平台圖示" /></span><span>內政部不動產資訊平台</span></div>
+        </div>
+
+        <main role="main" class="layout-main">
+            <div class="page-top-scope">
+                <div class="accesskey-div"><a href="#site_content" id="Accesskey_C" accesskey="C" title="主要功能區域" class="accesskey english-font-arial">:::</a></div>
+
+                            <div id="pageBreadcrumbs" class="pageBreadcrumbs" aria-label="Breadcrumb" role="navigation">
+                                <span class="crumb-item link"><a href="/" title="首頁"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden">首頁</span></a></span><span class="crumb-item separator"></span>
+
+                                            <span class="crumb-item link">
+                                                <a href="/Publicize/Info/Z1000?node=MG08" title="&#x4F4F;&#x5B85;&#x7D71;&#x8A08;"><span>&#x4F4F;&#x5B85;&#x7D71;&#x8A08;</span></a>
+                                            </span>
+                                            <span class="crumb-item separator"></span>
+                                            <span class="crumb-item link">
+                                                <a href="/Publicize/Info/Z1000?node=MG09" title="&#x653F;&#x5E9C;&#x4F4F;&#x5B85;&#x7D71;&#x8A08;&#x7814;&#x7A76;&#x5831;&#x544A;"><span>&#x653F;&#x5E9C;&#x4F4F;&#x5B85;&#x7D71;&#x8A08;&#x7814;&#x7A76;&#x5831;&#x544A;</span></a>
+                                            </span>
+                                            <span class="crumb-item separator"></span>
+                                <span class="crumb-item page" aria-current="page">&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;</span>
+                            </div>
+                        <div class="share-div">
+                            <div class="share-link">
+                                <span class="fb"><a href="https://www.facebook.com/sharer.php?u=https://pip.moi.gov.tw/Publicize/Info/E1050" target="_blank" title="[另開新視窗]推文至facebook"><img src="/Upload/image/share/icon-facebook.png" alt="推文至facebook icon" /><span class="sr-only">推文至facebook</span></a></span>
+                                <span class="twitter"><a href="http://twitter.com/share?text=&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;&#x2B;%7C&#x2B;&#x5167;&#x653F;&#x90E8;&#x4E0D;&#x52D5;&#x7522;&#x8CC7;&#x8A0A;&#x5E73;&#x53F0;&url='https://pip.moi.gov.tw/Publicize/Info/E1050'" target="_blank" title="[另開新視窗]推文至X"><img src="/Upload/image/share/icon-x.png" alt="推文至twitter icon" /><span class="sr-only">推文至X</span></a></span>
+                                <span class="line"><a href="https://lineit.line.me/share/ui?url=https://pip.moi.gov.tw/Publicize/Info/E1050" target="_blank" title="[另開新視窗]推文至line"><img src="/Upload/image/share/icon-line.png" alt="推文至line icon" /><span class="sr-only">推文至line</span></a></span>
+                                <span class="plurk"><a href="https://www.plurk.com/?qualifier=shares&status=https://pip.moi.gov.tw/Publicize/Info/E1050" target="_blank" title="[另開新視窗]推文至plurk"><img src="/Upload/image/share/icon-plurk.png" alt="推文至plurk icon" /><span class="sr-only">推文至plurk</span></a></span>
+                                <span class="print"><a href="#" onclick="self.print();return false;" title="[另開新視窗]列印功能"><img src="/Upload/image/share/print.png" alt="列印 icon" /><span class="sr-only">列印</span></a></span>
+                            </div>
+                        </div>
+            </div>
+
+            <div id="site_content" class="layout-content">
+                <form id="form1" name="form1" method="post" action="" class="mb-0 site-normal-style e1000 e1050">
+
+
+            <div class="pagemenu v2">
+                <ul>
+                                <li><a href="/Publicize/Info/E1080" title="&#x79DF;&#x91D1;&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;" class="sheet-link"><span class="s1">&#x79DF;&#x91D1;&#x7D71;&#x8A08;</span><span class="s2">&#x8CC7;&#x8A0A;</span></a></li>
+                                <li><a href="/Publicize/Info/E1010" title="&#x4F4F;&#x5B85;&#x9700;&#x6C42;&#x52D5;&#x5411;&#x8ABF;&#x67E5;" class="sheet-link"><span class="s1">&#x4F4F;&#x5B85;&#x9700;&#x6C42;</span><span class="s2">&#x52D5;&#x5411;&#x8ABF;&#x67E5;</span></a></li>
+                                <li><a href="/Publicize/Info/E1020" title="&#x90FD;&#x5E02;&#x5730;&#x50F9;&#x6307;&#x6578;" class="sheet-link"><span class="s1">&#x90FD;&#x5E02;&#x5730;&#x50F9;</span><span class="s2">&#x6307;&#x6578;</span></a></li>
+                                <li><a href="/Publicize/Info/E1030" title="&#x4F4F;&#x5B85;&#x8CC7;&#x8A0A;&#x7D71;&#x8A08;&#x5F59;&#x5831;" class="sheet-link"><span class="s1">&#x4F4F;&#x5B85;&#x8CC7;&#x8A0A;</span><span class="s2">&#x7D71;&#x8A08;&#x5F59;&#x5831;</span></a></li>
+                                <li><a href="/Publicize/Info/E1040" title="&#x4F4E;&#x5EA6;&#x4F7F;&#x7528;(&#x7528;&#x96FB;)&#x4F4F;&#x5B85;&#x3001;&#x5F85;&#x552E;&#x65B0;&#x6210;&#x5C4B;" class="sheet-link"><span class="s1">&#x4F4E;&#x5EA6;&#x4F7F;&#x7528;(&#x7528;&#x96FB;)&#x4F4F;&#x5B85;</span><span class="s2">&#x3001;&#x5F85;&#x552E;&#x65B0;&#x6210;&#x5C4B;</span></a></li>
+                                <li><a href="/Publicize/Info/E1050" title="&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;" class="sheet-link tag"><span class="s1">&#x623F;&#x50F9;&#x8CA0;&#x64D4;</span><span class="s2">&#x80FD;&#x529B;&#x7D71;&#x8A08;</span></a></li>
+                                <li><a href="/Publicize/Info/E1060" title="&#x4F4F;&#x5B85;&#x50F9;&#x683C;&#x6307;&#x6578;" class="sheet-link"><span class="s1">&#x4F4F;&#x5B85;&#x50F9;&#x683C;</span><span class="s2">&#x6307;&#x6578;</span></a></li>
+                                <li><a href="/Publicize/Info/E1070" title="&#x4F4F;&#x5B85;&#x5927;&#x4E8B;&#x7D00;" class="sheet-link"><span class="s1">&#x4F4F;&#x5B85;</span><span class="s2">&#x5927;&#x4E8B;&#x7D00;</span></a></li>
+                </ul>
+            </div>
+
+
+    <div class="page-head container">
+        <h2>&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;</h2>
+    </div>
+
+    <div class="page-body container">
+        <div class="html-style">
+            <div class="gov05-body">
+                <div class="news-dev">
+                    <div class="caption">最新調查報告</div>
+                            <div class="article"><div class="scrb_article"><div class="files"><div class="header_bg">相關檔案</div><ul><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/115Q1房價負擔能力指標統計成果.pdf" target="_blank" rel="noopener noreferrer">下載115年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/114Q4房價負擔能力指標統計成果.pdf" target="_blank" rel="noopener noreferrer">下載114年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/114Q3房價負擔能力指標統計成果.pdf" target="_blank" rel="noopener noreferrer">下載114年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/114年房價負擔能力第2季發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載114年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/114年房價負擔能力第1季發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載114年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/113年房價負擔能力第4季發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載113年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/113年房價負擔能力第3季發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載113年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/113年房價負擔能力第2季發布內容(平台)1131129.pdf" target="_blank" rel="noopener noreferrer">下載113年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/(平台)113Q1負擔能力發布內容.pdf" target="_blank" rel="noopener noreferrer">下載113年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/(平台)112Q4負擔能力發布內容.pdf" target="_blank" rel="noopener noreferrer">下載112年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/(平台)112Q3負擔能力發布內容.pdf" target="_blank" rel="noopener noreferrer">下載112年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/(平台)112Q2負擔能力發布內容.pdf" target="_blank" rel="noopener noreferrer">下載112年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/112Q1負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載112年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/111Q4負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載111年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/111Q3負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載111年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/111Q2負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載111年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/111Q1負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載111年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/110Q4負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載110年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/110Q3負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載110年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/110Q2負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載110年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/110Q1負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載110年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/109Q4負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載109年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/109Q3負擔能力發布內容(平台)更.pdf" target="_blank" rel="noopener noreferrer">下載109年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/109Q2負擔能力發布內容(修正).pdf" target="_blank" rel="noopener noreferrer">下載109年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/109Q1負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載109年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/108Q4負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載108年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/108Q3負擔能力發布內容(平台)更正.pdf" target="_blank" rel="noopener noreferrer">下載108年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/108Q2負擔能力發布內容(平台).pdf " target="_blank" rel="noopener noreferrer">下載108年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/0915-108Q1負擔能力發布內容(平台).pdf" target="_blank" rel="noopener noreferrer">下載108年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/107Q3Q4負擔能力發布內容.pdf" target="_blank" rel="noopener noreferrer">下載107年第3、4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/107Q2.pdf" target="_blank" rel="noopener noreferrer">下載107年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/107Q1.pdf" target="_blank" rel="noopener noreferrer">下載107年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/106Q4.pdf" target="_blank" rel="noopener noreferrer">下載106年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/106Q3.pdf" target="_blank" rel="noopener noreferrer">下載106年第3季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/106Q2.pdf" target="_blank" rel="noopener noreferrer">下載106年第2季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/106Q1.pdf" target="_blank" rel="noopener noreferrer">下載106年第1季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/105Q4.pdf" target="_blank" rel="noopener noreferrer">下載105年第4季房價負擔能力統計發布內容(PDF)</a></li><li><a href="https://pip.moi.gov.tw/Upload/CustomFile/Doc/105Q3.pdf" target="_blank" rel="noopener noreferrer">下載105年第3季房價負擔能力統計發布內容(PDF)</a></li></ul></div><div class="article_body"><div class="header_bg">最新調查報告</div><div class="article_bd"><h3 style="text-align: center; margin: 32px 0">115 年第 1季<br />房價負擔能力指標統計成果</h3><p>本季（115年第1季）全國房貸負擔率為41.46%，較上季（114年第4季）上升0.71個百分點，較114年同季下降3.07個百分點；而房價所得比本季為9.47倍。本季六都房貸負擔率部分，新北市、臺北市高於50%，臺中市、高雄市介於40%~50%間，桃園市、臺南市介於30%~40%之間，六都數據分述如下：</p><ol><li>新北市本季房貸負擔率為55.30%，較上季上升0.78個百分點，較114年同季下降3.38個百分點，而房價所得比本季為12.63倍。</li><li>臺北市本季房貸負擔率為64.41%，較上季上升0.49個百分點，較114年同季下降4.53個百分點，而房價所得比本季為14.72倍。</li><li>桃園市本季房貸負擔率為36.89%，較上季上升0.65個百分點，較114年同季下降2.09個百分點，而房價所得比本季為8.43倍。</li><li>臺中市本季房貸負擔率為49.67%，較上季上升1.12個百分點，較114年同季下降3.70個百分點，而房價所得比本季為11.35倍。</li><li>臺南市本季房貸負擔率為38.33%，較上季上升0.70個百分點，較114年同季下降3.90個百分點，而房價所得比本季為8.76倍。</li><li>高雄市本季房貸負擔率為40.90%，較上季上升0.87個百分點，較114年同季下降2.23個百分點，而房價所得比本季為9.35倍。</li></ol><p>其他縣市房貸負擔率部分，新竹縣為40.31%，宜蘭縣、苗栗縣、彰化縣、南投縣、雲林縣、屏東縣、臺東縣、花蓮縣、澎湖縣、新竹市、嘉義市、金門縣等12縣市介於30%至40%間，嘉義縣及基隆市則低於30%。</p><p>房貸負擔率是以中位數所得家庭購買住宅為基準，計算其每月房貸支出占可⽀配所得的比率，⽤以衡量⺠眾購屋壓⼒變化。從本季數據來看，全國中位數住宅價格由上季950萬元升至966萬元，漲幅1.68%，使得負擔率上升約0.69個百分點；同期家戶可支配所得由101.91萬元增至101.97萬元，成⻑幅度0.07%，使負擔率下降約0.03個百分點；五大銀行新承做購屋貸款平均利率小幅增加至2.318%，使負擔率略增0.05個百分點。綜合上述三項因素，本季房貸負擔率最終較上季上升0.71個百分點。</p><div class="table_body mobile-hide"><table id="t1"><caption><div>貳、115年第1季房價負擔能力指標統計表</div></caption><thead><tr><th id="t1c1" rowspan="2">縣市</th><th id="t1c2">房貸負擔率</th><th id="t1c3" colspan="2">房貸負擔率(百分點)</th><th id="t1c4">房價所得比</th><th id="t1c5" colspan="2">房價所得比(倍)</th></tr><tr><th id="t1c21">(%)</th><th id="t1c31">季變動值</th><th id="t1c32">年變動值</th><th id="t1c41">(倍)</th><th id="t1c51">季變動值</th><th id="t1c52">年變動值</th></tr></thead><tbody><tr><td headers="t1c1">全國</td><td headers="t1c2 t1c21">41.46</td><td headers="t1c3 t1c31">0.71</td><td headers="t1c3 t1c32">-3.07</td><td headers="t1c4 t1c41">9.47</td><td headers="t1c5 t1c51">0.15</td><td headers="t1c5 t1c52">-0.77</td></tr><tr><td headers="t1c1">新北市</td><td headers="t1c2 t1c21">55.30</td><td headers="t1c3 t1c31">0.78</td><td headers="t1c3 t1c32">-3.38</td><td headers="t1c4 t1c41">12.63</td><td headers="t1c5 t1c51">0.16</td><td headers="t1c5 t1c52">-0.86</td></tr><tr><td headers="t1c1">臺北市</td><td headers="t1c2 t1c21">64.41</td><td headers="t1c3 t1c31">0.49</td><td headers="t1c3 t1c32">-4.53</td><td headers="t1c4 t1c41">14.72</td><td headers="t1c5 t1c51">0.10</td><td headers="t1c5 t1c52">-1.13</td></tr><tr><td headers="t1c1">桃園市</td><td headers="t1c2 t1c21">36.89</td><td headers="t1c3 t1c31">0.65</td><td headers="t1c3 t1c32">-2.09</td><td headers="t1c4 t1c41">8.43</td><td headers="t1c5 t1c51">0.14</td><td headers="t1c5 t1c52">-0.53</td></tr><tr><td headers="t1c1">臺中市</td><td headers="t1c2 t1c21">49.67</td><td headers="t1c3 t1c31">1.12</td><td headers="t1c3 t1c32">-3.70</td><td headers="t1c4 t1c41">11.35</td><td headers="t1c5 t1c51">0.24</td><td headers="t1c5 t1c52">-0.92</td></tr><tr><td headers="t1c1">臺南市</td><td headers="t1c2 t1c21">38.33</td><td headers="t1c3 t1c31">0.70</td><td headers="t1c3 t1c32">-3.90</td><td headers="t1c4 t1c41">8.76</td><td headers="t1c5 t1c51">0.15</td><td headers="t1c5 t1c52">-0.95</td></tr><tr><td headers="t1c1">高雄市</td><td headers="t1c2 t1c21">40.90</td><td headers="t1c3 t1c31">0.87</td><td headers="t1c3 t1c32">-2.23</td><td headers="t1c4 t1c41">9.35</td><td headers="t1c5 t1c51">0.19</td><td headers="t1c5 t1c52">-0.57</td></tr><tr><td headers="t1c1">宜蘭縣</td><td headers="t1c2 t1c21">32.09</td><td headers="t1c3 t1c31">-1.49</td><td headers="t1c3 t1c32">-5.83</td><td headers="t1c4 t1c41">7.33</td><td headers="t1c5 t1c51">-0.35</td><td headers="t1c5 t1c52">-1.39</td></tr><tr><td headers="t1c1">新竹縣</td><td headers="t1c2 t1c21">40.31</td><td headers="t1c3 t1c31">1.13</td><td headers="t1c3 t1c32">-1.17</td><td headers="t1c4 t1c41">9.21</td><td headers="t1c5 t1c51">0.25</td><td headers="t1c5 t1c52">-0.33</td></tr><tr><td headers="t1c1">苗栗縣</td><td headers="t1c2 t1c21">33.46</td><td headers="t1c3 t1c31">1.13</td><td headers="t1c3 t1c32">-2.54</td><td headers="t1c4 t1c41">7.64</td><td headers="t1c5 t1c51">0.24</td><td headers="t1c5 t1c52">-0.64</td></tr><tr><td headers="t1c1">彰化縣</td><td headers="t1c2 t1c21">36.01</td><td headers="t1c3 t1c31">0.92</td><td headers="t1c3 t1c32">-3.05</td><td headers="t1c4 t1c41">8.23</td><td headers="t1c5 t1c51">0.20</td><td headers="t1c5 t1c52">-0.75</td></tr><tr><td headers="t1c1">南投縣</td><td headers="t1c2 t1c21">37.08</td><td headers="t1c3 t1c31">0.40</td><td headers="t1c3 t1c32">-4.03</td><td headers="t1c4 t1c41">8.47</td><td headers="t1c5 t1c51">0.08</td><td headers="t1c5 t1c52">-0.98</td></tr><tr><td headers="t1c1">雲林縣</td><td headers="t1c2 t1c21">31.36</td><td headers="t1c3 t1c31">1.54</td><td headers="t1c3 t1c32">-1.36</td><td headers="t1c4 t1c41">7.17</td><td headers="t1c5 t1c51">0.35</td><td headers="t1c5 t1c52">-0.35</td></tr><tr><td headers="t1c1">嘉義縣</td><td headers="t1c2 t1c21">29.21</td><td headers="t1c3 t1c31">1.04</td><td headers="t1c3 t1c32">-1.95</td><td headers="t1c4 t1c41">6.67</td><td headers="t1c5 t1c51">0.23</td><td headers="t1c5 t1c52">-0.49</td></tr><tr><td headers="t1c1">屏東縣</td><td headers="t1c2 t1c21">30.98</td><td headers="t1c3 t1c31">1.01</td><td headers="t1c3 t1c32">-1.83</td><td headers="t1c4 t1c41">7.08</td><td headers="t1c5 t1c51">0.22</td><td headers="t1c5 t1c52">-0.46</td></tr><tr><td headers="t1c1">臺東縣</td><td headers="t1c2 t1c21">35.66</td><td headers="t1c3 t1c31">1.55</td><td headers="t1c3 t1c32">-0.85</td><td headers="t1c4 t1c41">8.15</td><td headers="t1c5 t1c51">0.35</td><td headers="t1c5 t1c52">-0.25</td></tr><tr><td headers="t1c1">花蓮縣</td><td headers="t1c2 t1c21">36.38</td><td headers="t1c3 t1c31">-1.14</td><td headers="t1c3 t1c32">-4.07</td><td headers="t1c4 t1c41">8.31</td><td headers="t1c5 t1c51">-0.27</td><td headers="t1c5 t1c52">-0.99</td></tr><tr><td headers="t1c1">澎湖縣*</td><td headers="t1c2 t1c21">35.22</td><td headers="t1c3 t1c31">-0.89</td><td headers="t1c3 t1c32">-1.74</td><td headers="t1c4 t1c41">8.05</td><td headers="t1c5 t1c51">-0.21</td><td headers="t1c5 t1c52">-0.45</td></tr><tr><td headers="t1c1">基隆市</td><td headers="t1c2 t1c21">24.93</td><td headers="t1c3 t1c31">-0.30</td><td headers="t1c3 t1c32">-2.18</td><td headers="t1c4 t1c41">5.70</td><td headers="t1c5 t1c51">-0.07</td><td headers="t1c5 t1c52">-0.53</td></tr><tr><td headers="t1c1">新竹市</td><td headers="t1c2 t1c21">36.88</td><td headers="t1c3 t1c31">1.17</td><td headers="t1c3 t1c32">-1.41</td><td headers="t1c4 t1c41">8.43</td><td headers="t1c5 t1c51">0.26</td><td headers="t1c5 t1c52">-0.37</td></tr><tr><td headers="t1c1">嘉義市</td><td headers="t1c2 t1c21">32.85</td><td headers="t1c3 t1c31">1.13</td><td headers="t1c3 t1c32">-2.21</td><td headers="t1c4 t1c41">7.51</td><td headers="t1c5 t1c51">0.25</td><td headers="t1c5 t1c52">-0.55</td></tr><tr><td headers="t1c1">金門縣*</td><td headers="t1c2 t1c21">36.68</td><td headers="t1c3 t1c31">0.39</td><td headers="t1c3 t1c32">-0.70</td><td headers="t1c4 t1c41">8.38</td><td headers="t1c5 t1c51">0.08</td><td headers="t1c5 t1c52">-0.22</td></tr></tbody></table><div class="table_note"><div class="tbnote_body"><ol><li>季變動值是相較於上季之變動值，年變動值是相較於去年同季之變動值。</li><li>*代表不動產實價登錄資料樣本數少於100筆。</li></ol></div></div></div><div class="table_body"><table id="t2"><caption><div>表2 房價負擔能力指標分級意涵說明</div></caption><thead><tr><th id="t2c1">房貸負擔率</th></tr></thead><tbody><tr><td headers="t2c1" class="text">以二十年期本利均等攤還方式，貸款成數為七成，計算每月應償還本利。再以應繳本利除以中位數月家戶可支配所得求算。<br />房貸負擔率=中位數住宅價格貸款月攤還額/中位數月家戶可支配所得。<br />代表中位數住宅價格之每月應償還本利和占中位數月家戶可支配所得的比例狀況，比例越大則房價負擔能力越低。</td></tr></tbody><thead><tr><th id="t2c2">房價所得比</th></tr></thead><tbody><tr><td headers="t2c2" class="text">房價所得比=中位數住宅價格/中位數家戶可支配所得。<br />代表一戶中位數住宅對於中位數家戶一年可支配所得之比值。</td></tr></tbody></table></div><div class="table_body"><table id="t3"><caption><div>表3 資料來源說明</div></caption><thead><tr><th id="t3c1">房價</th></tr></thead><tbody><tr><td headers="t3c1" class="text">民國101年第2季以前資料，以財團法人金融聯合徵信中心提供房貸擔保品鑑估價格統計值，民國101年第3季起採用內政部地政司提供之不動產成交案件實際資訊申報登錄之住宅類交易價格資料，並統計得出中位數住宅價格。</td></tr></tbody><thead><tr><th id="t3c2">所得</th></tr></thead><tbody><tr><td headers="t3c2" class="text">財政部財政資訊中心之個人綜合所得稅申報資料，統計各縣市全體申報家戶稅後中位數所得統計值為基礎。再依據行政院主計總處按季公布行業別「經常性薪資」資料，進行各縣市最新季度所得推估，並與家庭收支調查可支配所得數據進行調整，最後得統計得出中位數家戶可支配所得。</td></tr></tbody><thead><tr><th id="t3c3">利率</th></tr></thead><tbody><tr><td headers="t3c3" class="text">中央銀行公布之五大銀行新承做購屋貸款利率。</td></tr></tbody></table></div></div></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<input name="__RequestVerificationToken" type="hidden" value="CfDJ8AbJiPVDnhdDllkOtRTo_iOfg2CnKnp9Kn_klmZvXX6cv6oamYSvcBqW2r4LqEcFLB9GBWDrYd6txoBYpop5UCjJFDp8wM6wz6rrFC6IJ1DsOVcVlBUtP7bQh14LTGVLiILi9WBSQ1HKfo5a3Yhy_jM" /></form>
+
+
+
+
+            </div>
+        </main>
+
+        <footer class="footer">
+
+            <div class="footer-sitemap">
+                <div class="div-head">
+                    <div class="collapse-button">
+                        <a href="#" role="button" title="「網站地圖」顯示" class="show"><span>網站地圖<i class="fa fa-angle-down" aria-hidden="true"></i></span></a>
+                    </div>
+                </div>
+                <div class="div-body show">
+                    <div>
+                        <ul class="sitemapLv1">
+
+                                        <li>
+                                            <div><strong id="sitemapGroupMG23" class="sitemap-group">&#x767E;&#x842C;&#x79DF;&#x5C4B;&#x5BB6;&#x6236;&#x652F;&#x6301;&#x8A08;&#x756B;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG23">
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B5010"  title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;">&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B5020"  title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;">&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B1020"  title="300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;">300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG01" class="sitemap-group">&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG01">
+                                                                <li><a class="sitemap-item text-color-red" href="/Publicize/Info/B1020"  title="300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;">300&#x5104;&#x5143;&#x4E2D;&#x592E;&#x64F4;&#x5927;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B1080"  title="&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;">&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B4050"  title="&#x516C;&#x76CA;&#x51FA;&#x79DF;&#x4EBA;">&#x516C;&#x76CA;&#x51FA;&#x79DF;&#x4EBA;</a></li>
+                                                                <li><a class="sitemap-item word-long" href="/Publicize/Info/B4040"  title="&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;&#x67E5;&#x6838;&#x7763;&#x5C0E;&#x5C08;&#x5340;">&#x6574;&#x5408;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;&#x8CC7;&#x6E90;&#x5BE6;&#x65BD;&#x65B9;&#x6848;&#x67E5;&#x6838;&#x7763;&#x5C0E;&#x5C08;&#x5340;</a></li>
+                                                                <li><a class="sitemap-item word-long" href="/Publicize/Info/B4030"  title="&#x4F4E;&#x6536;&#x5165;&#x6236;&#x53CA;&#x4E2D;&#x4F4E;&#x6536;&#x5165;&#x6236;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;">&#x4F4E;&#x6536;&#x5165;&#x6236;&#x53CA;&#x4E2D;&#x4F4E;&#x6536;&#x5165;&#x6236;&#x4F4F;&#x5B85;&#x88DC;&#x8CBC;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B4020"  title="&#x8EAB;&#x5FC3;&#x969C;&#x7919;&#x8005;&#x623F;&#x5C4B;&#x79DF;&#x91D1;&#x53CA;&#x8CFC;&#x5C4B;&#x8CB8;&#x6B3E;&#x5229;&#x606F;&#x88DC;&#x8CBC;">&#x8EAB;&#x5FC3;&#x969C;&#x7919;&#x8005;&#x623F;&#x5C4B;&#x79DF;&#x91D1;&#x53CA;&#x8CFC;&#x5C4B;&#x8CB8;&#x6B3E;&#x5229;&#x606F;&#x88DC;&#x8CBC;</a></li>
+                                                                <li><a class="sitemap-item word-long text-color-grey" href="/Publicize/Info/B1030"  title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x4E2D;&#x7522;&#x623F;&#x8CB8;&#x652F;&#x6301;&#x5C08;&#x5340;">&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x4E2D;&#x7522;&#x623F;&#x8CB8;&#x652F;&#x6301;&#x5C08;&#x5340;</a></li>
+                                                                <li><a class="sitemap-item word-long text-color-grey" href="/Publicize/Info/B2010"  title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x5C08;&#x5340;">&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x5C08;&#x5340;</a></li>
+                                                                <li><a class="sitemap-item word-long text-color-grey" href="/Publicize/Info/B4010"  title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x5167;&#x653F;&#x90E8;&#x4E3B;&#x8FA6;4,000&#x5104;&#x5143;&#x512A;&#x60E0;&#x8CFC;&#x5C4B;&#x5C08;&#x6848;&#x8CB8;&#x6B3E;">&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x5167;&#x653F;&#x90E8;&#x4E3B;&#x8FA6;4,000&#x5104;&#x5143;&#x512A;&#x60E0;&#x8CFC;&#x5C4B;&#x5C08;&#x6848;&#x8CB8;&#x6B3E;</a></li>
+                                                                <li><a class="sitemap-item word-long text-color-grey" href="/Publicize/Info/B1060"  title="&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x55AE;&#x8EAB;&#x53CA;&#x5A5A;&#x80B2;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;">&#x3010;&#x5DF2;&#x4E0D;&#x518D;&#x53D7;&#x7406;&#x65B0;&#x7533;&#x8ACB;&#x6848;&#x3011;&#x55AE;&#x8EAB;&#x53CA;&#x5A5A;&#x80B2;&#x79DF;&#x91D1;&#x88DC;&#x8CBC;&#x5C08;&#x5340;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG02" class="sitemap-group">&#x793E;&#x6703;&#x4F4F;&#x5B85;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG02">
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B5010"  title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;">&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5C08;&#x5340;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/B5020"  title="&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;">&#x793E;&#x6703;&#x4F4F;&#x5B85;&#x5305;&#x79DF;&#x4EE3;&#x7BA1;&#x5C08;&#x5340;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG03" class="sitemap-group">&#x4F4F;&#x5B85;&#x5E02;&#x5834;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG03">
+                                                            <li class="sitemap-subgroup"><strong>&#x50F9;&#x683C;&#x884C;&#x60C5;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="https://lvr.land.moi.gov.tw/" target=_blank title="&#x5BE6;&#x969B;&#x6210;&#x4EA4;&#x50F9;&#x683C;">&#x5BE6;&#x969B;&#x6210;&#x4EA4;&#x50F9;&#x683C;</a></li>
+                                                                    <li><a class="sitemap-item default" href="https://lvr.land.moi.gov.tw/" target=_blank title="&#x5BE6;&#x969B;&#x79DF;&#x91D1;&#x884C;&#x60C5;">&#x5BE6;&#x969B;&#x79DF;&#x91D1;&#x884C;&#x60C5;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/A3010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x8CB7;&#x8CE3;&#x5951;&#x7D04;&#x50F9;">&#x8CB7;&#x8CE3;&#x5951;&#x7D04;&#x50F9;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/A5010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x6A19;&#x552E;&#x5F97;&#x6A19;&#x50F9;">&#x6A19;&#x552E;&#x5F97;&#x6A19;&#x50F9;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/A6010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x62CD;&#x8CE3;&#x62CD;&#x5B9A;&#x50F9;">&#x62CD;&#x8CE3;&#x62CD;&#x5B9A;&#x50F9;</a></li>
+                                                                    <li><a class="sitemap-item default" href="https://www.land.moi.gov.tw/chhtml/landvalue/42" target=_blank title="&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;">&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/A1030"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x6B77;&#x53F2;&#x7D71;&#x8A08;&#x8CC7;&#x6599;">&#x6B77;&#x53F2;&#x7D71;&#x8A08;&#x8CC7;&#x6599;</a></li>
+                                                            <li class="sitemap-subgroup"><strong>&#x5F85;&#x62CD;/&#x6A19;&#x552E;/&#x5F85;&#x79DF;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/D1010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x62CD;&#x8CE3;">&#x62CD;&#x8CE3;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/D2010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x6A19;&#x552E;">&#x6A19;&#x552E;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/D1020"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x516C;&#x6709;&#x623F;&#x7522;&#x51FA;&#x79DF;">&#x516C;&#x6709;&#x623F;&#x7522;&#x51FA;&#x79DF;</a></li>
+                                                            <li class="sitemap-subgroup"><strong>&#x623F;&#x8CB8;&#x8CC7;&#x8A0A;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/C1010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x623F;&#x8CB8;&#x5546;&#x54C1;&#x67E5;&#x8A62;">&#x623F;&#x8CB8;&#x5546;&#x54C1;&#x67E5;&#x8A62;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/C1040"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x623F;&#x8CB8;&#x8A66;&#x7B97;">&#x623F;&#x8CB8;&#x8A66;&#x7B97;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/C1050"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7A05;&#x91D1;&#x8A66;&#x7B97;">&#x7A05;&#x91D1;&#x8A66;&#x7B97;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG07" class="sitemap-group">&#x5C45;&#x4F4F;&#x54C1;&#x8CEA;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG07">
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/J2010"  title="&#x4F4F;&#x5B85;&#x6027;&#x80FD;&#x8A55;&#x4F30;">&#x4F4F;&#x5B85;&#x6027;&#x80FD;&#x8A55;&#x4F30;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/J2020"  title="&#x7121;&#x969C;&#x7919;&#x4F4F;&#x5B85;">&#x7121;&#x969C;&#x7919;&#x4F4F;&#x5B85;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/J2030"  title="&#x8010;&#x9707;&#x5F31;&#x5C64;&#x88DC;&#x5F37;">&#x8010;&#x9707;&#x5F31;&#x5C64;&#x88DC;&#x5F37;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/J1030"  title="&#x57FA;&#x672C;&#x5C45;&#x4F4F;&#x6C34;&#x6E96;">&#x57FA;&#x672C;&#x5C45;&#x4F4F;&#x6C34;&#x6E96;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG08" class="sitemap-group">&#x4F4F;&#x5B85;&#x7D71;&#x8A08;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG08">
+                                                            <li class="sitemap-subgroup"><strong>&#x653F;&#x5E9C;&#x4F4F;&#x5B85;&#x7D71;&#x8A08;&#x7814;&#x7A76;&#x5831;&#x544A;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1080"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x79DF;&#x91D1;&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;">&#x79DF;&#x91D1;&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x4F4F;&#x5B85;&#x9700;&#x6C42;&#x52D5;&#x5411;&#x8ABF;&#x67E5;">&#x4F4F;&#x5B85;&#x9700;&#x6C42;&#x52D5;&#x5411;&#x8ABF;&#x67E5;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1020"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x90FD;&#x5E02;&#x5730;&#x50F9;&#x6307;&#x6578;">&#x90FD;&#x5E02;&#x5730;&#x50F9;&#x6307;&#x6578;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1030"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x4F4F;&#x5B85;&#x8CC7;&#x8A0A;&#x7D71;&#x8A08;&#x5F59;&#x5831;">&#x4F4F;&#x5B85;&#x8CC7;&#x8A0A;&#x7D71;&#x8A08;&#x5F59;&#x5831;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1040"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x4F4E;&#x5EA6;&#x4F7F;&#x7528;(&#x7528;&#x96FB;)&#x4F4F;&#x5B85;&#x3001;&#x5F85;&#x552E;&#x65B0;&#x6210;&#x5C4B;">&#x4F4E;&#x5EA6;&#x4F7F;&#x7528;(&#x7528;&#x96FB;)&#x4F4F;&#x5B85;&#x3001;&#x5F85;&#x552E;&#x65B0;&#x6210;&#x5C4B;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1050"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;">&#x623F;&#x50F9;&#x8CA0;&#x64D4;&#x80FD;&#x529B;&#x7D71;&#x8A08;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1060"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x4F4F;&#x5B85;&#x50F9;&#x683C;&#x6307;&#x6578;">&#x4F4F;&#x5B85;&#x50F9;&#x683C;&#x6307;&#x6578;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E1070"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x4F4F;&#x5B85;&#x5927;&#x4E8B;&#x7D00;">&#x4F4F;&#x5B85;&#x5927;&#x4E8B;&#x7D00;</a></li>
+                                                            <li class="sitemap-subgroup"><strong>&#x5404;&#x9805;&#x6307;&#x6A19;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E2010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x50F9;&#x683C;&#x6307;&#x6A19;">&#x50F9;&#x683C;&#x6307;&#x6A19;</a></li>
+                                                            <li class="sitemap-subgroup"><strong>&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E3010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x67E5;&#x8A62;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x67E5;&#x8A62;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E4010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x67E5;&#x8A62;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x67E5;&#x8A62;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E3030"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x6574;&#x5408;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E4040"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;">&#x7D71;&#x8A08;&#x8CC7;&#x8A0A;&#x4E3B;&#x984C;&#x9805;&#x76EE;&#x4E0B;&#x8F09;&#x5340;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/E5010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7D71;&#x8A08;&#x65B9;&#x6CD5;&#x53CA;&#x5B9A;&#x7FA9;">&#x7D71;&#x8A08;&#x65B9;&#x6CD5;&#x53CA;&#x5B9A;&#x7FA9;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG12" class="sitemap-group">&#x5176;&#x4ED6;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG12">
+                                                            <li class="sitemap-subgroup"><strong>&#x653F;&#x7B56;&#x8207;&#x7814;&#x7A76;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/F1010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x4E0D;&#x52D5;&#x7522;&#x53CA;&#x4F4F;&#x5B85;&#x653F;&#x7B56;">&#x4E0D;&#x52D5;&#x7522;&#x53CA;&#x4F4F;&#x5B85;&#x653F;&#x7B56;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/F2010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7814;&#x7A76;&#x5831;&#x544A;">&#x7814;&#x7A76;&#x5831;&#x544A;</a></li>
+                                                            <li class="sitemap-subgroup"><strong>&#x6CD5;&#x898F;&#x8207;&#x77E5;&#x8B58;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/G1010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x4E0D;&#x52D5;&#x7522;&#x6CD5;&#x898F;">&#x4E0D;&#x52D5;&#x7522;&#x6CD5;&#x898F;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/G1020"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x5951;&#x7D04;&#x66F8;&#x7BC4;&#x672C;">&#x5951;&#x7D04;&#x66F8;&#x7BC4;&#x672C;</a></li>
+                                                                    <li><a class="sitemap-item default" href="https://resim.moi.gov.tw/" target=_blank title="&#x5167;&#x653F;&#x90E8;&#x4E0D;&#x52D5;&#x7522;&#x670D;&#x52D9;&#x696D;&#x8CC7;&#x8A0A;&#x7CFB;&#x7D71;">&#x5167;&#x653F;&#x90E8;&#x4E0D;&#x52D5;&#x7522;&#x670D;&#x52D9;&#x696D;&#x8CC7;&#x8A0A;&#x7CFB;&#x7D71;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/G2010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x7CFE;&#x7D1B;&#x6848;&#x4F8B;&#x53CA;&#x7D71;&#x8A08;">&#x7CFE;&#x7D1B;&#x6848;&#x4F8B;&#x53CA;&#x7D71;&#x8A08;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/G1030"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x5176;&#x4ED6;">&#x5176;&#x4ED6;</a></li>
+                                                            <li class="sitemap-subgroup"><strong>&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;</strong></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/DigitalArchive/Catalog" target=_blank title="&#x4F4F;&#x5B85;&#x696D;&#x52D9;&#x6578;&#x4F4D;&#x5178;&#x85CF;">&#x4F4F;&#x5B85;&#x696D;&#x52D9;&#x6578;&#x4F4D;&#x5178;&#x85CF;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/B5013" target=_blank title="&#x653F;&#x5E9C;&#x5C45;&#x4F4F;&#x5354;&#x52A9;&#x8CC7;&#x683C;&#x6AA2;&#x6838;&#x5C08;&#x5340;">&#x653F;&#x5E9C;&#x5C45;&#x4F4F;&#x5354;&#x52A9;&#x8CC7;&#x683C;&#x6AA2;&#x6838;&#x5C08;&#x5340;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/B3010"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x5408;&#x5B9C;&#x4F4F;&#x5B85;">&#x5408;&#x5B9C;&#x4F4F;&#x5B85;</a></li>
+                                                                    <li><a class="sitemap-item default" href="/Publicize/Info/B2020"  title="(&#x53E6;&#x958B;&#x65B0;&#x8996;&#x7A97;)&#x5F71;&#x97F3;&#x5C08;&#x5340;">&#x5F71;&#x97F3;&#x5C08;&#x5340;</a></li>
+                                                                    <li><a class="sitemap-item default" href="https://www.nta.gov.tw/singlehtml/108" target=_blank title="&#x8CA1;&#x653F;&#x90E8;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x8CFC;&#x5C4B;&#x512A;&#x60E0;&#x8CB8;&#x6B3E;">&#x8CA1;&#x653F;&#x90E8;&#x9752;&#x5E74;&#x5B89;&#x5FC3;&#x6210;&#x5BB6;&#x8CFC;&#x5C4B;&#x512A;&#x60E0;&#x8CB8;&#x6B3E;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG16" class="sitemap-group">&#x672C;&#x7DB2;&#x4ECB;&#x7D39;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG16">
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2010"  title="&#x672C;&#x7AD9;&#x7DE3;&#x8D77;">&#x672C;&#x7AD9;&#x7DE3;&#x8D77;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2020"  title="&#x4E3B;&#x7BA1;&#x6A5F;&#x95DC;">&#x4E3B;&#x7BA1;&#x6A5F;&#x95DC;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2040"  title="&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;">&#x7DB2;&#x7AD9;&#x5C0E;&#x89BD;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2100"  title="&#x5206;&#x773E;&#x5C0E;&#x89BD;">&#x5206;&#x773E;&#x5C0E;&#x89BD;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2050"  title="&#x5E38;&#x898B;&#x554F;&#x984C;">&#x5E38;&#x898B;&#x554F;&#x984C;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/E5010"  title="&#x8CC7;&#x6599;&#x4F86;&#x6E90;&#x8207;&#x66F4;&#x65B0;&#x983B;&#x7387;">&#x8CC7;&#x6599;&#x4F86;&#x6E90;&#x8207;&#x66F4;&#x65B0;&#x983B;&#x7387;</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div><strong id="sitemapGroupMG19" class="sitemap-group">&#x7DB2;&#x7DB2;&#x76F8;&#x9023;</strong></div>
+                                            <ul class="sitemapLv2" aria-labelledby="sitemapGroupMG19">
+                                                                <li><a class="sitemap-item default" href="https://easymap.land.moi.gov.tw/W10Web/Normal" target=_blank title="&#x5730;&#x7C4D;&#x5716;&#x8CC7;&#x7DB2;&#x8DEF;&#x4FBF;&#x6C11;&#x670D;&#x52D9;&#x7CFB;&#x7D71;">&#x5730;&#x7C4D;&#x5716;&#x8CC7;&#x7DB2;&#x8DEF;&#x4FBF;&#x6C11;&#x670D;&#x52D9;&#x7CFB;&#x7D71;</a></li>
+                                                                <li><a class="sitemap-item default" href="https://www.land.nat.gov.tw/" target=_blank title="&#x5730;&#x653F;&#x96FB;&#x50B3;&#x7CFB;&#x7D71;">&#x5730;&#x653F;&#x96FB;&#x50B3;&#x7CFB;&#x7D71;</a></li>
+                                                                <li><a class="sitemap-item default" href="https://ramdar.nusc.gov.tw/" target=_blank title="&#x8F3B;&#x5C04;&#x5C4B;&#x67E5;&#x8A62;">&#x8F3B;&#x5C04;&#x5C4B;&#x67E5;&#x8A62;</a></li>
+                                                                <li><a class="sitemap-item default" href="https://www.land.moi.gov.tw/chhtml/landvalue/42" target=_blank title="&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;&#x67E5;&#x8A62;">&#x653F;&#x5E9C;&#x516C;&#x544A;&#x73FE;&#x503C;&#x67E5;&#x8A62;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2060"  title="&#x571F;&#x5730;&#x4F7F;&#x7528;&#x5206;&#x5340;&#x67E5;&#x8A62;">&#x571F;&#x5730;&#x4F7F;&#x7528;&#x5206;&#x5340;&#x67E5;&#x8A62;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2070"  title="&#x4F4F;&#x5B85;&#x53CA;&#x4E0D;&#x52D5;&#x7522;&#x8CC7;&#x8A0A;&#x7DB2;">&#x4F4F;&#x5B85;&#x53CA;&#x4E0D;&#x52D5;&#x7522;&#x8CC7;&#x8A0A;&#x7DB2;</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2080"  title="&#x570B;&#x5167;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)">&#x570B;&#x5167;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)</a></li>
+                                                                <li><a class="sitemap-item default" href="/Publicize/Info/Z2090"  title="&#x570B;&#x5916;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)">&#x570B;&#x5916;&#x76F8;&#x95DC;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;(&#x4EE5;&#x4E0B;&#x7DB2;&#x7AD9;&#x9023;&#x7D50;&#x516C;&#x5E03;&#x76F8;&#x95DC;&#x8CC7;&#x8A0A;&#x975E;&#x4EE3;&#x8868;&#x672C;&#x5E73;&#x53F0;&#x7ACB;&#x5834;)</a></li>
+                                            </ul>
+                                        </li>
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+                    <div id="service-hotline" class="information-desk"><table>
+    <caption class="text-center">
+        <div>諮詢專線</div>
+    </caption>
+    <thead>
+        <tr>
+            <th scope="col">類型</th>
+            <th scope="col">諮詢專線</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">內政服務熱線</th>
+            <td>1996免付費電話 (<a class="like1996" href="https://www.moi.gov.tw/cp.aspx?n=8370" target="_blank" title="[另開新視窗]關於「1996內政服務熱線」資訊" rel="noopener noreferrer"><i class="fas fa-user-alt"></i>說明</a>)</td>
+        </tr>
+        <tr>
+            <th scope="row">縣市政府民眾服務專線</th>
+            <td>市內電話或手機直撥1999</td>
+        </tr>
+        <tr>
+            <th scope="row">300億元中央擴大租金補貼</th>
+            <td>諮詢專線：(02)7729-8003【專人接聽時間為週一至週五上午8:00至下午6:00】<br />審查專線：
+<a href="/Publicize/Info/B1020?y=115&amp;n=辦理單位" target="_blank" title="[另開新視窗]300億元中央擴大租金補貼的直轄市、縣（市）政府受理單位" class="text-color-red" rel="noopener noreferrer">直轄市、縣（市）政府受理單位</a>【審查進度、結果、補件等相關問題】</td>
+        </tr>
+        <tr>
+            <th scope="row">社會住宅</th>
+            <td>國家住宅及都市更新中心、直轄市、縣（市）受理單位(
+<a href="/Publicize/Info/B5010#Outlink" target="_blank" title="[另開新視窗]社會住宅相關的受理單位資訊，包含「國家住宅及都市更新中心」及「直轄市、縣（市）受理單位聯絡窗口」" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)</td>
+        </tr>
+        <tr>
+            <th scope="row">社會住宅包租代管</th>
+            <td>地方政府1999市民專線或國家住宅及都市更新中心(02)2100-6360
+<br />社會住宅包租代管第五期計畫縣市版受理單位及聯絡窗口(
+
+<a href="/Publicize/Info/B5020?mode=P5#period5" target="_blank" title="[另開新視窗]社會住宅包租代管第5期計畫受理單位及聯絡窗口等相關資訊" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)
+
+<br />
+
+社會住宅包租代管第五期計畫中央版受理單位及聯絡窗口(
+<a href="https://www.hurc.org.tw/hurc/docDetail?uid=296&amp;pid=257&amp;doc_id=1779" target="_blank" title="[另開新視窗]顯示【國家住宅及都市更新中心】網站中關於社會住宅包租代管第五期計畫受理單位及聯絡窗口" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址(國家住宅及都市更新中心)</a>)
+
+<br />
+社會住宅包租代管第五期計畫各地方業者資訊(
+<a href="/Publicize/Info/B5020?mode=Info&amp;PGID=343" target="_blank" title="[另開新視窗]社會住宅包租代管第五期計畫各地方業者資訊" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)</td>
+        </tr>
+		
+		
+        <tr>
+            <th scope="row">自購住宅貸款利息補貼<br />修繕住宅貸款利息補貼</th>
+            <td>諮詢專線：(02)7729-8003【專人接聽時間為週一至週五上午8:00至下午6:00】<br />聯絡窗口：直轄市、縣（市）政府受理單位(
+<a href="/Publicize/Info/B1080?KeyID=HS202610" target="_blank" title="[另開新視窗]自購(修繕)住宅貸款利息補貼直轄市、縣（市）政府受理單位" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)</td>
+        </tr>
+        <tr>
+            <th scope="row">公益出租人</th>
+            <td>諮詢專線：(02)7729-8003【專人接聽時間為週一至週五上午8:00至下午6:00】<br />聯絡窗口：直轄市、縣（市）政府受理單位(
+<a href="/Publicize/Info/B4050?n=公益出租人-聯絡窗口" target="_blank" title="[另開新視窗]公益出租人直轄市、縣（市）政府受理單位" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)</td>
+        </tr>
+        <tr>
+            <th scope="row">原有住宅無障礙設施改善補助</th>
+            <td>聯絡窗口：直轄市、縣（市）政府受理單位(
+<a href="https://pip.moi.gov.tw/Upload/File/Policy/B/113年受理單位-1130325.pdf" target="_blank" title="[另開新視窗][PDF檔案]原有住宅無障礙設施改善補助直轄市、縣（市）政府受理單位" rel="noopener noreferrer"><i class="far fa-file-pdf" aria-hidden="true"></i>PDF檔案</a>)</td>
+        </tr>
+        <tr>
+            <th scope="row">財政部青年安心成家貸款</th>
+            <td>財政部及承貸公股銀行聯絡窗口(
+<a href="https://www.nta.gov.tw/singlehtml/110" target="_blank" title="[另開新視窗]財政部青年安心成家貸款聯絡窗口" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)</td>
+        </tr>
+        <tr>
+            <th scope="row">契約書範本相關事宜</th>
+            <td>內政服務熱線1996轉地政司</td>
+        </tr>
+        <tr>
+            <th scope="row">不動產服務業資訊</th>
+            <td>內政部不動產服務業資訊系統(
+<a href="https://resim.moi.gov.tw/" target="_blank" title="[另開新視窗]內政部不動產服務業資訊系統" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)<br />不動產估價師、地政士、不動產經紀業、租賃住宅服務業縣市政府聯絡窗口 (
+<a href="https://resim.moi.gov.tw/Home/QueryIndex" target="_blank" title="[另開新視窗]開啟【內政部不動產服務業資訊系統】網站，選擇業務項目，再選「縣市聯絡窗口」" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>開啟網址</a>)</td>
+        </tr>
+        <tr>
+            <th scope="row">國土管理署</th>
+            <td>【電話總機】(02)8771-2345
+<a href="http://www.nlma.gov.tw/ch/sglarticle/phone" target="_blank" title="[另開新視窗]國土管理署各業務單位聯絡電話" rel="noopener noreferrer"><i class="fas fa-info-circle"></i>【各業務單位聯絡電話】</a></td>
+        </tr>
+        <tr>
+            <th scope="row">「不動產資訊平台」諮詢服務</th>
+            <td><span>諮詢專線：(02)2778-7148 【專人接聽時間為週一至週五 08:30–12:00、13:30–17:30，國定假日暫停服務】</span><span><a class="mailbox" href="/Publicize/Info/Z4030" title="移至「諮詢信箱」" target="_self"><i class="fa fa-envelope"></i>諮詢信箱</a></span></td>
+        </tr>
+    </tbody>
+</table></div>
+
+            <div class="footer-copyright">
+                <div class="accesskey-div">
+                    <a href="#Accesskey_B" id="Accesskey_B" accesskey="B" title="下方功能區域" class="accesskey english-font-arial">:::</a>
+                </div>
+                <div class="footer-info">
+                    <div class="div1">
+                        <div class="browserCounter">
+                                <div>
+                                    <label class="name">累計瀏覽人次：</label><span class="val">96,990,119</span>
+                                </div>
+                                <div>
+                                    <label class="name">今日瀏覽人次：</label><span class="val">51,673</span>
+                                </div>
+                        </div>
+                        <div class="page-qrcode">
+                                    <div class="urlqrcode">
+                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNAQAAAAAzx8nEAAABx0lEQVR4nO2XPY6EMAyFjShScoTcBC6GFCQuBjfJEVJSjMb7nsPCzkjTOsVsivnho7Ds52dH9NM55B99PSoi0ukiYZOkxzg88J&#x2B;/vFFS3RGSdGXmS49oz9zRLGHH7/AUiTLKHPFSI6RLRKJ6xvpoiErKAenJrFcjxHqVOR5d6a1ob6X0QlQvHoT9/HgTthOqZ4nHhE6SiQG/trkTWhVxIUdTEctWDnsDxNqMks4wx2HF06EBspDgZ2xjfUK94A2Q9Q/Ui1JlZMt4C4QvQZhPZAu&#x2B;MlftuCORwJB0Y/egXlkv2XgiCBcRKkdfhGKWKLdsHBELJCgVvRVFE7l3AEeEg15mG9NSKOHwKxtPBEdFhPPpstQOXvJHaONrGTJLyVcveyJGaKbWma9QvaoNUJ8hXM22JFI2XItSA6RVwhu3EHlJlCNS21DhbFzMqmzaIHqrZWtVukm1Wm&#x2B;EAoVtWE7h0mTvXnZEdjj1OP7VZs5ekjs6b1IcuWtdU&#x2B;VSlCdKvDGcpbK5e9fLE9ndocfIRTvZuJHpdhtfpPRWThquIn/HjTNCvexCx8ETVBsg1gs5Qicp3QQvNUFSr/jWy3aJer3QOaEP5x99O/oBqrnj0xcNNYoAAAAASUVORK5CYII=" alt="&#x9019;&#x662F;&#x53EF;&#x4EE5;&#x7528;&#x4F86;&#x958B;&#x555F;&#x300C;https://pip.moi.gov.tw/Publicize/Info/E1050&#x300D;&#x7DB2;&#x9801;&#x7684;QRCode"></img>
+                                    </div>
+                        </div>
+                    </div>
+                    <div class="div2">
+
+                                <div class="unit">
+                                    <div>
+    <div class="frow">
+        <span class="label">
+        </span>
+        <span class="data">
+            <span class="item">
+                <a href="/Publicize/Info/Z2130">隱私權政策</a><span class="split-symbols">|</span></span>
+            <span class="item">
+                <a href="/Publicize/Info/Z2140">網站安全政策</a>
+            </span>
+        </span>
+    </div>
+    <div class="frow">
+        <span class="label">內政部地址：</span>
+        <span class="data">100218台北市徐州路5號</span>
+    </div>
+    <div class="frow">
+        <span class="label">網站管理單位：</span>
+        <span class="data">
+            <span class="item">
+                <a href="http://www.nlma.gov.tw/ch" target="_blank" title="[另開新網頁]" rel="noopener noreferrer">內政部國土管理署</a>
+            </span>
+        </span>
+    </div>
+    <div class="frow">
+        <span class="label">資料提供單位：</span>
+        <span class="data">
+            <span class="item">
+                <a href="http://www.nlma.gov.tw/ch" target="_blank" title="[另開新網頁]" rel="noopener noreferrer">內政部國土管理署</a><span class="split-symbols">|</span></span>
+            <span class="item">
+                <a href="https://www.land.moi.gov.tw" target="_blank" title="[另開新網頁]" rel="noopener noreferrer">地政司</a><span class="split-symbols">|</span></span>
+            <span class="item">
+                <a href="https://www.ris.gov.tw" target="_blank" title="[另開新網頁]" rel="noopener noreferrer">戶政司</a><span class="split-symbols">|</span></span>
+            <span class="item">
+                <a href="https://www.moi.gov.tw/stat/index.aspx" target="_blank" title="[另開新網頁]" rel="noopener noreferrer">統計處</a><span class="split-symbols">|</span></span>
+            <span class="item">
+                <a href="https://www.dot.gov.tw" target="_blank" title="[另開新網頁]" rel="noopener noreferrer">財政部賦稅署</a><span class="split-symbols">|</span></span>
+            <span class="item">
+                <a href="https://www.jcic.org.tw" target="_blank" title="[另開新網頁]" rel="noopener noreferrer">財團法人聯合徵信中心</a><span class="split-symbols">|</span></span>
+            <span class="item">
+                <span>地方政府<span class="split-symbols">|</span></span>
+            </span>
+            <span class="item">
+                <span>地方法院<span class="split-symbols">|</span></span>
+            </span>
+            <span class="item">
+                <span>銀行</span>
+            </span>等單位</span>
+    </div>
+    <div class="frow">
+        <span class="label">網站製作維護單位：</span>
+        <span class="data">
+            <span class="item">
+                <span>鴻維科技股份有限公司</span>
+            </span>
+        </span>
+    </div>
+    <div class="frow">
+        <span class="label">瀏覽器建議使用：</span>
+        <span class="data">
+            <span class="item">
+                <span>Google Chrome, Microsoft Edge 或 FireFox 最新版本</span>
+            </span>
+        </span>
+    </div>
+</div>
+                                    <div><span class="label">當前版本：</span><span class="data"><span class="item">4.114096.002.1106</span></span></div>
+                                    <div class="text-start print-hide">211.22.87.252</div>
+                                </div>
+
+                    </div>
+                            <div class="div3 print-hide"><div class="copyright"><p>Copyright © 2019 內政部, All Rights Reserved</p></div><div class="decoration"><a class="img-aa" href="https://accessibility.moda.gov.tw/Applications/Detail?category=20230816104752" target="_blank" title="通過AA無障礙網頁檢測" rel="noopener noreferrer"><img src="https://pip.moi.gov.tw/Upload/image/home/logo_handicap.png" alt="" /><span class="hidden">通過AA無障礙網頁檢測</span></a></div></div>
+
+                </div>
+
+
+            </div>
+        </footer>
+
+        <div class="toolsSide">
+            <a href="#" id="back-to-top" role="button" title="TOP"><div class="img"><img src="/Upload/image/home/top-2024.png" alt="" aria-hidden="true" /></div><span>TOP</span></a>
+        </div>
+
+    </div>
+
+
+
+
+</body>
+</html>
