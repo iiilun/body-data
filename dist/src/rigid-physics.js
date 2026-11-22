@@ -1,4 +1,5 @@
-import {clamp,lerp,hash} from './math.js?v=4';
+import {clamp,lerp,hash} from './math.js?v=5.0.0';
+import {shadeAt} from './scene-models.js?v=5.0.0';
 export class RigidCare{
  constructor(Matter=globalThis.Matter){this.M=Matter;this.reset();}
  reset(){
@@ -32,17 +33,18 @@ export class RigidCare{
  }
  update(dt,segments,config){
   if(dt<=0)return;this.sync(segments);this.clock+=dt;this.time+=dt;
-  if(this.clock>config.interval&&this.bodies.length<28&&config.cards?.length){
+  if(this.clock>config.interval&&this.bodies.length<80&&config.cards?.length){
    this.clock=0;const card=config.cards[this.serial%config.cards.length],size=config.measure(card),side=this.serial%2;
-   const candidates=segments.filter(s=>s.id.startsWith('forearm')&&s.side===side),arm=candidates[0];
-   const x=clamp(arm?lerp(arm.a.x,arm.b.x,.5):config.width*(side?.72:.28),size.width/2+10,config.width-size.width/2-10);
+   const weightedSide=this.serial%7<5?0:1;
+   const candidates=segments.filter(s=>s.id.startsWith('forearm')&&s.side===weightedSide),arm=candidates[0];
+   const x=clamp(arm?lerp(arm.a.x,arm.b.x,.28+hash(this.serial)*.44):config.width*(side?.72:.28),size.width/2+10,config.width-size.width/2-10);
    this.add(card,x,-size.height,size.width,size.height,(hash(this.serial+1)-.5)*.32);
   }
   this.accumulator+=Math.min(dt,.055);while(this.accumulator>=1/120){this.M.Engine.update(this.engine,1000/120);this.accumulator-=1/120;}
   for(const body of this.bodies)if(body.position.y>config.height+400||body.position.x<-500||body.position.x>config.width+500){this.M.Composite.remove(this.engine.world,body);}
   this.bodies=this.bodies.filter(b=>b.position.y<=config.height+400&&b.position.x>=-500&&b.position.x<=config.width+500);
-  const count=[0,0];for(const b of this.bodies)if(b.plugin.caught&&Math.abs(b.velocity.y)<4)count[b.plugin.side??0]++;
-  this.smoothLoads=this.smoothLoads.map((n,i)=>lerp(n,clamp(count[i]/10),1-Math.exp(-dt*1.8)));
+  const count=[0,0];for(const b of this.bodies)if(b.plugin.caught&&Math.abs(b.velocity.y)<5&&b.position.y<config.height)count[b.plugin.side??0]++;
+  this.smoothLoads=this.smoothLoads.map((n,i)=>lerp(n,clamp(count[i]/13),1-Math.exp(-dt*1.3)));
  }
 }
 export class PixelMelt{
@@ -53,18 +55,15 @@ export class PixelMelt{
   const shade=hands.filter(h=>h.y<height*.47);let motion=0;
   for(const h of shade){const old=this.previousHand.find(p=>p.id===h.id);if(old)motion+=Math.min(1,Math.hypot(h.x-old.x,h.y-old.y)/Math.max(1,dt*width));}
   this.previousHand=hands.map(h=>({...h}));this.cooling=lerp(this.cooling,clamp(shade.length*.28+motion*.75),1-Math.exp(-dt*8));
-  this.heat=clamp(this.heat+dt*(.028+.02*progress)*(1-this.cooling*.93));
-  const seen=new Set();
-  for(const cell of cells){seen.add(cell.id);let p=this.pixels.get(cell.id);if(!p){p={id:cell.id,dx:0,dy:0,vx:0,vy:0,free:false,damage:0,color:cell.color,lastX:cell.x,lastY:cell.y};this.pixels.set(cell.id,p)}
-   const protectedBy=shade.some(h=>Math.abs(h.x-cell.x)<width*.16&&h.y<cell.y+block);
-   p.damage+=dt*(protectedBy?.002:.022)*(1-this.cooling*.7)*(1.3-cell.y/height*.6);
-   if(!p.free&&p.damage>.14+hash(cell.id*3)*.62&&progress>.08){p.free=true;p.x=cell.x;p.y=cell.y;p.vx=(hash(cell.id+1)-.5)*width*.12;p.vy=height*.02;}
-   if(p.free){
-    for(const h of hands){const d=Math.hypot(p.x-h.x,p.y-h.y);if(d<block*3){p.vx+=(p.x-h.x)/(d||1)*dt*height*.8;p.vy-=dt*height*.4;}}
-    p.vy+=dt*height*.55;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.exp(-dt*.35);
-   }else{p.lastX=cell.x;p.lastY=cell.y;p.color=cell.color;}
+  this.heat=clamp(this.heat+dt*(.024+.012*progress)*(1-this.cooling*.7));
+  for(const cell of cells){const id=cell.material??cell.id;let p=this.pixels.get(id);const protection=shadeAt(cell,shade,width,height);
+   if(!p){p={id,free:false,damage:this.heat*(1-protection)*.65,color:cell.color,seed:this.pixels.size};this.pixels.set(id,p);}
+   if(!p.free){p.damage+=dt*(.018+.009*progress)*(1-protection*.98);p.color=cell.color;
+    if(p.damage>.12+hash(p.seed*3)*.75&&progress>.05){p.free=true;p.x=cell.x;p.y=cell.y;p.vx=(hash(p.seed+1)-.5)*width*.09;p.vy=-height*.025;p.age=0;}
+   }
   }
-  for(const [id,p]of this.pixels)if(!seen.has(id)&&!p.free)this.pixels.delete(id);
+  // Released pixels remain released even when their source material leaves the camera grid.
+  for(const p of this.pixels.values())if(p.free){p.age+=dt;p.vy+=dt*height*.3;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.exp(-dt*.25);}
   return this.pixels;
  }
 }

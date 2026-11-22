@@ -1,36 +1,62 @@
-import {clamp,lerp} from './math.js?v=4';
-function freeIntervals(blocked,width){
- const ranges=blocked.map(([a,b])=>[clamp(a,0,width),clamp(b,0,width)]).filter(([a,b])=>b>a).sort((a,b)=>a[0]-b[0]);
- const merged=[];for(const range of ranges){const last=merged.at(-1);if(last&&range[0]<=last[1]+2)last[1]=Math.max(last[1],range[1]);else merged.push([...range]);}
- const free=[];let x=0;for(const [a,b]of merged){if(a-x>8)free.push([x,a]);x=b;}if(width-x>8)free.push([x,width]);return free;
+import {clamp} from './math.js?v=5.0.0';
+
+export function factText(card){return `${String(card.value).replace(/\s/g,'\u00a0')} ${card.fieldLabel||card.label} · ${card.scope} ${card.yearText||card.year}`;}
+function blockedRanges(cells,top,bottom,block,width,padding){
+ const rows=cells.filter(c=>c.y+block*.5>top&&c.y-block*.5<bottom).map(c=>[clamp(c.x-block*.5-padding,0,width),clamp(c.x+block*.5+padding,0,width)]).sort((a,b)=>a[0]-b[0]);
+ const merged=[];for(const r of rows){if(r[1]<=r[0])continue;const last=merged.at(-1);if(last&&r[0]<=last[1]+3)last[1]=Math.max(last[1],r[1]);else merged.push(r);}return merged;
 }
 export class SilhouetteType{
- constructor(){this.items=[];this.key='';}
+ constructor(){this.items=[];this.rows=[];this.key='';this.time=0;}
  build(width,height,font,row,cards,measure){
-  const key=[width,height,font,cards.map(c=>c.value+' '+c.label+' '+c.scope).join('|')].join(':');if(key===this.key)return;
-  this.key=key;this.items=[];this.width=width;this.height=height;this.font=font;this.row=row;if(!cards.length)return;
-  const text=cards.map(c=>c.value+' '+(c.fieldLabel||c.label).toUpperCase()+' · '+c.scope+' '+c.year).join(' / ').replace(/≈\s+/g,'≈\u00a0')+' / ';
-  const isBreak=ch=>/\s/.test(ch)&&ch!=='\u00a0';
-  const units=/[\u0600-\u06ff]/.test(text)?text.match(/[\p{L}\p{M}]+|./gu):[...text];
-  let index=0;
-  for(let y=8;y<height-75;y+=row)for(let x=0;x<width*1.5;){const char=units[index++%units.length],advance=Math.max(font*.17,measure(char));const previous=units[(index-2+units.length)%units.length];let wordWidth=0,word='';if(isBreak(previous)||index===1){for(let n=index-1;n<index-1+units.length;n++){const next=units[n%units.length];if(isBreak(next)&&n>=index)break;word+=next;wordWidth+=Math.max(font*.17,measure(next))+2;if(/[\u2e80-\u9fff]/.test(next))break;}}this.items.push({char,width:advance,wordWidth,atomic:/^[≈0-9\u0660-\u0669]/.test(word.trim()),x,y,active:false,alpha:0});x+=advance+2;}
+  const key=[width,height,font,cards.map(factText).join('|')].join(':');if(key===this.key)return;
+  this.key=key;this.items=[];this.rows=[];this.width=width;this.height=height;this.font=font;this.row=row;this.time=0;if(!cards.length)return;
+  // Each lane keeps its own ordered sentence. Reflow never reassigns glyphs to another row.
+  for(let y=12,line=0;y<height-38;y+=row,line++){
+   const ordered=cards.map((_,i)=>cards[(i+line*3)%cards.length]);
+   const text=ordered.map(factText).join('   /   ')+'   /   ';
+   const units=/[\u0600-\u06ff]/.test(text)?text.match(/[\p{L}\p{M}]+|[^\p{L}\p{M}]/gu):[...text];
+   const lane={items:[],y,index:line,drift:0};let x=-width*.55,index=0;
+   while(x<width*1.7){const char=units[index++%units.length],advance=Math.max(font*.2,measure(char));const glyph={char,width:advance,baseX:x,x,y,drawX:x,drawY:y,vx:0,vy:0,active:true,alpha:1};lane.items.push(glyph);this.items.push(glyph);x+=advance+font*.025;}
+   for(let n=0;n<lane.items.length;n++){const g=lane.items[n],previous=lane.items[n-1];if(/[≈0-9٠-٩]/.test(g.char[0])&&(!previous||/\s/.test(previous.char))){let word='';for(let j=n;j<lane.items.length;j++){const char=lane.items[j].char;if(/\s/.test(char)&&char!=='\u00a0')break;word+=char;}g.atomicWidth=measure(word);}}
+   lane.period=x+width*.55;this.rows.push(lane);
+  }
  }
  update(dt,cells,block,width,hands,progress){
-  const targets=[],margin=9+progress*12,height=this.font*.92;
-  for(let y=8;y<this.height-75;y+=this.row){
-   const blocked=cells.filter(c=>c.y+block/2>y&&c.y-block/2<y+height).map(c=>[c.x-block/2-margin,c.x+block/2+margin]);
-   for(const h of hands)if(h.y+65>y&&h.y-65<y+height)blocked.push([h.x-80,h.x+80]);
-   const intervals=freeIntervals(blocked,width).filter(([a,b])=>b-a>this.font*1.45);
-   for(const [start,end]of intervals){let x=start;
-    while(targets.length<this.items.length){const g=this.items[targets.length];if(g.wordWidth&&(g.atomic||g.wordWidth<=end-start)&&x+g.wordWidth>end)break;if(x+g.width>end)break;targets.push({x,y});x+=g.width+2;}
+  dt=Math.min(dt,.04);this.time+=dt;
+  for(const lane of this.rows){
+   lane.drift+=dt*(7+lane.index%4*2)*(lane.index%2?-1:1);
+   const blockers=[...cells,...hands.map(h=>({x:h.x,y:h.y}))];
+   const ranges=blockedRanges(blockers,lane.y,lane.y+this.font*.94,block,width,9+progress*5+this.font*.75);
+   const removed=ranges.reduce((n,[a,b])=>n+b-a,0);
+   const ordered=lane.items.map(g=>{let raw=g.baseX+lane.drift;while(raw<-width*.6)raw+=lane.period;while(raw>width*1.7)raw-=lane.period;return {g,raw};}).sort((a,b)=>a.raw-b.raw);
+   let cursor=(ordered[0]?.raw||0)-removed*.5,previous=null;
+   for(const {g,raw}of ordered){
+    for(const [a,b]of ranges)if(cursor+(g.atomicWidth||g.width)>a&&cursor<b)cursor=b;
+    const target=cursor,targetY=lane.y+Math.sin(this.time*.55+lane.index*.8)*2.5;cursor+=g.width+this.font*.025;
+    if(Math.abs(g.x-target)>width*.9){g.x=target;g.vx=0;}
+    const ax=(target-g.x)*72-g.vx*16,ay=(targetY-g.y)*55-g.vy*14;
+    g.vx+=ax*dt;g.vy+=ay*dt;g.x+=g.vx*dt;g.y+=g.vy*dt;
+    g.drawX=Math.max(g.x,previous?previous.drawX+previous.width+this.font*.025:-Infinity);g.drawY=g.y;g.active=true;previous=g;
    }
   }
-  const blend=1-Math.exp(-Math.min(dt,.05)*13);
-  for(let i=0;i<this.items.length;i++){
-   const g=this.items[i],target=targets[i];g.active=!!target;if(!target)continue;
-   const distance=Math.hypot(g.x-target.x,g.y-target.y);g.x=lerp(g.x,target.x,blend);g.y=lerp(g.y,target.y,blend);
-   g.drawX=target.x+clamp(g.x-target.x,-.8,.8);g.drawY=target.y+clamp(g.y-target.y,-.8,.8);
-   g.alpha=lerp(g.alpha,distance>this.font?0.2:1,blend);
+ }
+}
+
+// Background facts use the same size and baseline. Movement changes, observations do not.
+export class DataFlow{
+ constructor(){this.key='';this.lanes=[];}
+ build(width,height,font,cards,measure){
+  const key=[width,height,font,cards.map(factText).join('|')].join(':');if(key===this.key)return;this.key=key;this.lanes=[];if(!cards.length)return;
+  const row=font*2.35;
+  for(let y=14,index=0;y<height-25;y+=row,index++){
+   const snippets=[];let x=0,n=0;while(x<width*2.2){const card=cards[(index*3+n++)%cards.length],text=factText(card),w=measure(text)+font*3;snippets.push({text,x,width:w});x+=w;}
+   this.lanes.push({y,index,snippets,period:x});
   }
+ }
+ draw(ctx,{width,height,font,cards,time,color='#fff',alpha=.38,speed=22,clip}){
+  ctx.save();if(clip){ctx.beginPath();ctx.rect(...clip);ctx.clip();}
+  this.build(width,height,font,cards,s=>ctx.measureText(s).width);ctx.fillStyle=color;ctx.globalAlpha=alpha;
+  for(const lane of this.lanes){const offset=((time*speed*(lane.index%2?-1:1)+lane.index*137)%lane.period+lane.period)%lane.period;for(const s of lane.snippets)for(const repeat of [-1,0,1]){const x=s.x-offset+repeat*lane.period;if(x+s.width>0&&x<width)ctx.fillText(s.text,x,lane.y+Math.sin(time*.6+lane.index)*2);}}
+  ctx.restore();
  }
 }

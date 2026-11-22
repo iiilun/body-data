@@ -1,3 +1,4 @@
+@font-face{font-family:"Noto Sans Arabic";src:url("./assets/fonts/NotoSansArabic.ttf") format("truetype");font-style:normal;font-weight:100 900;font-display:swap}
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&family=Noto+Sans+KR:wght@300;400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap');
 :root{color-scheme:dark;--fg:#fff;--bg:#000;--cube:clamp(210px,25vw,360px);font-family:'Helvetica Neue',Helvetica,Arial,'Noto Sans TC','Noto Sans JP','Noto Sans KR','Noto Sans Arabic',sans-serif;font-synthesis:none}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{background:var(--bg);color:var(--fg)}[hidden]{display:none!important}button,select,a{-webkit-tap-highlight-color:transparent;color:inherit}button,select{font:inherit;font-size:16px;font-weight:400}button{cursor:pointer}button:disabled{cursor:wait}button:focus-visible,a:focus-visible,select:focus-visible{outline:1px solid currentColor;outline-offset:6px}button{background:none;border:0;padding:8px 0}button:hover,a:hover{opacity:.55}#stage{position:fixed;inset:0;width:100%;height:100%;z-index:0}#camera{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none}main{position:relative;height:100svh;pointer-events:none}button,select,a,dialog{pointer-events:auto}
@@ -40,3 +41,18 @@ body[data-theme="hold"] .alignment{color:#000}.scene-context{padding-top:26px;ba
 @media(max-width:700px){body[data-state="idle"] .cube-scene,body[data-state="loading"] .cube-scene,body[data-state="scanning"] .cube-scene{left:50%;top:42%;--cube:clamp(210px,50vw,300px)}#cube-guidance{top:74%;max-width:88vw;width:88vw}#cube-guidance .menu-hint{font-size:13px}.alignment>p{font-size:15px}.alignment h2{font-size:15px;left:65px}.briefing{padding-top:68px}.brief-instruction{max-width:100%}}
 
 #cube-scene{-webkit-user-select:none;user-select:none}
+
+/* V5: the front face becomes the only confirmation target. */
+.cube-face{transition:background-color .24s ease,color .24s ease}
+.cube-face[data-selected="true"]{background:#fff;color:#000;outline-color:#fff}
+#cube-guidance{top:80%}#cube-guidance .menu-hint{font-size:14px;line-height:1.7}
+#grip-progress{height:2px}
+.brief-facts.triple{grid-template-columns:repeat(3,minmax(0,1fr));gap:5%}
+.brief-heading>p{max-width:46%}.brief-source{max-height:3em;overflow:hidden}
+.coach{bottom:110px;background:var(--bg);padding:10px 16px}
+.coach p{max-width:58ch}.scene-context{padding-top:25px}
+@media(max-width:700px){.brief-facts.triple{grid-template-columns:1fr 1fr;row-gap:18px}.brief-facts.triple .fact-value{font-size:48px}#cube-guidance{top:75%}.coach{bottom:115px}.scene-context p{font-size:14px}}
+
+body[dir="rtl"]{font-family:"Noto Sans Arabic",Arial,sans-serif}body[dir="rtl"] .fact-value{font-family:"Noto Sans Arabic",Arial,sans-serif}
+
+.brief-facts.quad{row-gap:22px;margin:auto 0}.brief-facts.quad .fact-label{margin-top:12px}

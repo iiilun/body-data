@@ -62,13 +62,15 @@ for(const code of Object.keys(languages)){
   Object.assign(languages[code].labels,extraLabels[code]);
   languages[code].back={en:'Back',es:'Volver',fr:'Retour',zh:'返回',ja:'戻る',ko:'돌아가기',ar:'رجوع'}[code];
 }
+const formatters=new Map();
+function formatter(language,kind,digits=1){const key=[language,kind,digits].join(':');if(!formatters.has(key))formatters.set(key,new Intl.NumberFormat(locales[language]||locales.en,{...(kind==='compact'?{notation:'compact'}:{}),maximumFractionDigits:digits}));return formatters.get(key);}
 export function number(value, language, digits = 1) {
   if (!Number.isFinite(value)) return '—';
-  return new Intl.NumberFormat(locales[language] || locales.en,{maximumFractionDigits:digits}).format(value);
+  return formatter(language,'number',digits).format(value);
 }
 export function compact(value, language) {
   if (!Number.isFinite(value)) return '—';
-  return new Intl.NumberFormat(locales[language] || locales.en,{notation:'compact',maximumFractionDigits:2}).format(value);
+  return formatter(language,'compact',2).format(value);
 }
 export function countryName(code, language) {
   try { return new Intl.DisplayNames([locales[language]], {type:'region'}).of(code); } catch { return code; }

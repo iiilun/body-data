@@ -1,6 +1,7 @@
-import {dictionary,number,compact,countryName} from './i18n.js?v=4';
-import {copy} from './experience.js?v=4';
-import {extraLabels,scopes} from './extra-labels.js?v=4';
+import {dictionary,number,compact,countryName} from './i18n.js?v=5.0.0';
+import {copy} from './experience.js?v=5.0.0';
+import {extraLabels,scopes} from './extra-labels.js?v=5.0.0';
+import {sceneWords} from './scene-copy.js?v=5.0.0';
 export const words={
  en:{thirst:'THIRST',offline:'OFFLINE',vacant:'VACANT',thirstTopic:'ACCESS TO WATER',offlineTopic:'DIGITAL ACCESS',vacantTopic:'EMPTY HOMES',turn:'MOVE AN OPEN HAND TO TURN',grip:'CLOSE YOUR FIST TO ENTER',preview:'DRAG TO TURN · SPACE TO GRIP',align:'MATCH THE OUTLINE',holdPose:'HOLD THE POSE',reading:'THE DATA',thirstAction:'CUP YOUR HANDS. CATCH THE FLOW.',offlineAction:'RAISE BOTH HANDS. RECONNECT.',vacantAction:'REACH OUT. TRY TO OCCUPY THE ROOM.',thirstNote:'Gather the flow. Access arrives in interruptions.',offlineNote:'Sweep across the missing image to reconnect its pieces.',vacantNote:'The room exists. Reaching it does not make it yours.',safeWater:'SAFELY MANAGED WATER',withoutWater:'WITHOUT SAFELY MANAGED WATER',online:'USING THE INTERNET',offlinePeople:'NOT USING THE INTERNET',coverage:'COVERAGE',selected:'SELECTED CENSUSES',homes:'HOMES',careRatio:'CARE TIME GAP',womenHours:'WOMEN · CARE HOURS / DAY',menHours:'MEN · CARE HOURS / DAY',gapHours:'DAILY CARE TIME GAP',housingShare:'URBAN RESIDENTS IN SLUMS',housingPeople:'SLUM RESIDENTS',mortgage:'MORTGAGE / INCOME',housePrice:'HOME PRICE / ANNUAL INCOME',waterSupply:'PUBLIC WATER COVERAGE',field:'MAKE ROOM WITH YOUR BODY',reconnect:'SWEEP TO RECONNECT',cup:'BRING YOUR HANDS TOGETHER',reach:'REACH INTO THE EMPTY ROOMS'},
  zh:{thirst:'飲水',offline:'離線',vacant:'空屋',thirstTopic:'飲水的取得',offlineTopic:'數位落差',vacantTopic:'空置的住宅',turn:'張開手掌，移動以轉動方塊',grip:'握拳，進入正面的議題',preview:'拖曳轉動・空白鍵模擬握拳',align:'將身體對齊輪廓',holdPose:'維持這個姿勢',reading:'這些數據',thirstAction:'雙手靠攏，接住水流。',offlineAction:'舉起雙手，重新連結。',vacantAction:'伸出雙手，嘗試進入空屋。',thirstNote:'用雙手匯集水流，供給卻時有中斷。',offlineNote:'揮過缺失的影像，讓片段重新同步。',vacantNote:'住宅存在，卻不代表能夠入住。',safeWater:'安全管理飲水服務比例',withoutWater:'缺乏安全管理飲水服務的人數',online:'使用網路的人口比例',offlinePeople:'未使用網路的人數',coverage:'涵蓋範圍',selected:'各地住宅普查',homes:'住宅',careRatio:'男女無酬照顧時數差距',womenHours:'女性・每日照顧時數',menHours:'男性・每日照顧時數',gapHours:'每日照顧時數差',housingShare:'都市人口居住於貧民窟的比例',housingPeople:'居住於貧民窟的人數',mortgage:'房貸還款／可支配所得',housePrice:'房價／家戶年所得',waterSupply:'自來水普及率',field:'移動身體，留出居住的空間',reconnect:'揮手，讓影像重新連結',cup:'雙手靠攏，匯集水流',reach:'伸手，嘗試進入空置的房間'},
@@ -13,16 +14,26 @@ export const words={
 export function scopeName(scope,lang){if(scope==='World'||scope==='WORLD'||scope==='global')return dictionary(lang).scopes.en===dictionary(lang).scopes[lang]?dictionary(lang).scopes[lang]:({zh:'全球',es:'MUNDO',fr:'MONDE',ja:'世界',ko:'전 세계',ar:'العالم'})[lang]||'WORLD';if(scope==='Taiwan'||scope==='TW')return lang==='zh'?'臺灣':countryName('TW',lang);return /^[A-Z]{2}$/.test(scope||'')?countryName(scope,lang):scope;}
 export class Catalogue{
  async load(){
-  const [extras,regional]=await Promise.all(['extra-facts.json','regional-access.json'].map(f=>fetch('./assets/'+f).then(r=>r.ok?r.json():{}).catch(()=>({}))));
-  this.extra=extras.cards||[];this.regional=regional.groups||{};
+  const response=await fetch('./assets/global-facts.json?v=5.0.0');if(!response.ok)throw Error('Global data unavailable');
+  const payload=await response.json();this.global=payload.cards;this.retrievedAt=payload.retrievedAt;this.rules=payload.interactionRules;
  }
- format(c,lang){const w=words[lang],iso={'Japan':'JP','Spain':'ES','United States':'US','Republic of Korea':'KR'}[c.scope];return {...c,value:typeof c.value==='string'?c.value:(c.estimated?'≈ ':'')+(c.format==='percent'?number(c.value,lang,2)+'%':c.format==='hours'?number(c.value,lang,2)+' '+copy[lang].hour:c.format==='ratio'?number(c.value,lang,2)+'×':compact(c.value,lang)),label:w[c.labelKey]||extraLabels[lang]?.[c.labelKey]||extraLabels.en[c.labelKey]||c.labels?.[lang]||c.label||c.labelKey,fieldLabel:lang==='en'?({housingShare:'URBAN POP. IN SLUMS',housingPeople:'SLUM RESIDENTS',inadequateHousing:'INADEQUATE HOMES · UP TO',peopleEvicted:'EVICTED · TOTAL'})[c.labelKey]:null,scope:scopes[lang]?.[c.scope]||scopeName(iso||c.scope,lang)};}
+ format(c,lang){
+  const w=words[lang],iso={'Japan':'JP','Spain':'ES','United States':'US','Republic of Korea':'KR'}[c.scope],unit=typeof c.unit==='object'?c.unit[lang]:c.unit;
+  let value=c.value;
+  if(typeof value!=='string'){
+   const prefix=c.estimated?'≈ ':'';
+   value=prefix+(c.format==='percent'?number(value,lang,2)+'%':c.format==='hours'?number(value,lang,2)+' '+copy[lang].hour:c.format==='ratio'?number(value,lang,2)+'×':c.format==='decimal'?number(value,lang,2)+(unit?' '+unit:''):compact(value,lang));
+  }
+  const yearText=String(c.year).replace(/\d/g,d=>number(Number(d),lang,0));
+  return {...c,value,yearText,label:c.labels?.[lang]||w[c.labelKey]||extraLabels[lang]?.[c.labelKey]||extraLabels.en[c.labelKey]||c.label||c.labelKey,scope:c.scopeLabels?.[lang]||scopes[lang]?.[c.scope]||scopeName(iso||c.scope,lang)};
+ }
  primary(scene,lang){
   let cards=this.cards(scene,lang);if(!cards.length)return null;
   const c=cards[0],w=words[lang],d=dictionary(lang);
-  return {title:w[scene+'Topic'],short:c.value,value:c.rawValue??0,rawValue:c.rawValue??0,unit:c.label,scope:c.scope,year:c.year,source:c.source,url:c.url,estimated:c.estimated,partial:c.partial,coverage:c.coverage,raw:{},label:scene,action:w[scene+'Action'],note:w[scene+'Note']};
+  return {title:w[scene+'Topic']||copy[lang][scene+'Topic'],short:c.value,value:c.rawValue??0,rawValue:c.rawValue??0,unit:c.label,scope:scopeName('World',lang),year:c.year,source:c.source,url:c.url,estimated:c.estimated,raw:{},label:scene,ratio:2.5,housingPressure:.25,action:sceneWords[lang][scene+'Action'],note:sceneWords[lang][scene+'Note']};
  }
  cards(scene,lang,m){
+  if(this.global)return this.global.filter(c=>c.scene===scene).map(c=>({...this.format({...c,rawValue:c.value},lang),scopeCode:c.scope,label:c.labels[lang],format:c.format,definition:c.definition}));
   const out=[],d=dictionary(lang),w=words[lang];
   const add=(value,format,labelKey,scope,year,source,url,extra={})=>out.push(this.format({value,rawValue:value,format,labelKey,scope,year,source,url,...extra},lang));
   if(m&&scene==='hold'&&lang!=='zh'){
@@ -53,3 +64,5 @@ words.en.careRatio="WOMEN’S CARE TIME / MEN’S";words.zh.careRatio='女性／
 export const vacantDefinitions={en:'National definitions differ. Japan includes homes for rent or sale and secondary homes. Spain uses census electricity-use classification. France excludes Mayotte. US rates refer to rental or homeowner inventory, not all homes. These observations are not added together.',zh:'空閒住宅指無經常居住者，包含偶爾自住與目前未使用的住宅。子類與總計不可再相加。',es:'El censo clasifica las viviendas vacías a partir del consumo eléctrico. Es una observación de España, no una suma de todos los países hispanohablantes.',fr:'Logements vacants selon l’Insee, France hors Mayotte. Observation nationale, pas un total francophone.',ja:'空き家総数には賃貸用・売却用・二次的住宅も含む。長期放置された家だけを指さない。',ko:'조사 기준일 거주자가 없는 주택입니다. 법률상 장기간 방치된 빈집과 범위가 다릅니다.',ar:'مساكن شاغرة في المناطق الحضرية بالمغرب فقط، ولا تشمل المساكن الثانوية والموسمية.'};
 const roomHints={en:'PUT BOTH HANDS IN ONE ROOM · HOLD TO APPEAR',zh:'將雙手放入同一間房間，停留使影像出現',es:'PON LAS DOS MANOS EN UNA HABITACIÓN Y MANTÉNLAS',fr:'PLACE TES DEUX MAINS DANS UNE PIÈCE ET MAINTIENS',ja:'同じ部屋に両手を入れ、そのまま保つ',ko:'한 방에 두 손을 넣고 유지하세요',ar:'ضع يديك في غرفة واحدة وثبّتهما لتظهر'};
 for(const lang of Object.keys(words))words[lang].reach=roomHints[lang];
+
+for(const lang of Object.keys(words)){words[lang].turn=sceneWords[lang].turn;words[lang].grip=sceneWords[lang].grip;}
