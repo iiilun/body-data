@@ -1,11 +1,11 @@
-import {clamp,lerp,hash} from './math.js?v=5.0.0';
-import {shadeAt} from './scene-models.js?v=5.0.0';
+import {clamp,lerp,hash} from './math.js?v=5.1.0';
+import {shadeAt} from './scene-models.js?v=5.1.0';
 export class RigidCare{
  constructor(Matter=globalThis.Matter){this.M=Matter;this.reset();}
  reset(){
   if(this.engine)this.M.Engine.clear(this.engine);
   this.engine=this.M.Engine.create({gravity:{x:0,y:1,scale:.001},positionIterations:8,velocityIterations:8,enableSleeping:false});
-  this.colliders=new Map();this.bodies=[];this.serial=0;this.clock=0;this.accumulator=0;this.catches=0;this.time=0;this.smoothLoads=[0,0];
+  this.colliders=new Map();this.bodies=[];this.serial=0;this.clock=0;this.accumulator=0;this.catches=0;this.time=0;this.smoothLoads=[0,0];this.fatigue=[0,0];
   this.M.Events.on(this.engine,'collisionStart',e=>{for(const pair of e.pairs){const a=pair.bodyA.parent,b=pair.bodyB.parent;for(const [value,other]of [[a,b],[b,a]])if(value.plugin?.card&&other.plugin?.support){if(!value.plugin.caught){value.plugin.caught=true;this.catches++}value.plugin.side=other.plugin.side??0;}}});
  }
  loads(){return this.smoothLoads;}
@@ -44,7 +44,8 @@ export class RigidCare{
   for(const body of this.bodies)if(body.position.y>config.height+400||body.position.x<-500||body.position.x>config.width+500){this.M.Composite.remove(this.engine.world,body);}
   this.bodies=this.bodies.filter(b=>b.position.y<=config.height+400&&b.position.x>=-500&&b.position.x<=config.width+500);
   const count=[0,0];for(const b of this.bodies)if(b.plugin.caught&&Math.abs(b.velocity.y)<5&&b.position.y<config.height)count[b.plugin.side??0]++;
-  this.smoothLoads=this.smoothLoads.map((n,i)=>lerp(n,clamp(count[i]/13),1-Math.exp(-dt*1.3)));
+  this.fatigue=this.fatigue.map((n,i)=>clamp(n+dt*(count[i]>0?count[i]*.0025:-.015),0,.35));
+  this.smoothLoads=this.smoothLoads.map((n,i)=>lerp(n,clamp(count[i]/7+this.fatigue[i]),1-Math.exp(-dt*3.2)));
  }
 }
 export class PixelMelt{

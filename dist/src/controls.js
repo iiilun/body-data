@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.0.0';
+import {clamp,lerp} from './math.js?v=5.1.0';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;
@@ -7,49 +7,44 @@ export function facingFace(pitch,yaw){
  const depth=normals.map(([a,b,c])=>Math.sin(x)*b+Math.cos(x)*(-Math.sin(y)*a+Math.cos(y)*c));
  return depth.indexOf(Math.max(...depth));
 }
+// Short swipes turn once; actual face hit-testing is supplied by the view.
 export class GestureCube{
- constructor(){this.pitch=-12;this.yaw=-20;this.targetX=-12;this.targetY=-20;this.face=0;this.reset();}
- reset(){this.anchor=null;this.last=null;this.stroke=null;this.armed=false;this.closed=0;this.cooldown=.4;this.still=0;this.stable=0;this.highlight=false;}
- update(dt,hands){
-  this.cooldown=Math.max(0,this.cooldown-dt);let selected=null,moving=false;
-  const hand=hands.find(h=>this.anchor?.id===h.id)||hands[0];
-  if(hand?.open>.55&&!hand.fist){
-   this.armed=true;this.closed=0;
-   if(!this.anchor||this.anchor.id!==hand.id){this.anchor={...hand};this.last={...hand};this.stroke=null;}
-   const dx=hand.x-this.anchor.x,dy=hand.y-this.anchor.y;
-   const vx=hand.x-this.last.x,vy=hand.y-this.last.y;
-   if(!this.stroke&&Math.max(Math.abs(dx),Math.abs(dy))>.065){
-    const axis=Math.abs(dx)>Math.abs(dy)?'x':'y',direction=Math.sign(axis==='x'?dx:dy);
-    this.stroke={axis,direction,furthest:0,base:axis==='x'?this.targetY:this.targetX,returning:false};
+ constructor(){this.pitch=-18;this.yaw=-28;this.targetX=-18;this.targetY=-28;this.face=0;this.reset();}
+ reset(){this.samples=[];this.anchor=null;this.stroke=null;this.armed=false;this.closed=0;this.cooldown=0;this.highlight=false;this.hover=-1;this.hoverAge=1;this.latched=-1;this.time=0;this.handId=null;}
+ update(dt,hands,hitFace=-1){
+  this.time+=dt;this.cooldown=Math.max(0,this.cooldown-dt);this.hoverAge+=dt;let selected=null;
+  const hand=hands.find(h=>h.id===this.handId)||hands[0];
+  if(!hand){this.samples=[];this.stroke=null;this.handId=null;this.armed=false;this.closed=0;this.highlight=false;this.hover=-1;this.hoverAge=1;}
+  else{
+   if(this.handId!==hand.id){this.samples=[];this.stroke=null;this.armed=false;this.closed=0;this.handId=hand.id;}
+   if(!hand.fist){
+    this.closed=0;this.latched=-1;this.armed=true;this.hover=Number.isInteger(hitFace)&&hitFace>=0&&hitFace<6?hitFace:-1;this.highlight=this.hover>=0;
+    if(this.highlight){this.face=this.hover;this.hoverAge=0;}
+    if(this.stroke){
+     const d=this.stroke.axis==='x'?hand.x-this.stroke.x:hand.y-this.stroke.y;
+     if(d*this.stroke.direction<.025){this.stroke=null;this.samples=[];}
+    }else if(hand.open>.65&&(this.highlight||this.hoverAge<.18)){
+     this.samples.push({x:hand.x,y:hand.y,t:this.time});while(this.samples.length>1&&this.time-this.samples[0].t>.2)this.samples.shift();
+     const first=this.samples[0],dx=hand.x-first.x,dy=hand.y-first.y,span=Math.max(.035,this.time-first.t),axis=Math.abs(dx)>Math.abs(dy)?'x':'y',distance=axis==='x'?dx:dy;
+     if(this.cooldown===0&&Math.abs(distance)>.055&&Math.abs(distance)/span>.28){
+      const direction=Math.sign(distance);if(axis==='x')this.targetY+=direction*90;else this.targetX+=direction*90;
+      this.stroke={x:first.x,y:first.y,axis,direction};this.samples=[];this.cooldown=.22;this.highlight=false;this.hover=-1;this.hoverAge=1;
+     }
+    }else this.samples=[];
+   }else{
+    // Keep the last open-palm target while the fingers close; closing changes the palm centre slightly.
+    if(this.latched<0&&this.armed&&this.hoverAge<.2)this.latched=this.hover;
+    this.highlight=this.latched>=0;
+    if(this.highlight){this.face=this.latched;this.closed+=dt;if(this.closed>=.10){selected=FACE_SCENES[this.latched];this.armed=false;this.latched=-1;this.closed=0;this.hoverAge=1;this.highlight=false;}}
+    else this.closed=0;
    }
-   if(this.stroke){
-    const s=this.stroke,travel=(s.axis==='x'?dx:dy)*s.direction,velocity=(s.axis==='x'?vx:vy)*s.direction;
-    // The return stroke is a clutch: it never undoes a completed swipe.
-    if(travel<s.furthest-.025)s.returning=true;
-    if(!s.returning&&travel>s.furthest){
-     s.furthest=travel;const angle=s.base+s.direction*clamp(travel/.20,0,1)*90;
-     if(s.axis==='x')this.targetY=angle;else this.targetX=clamp(angle,-90,90);
-     moving=velocity>Math.max(.0005,dt*.025);
-    }
-    if(travel<.035&&s.returning){this.stroke=null;this.anchor={...hand};}
-   }
-   this.last={...hand};this.still=moving?0:this.still+dt;
-   if(this.still>.16){
-    this.targetY=Math.round(this.targetY/90)*90;this.targetX=Math.round(this.targetX/90)*90;
-   }
-  }else if(hand?.fist){
-   if(this.highlight&&this.armed&&this.cooldown<=0){this.closed+=dt;if(this.closed>=.34){selected=FACE_SCENES[this.face];this.armed=false;this.closed=0;this.cooldown=1;}}
-   else this.closed=0;
-  }else{this.anchor=null;this.last=null;this.stroke=null;this.closed=0;this.still=0;this.stable=0;this.highlight=false;this.armed=false;}
-  const blend=1-Math.exp(-dt*12);
-  this.pitch=lerp(this.pitch,this.targetX,blend);this.yaw=lerp(this.yaw,this.targetY,blend);
-  const settled=Math.abs(this.pitch-this.targetX)+Math.abs(this.yaw-this.targetY)<2;
-  this.stable=hand&&this.armed&&settled&&!moving?this.stable+dt:0;
-  if(hand?.open>.55)this.highlight=this.stable>.22;
-  this.face=facingFace(this.pitch,this.yaw);
-  return {pitch:this.pitch,yaw:this.yaw,face:this.face,selected,highlight:this.highlight,progress:clamp(this.closed/.34)};
+  }
+  const blend=1-Math.exp(-dt*19);this.pitch=lerp(this.pitch,this.targetX,blend);this.yaw=lerp(this.yaw,this.targetY,blend);
+  if(!this.highlight)this.face=facingFace(this.pitch,this.yaw);
+  return {pitch:this.pitch,yaw:this.yaw,face:this.face,selected,highlight:this.highlight,progress:clamp(this.closed/.10)};
  }
 }
+
 export function framePose(scene){
  const p=Array.from({length:33},()=>({x:.5,y:.8,visibility:1}));
  p[0]={x:.5,y:.23,visibility:1};p[11]={x:.36,y:.42,visibility:1};p[12]={x:.64,y:.42,visibility:1};p[23]={x:.41,y:.94,visibility:1};p[24]={x:.59,y:.94,visibility:1};

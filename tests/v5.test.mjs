@@ -10,17 +10,17 @@ import {WaterCatch,VacancyCity,materialKey,offlineTime} from '../dist/src/scene-
 import {SilhouetteType} from '../dist/src/spatial-type.js';
 const source=JSON.parse(await readFile(new URL('../dist/assets/global-facts.json',import.meta.url),'utf8'));
 const open=(x=.5,y=.5)=>({id:'hand',x,y,open:1,fist:false});
-const run=(cube,hand,n=90)=>{let out;for(let i=0;i<n;i++)out=cube.update(1/60,hand?[hand]:[]);return out;};
+const run=(cube,hand,n=90)=>{let out;for(let i=0;i<n;i++)out=cube.update(1/60,hand?[hand]:[],0);return out;};
 
 test('returning an open hand to centre preserves the completed cube swipe',()=>{
- const cube=new GestureCube();run(cube,open());for(let i=0;i<20;i++)cube.update(1/60,[open(.5+i*.011)]);run(cube,open(.72));const yaw=cube.targetY;
- for(let i=0;i<20;i++)cube.update(1/60,[open(.72-i*.011)]);run(cube,open());assert.equal(cube.targetY,yaw);assert.ok(yaw>=90);assert.equal(cube.highlight,true);
+ const cube=new GestureCube();run(cube,open());for(let i=0;i<20;i++)cube.update(1/60,[open(.5+i*.011)],0);run(cube,open(.72));const yaw=cube.targetY;
+ for(let i=0;i<20;i++)cube.update(1/60,[open(.72-i*.011)],0);run(cube,open());assert.equal(cube.targetY,yaw);assert.equal(yaw,62);assert.equal(cube.highlight,true);
 });
-test('a cube face only turns white after settling and fist confirmation uses that face',()=>{
- const cube=new GestureCube();assert.equal(cube.update(1/60,[open()]).highlight,false);run(cube,open());assert.equal(cube.highlight,true);const expected=FACE_SCENES[cube.face];let selected;for(let i=0;i<25;i++){const s=cube.update(1/60,[{...open(),open:0,fist:true}]);if(s.selected)selected=s.selected;}assert.equal(selected,expected);
+test('hover highlights the pointed face immediately and a quick fist confirms that exact face',()=>{
+ const cube=new GestureCube();assert.equal(cube.update(1/60,[open()],4).highlight,true);let selected;for(let i=0;i<8;i++){const s=cube.update(1/60,[{...open(),open:0,fist:true}],0);if(s.selected)selected=s.selected;}assert.equal(selected,FACE_SCENES[4]);
 });
-test('a return stroke rearms the next swipe without resetting the cube orientation',()=>{
- const cube=new GestureCube();run(cube,open());for(let k=0;k<3;k++){for(let i=0;i<22;i++)cube.update(1/60,[open(.5+i*.01)]);run(cube,open(.72),50);for(let i=0;i<23;i++)cube.update(1/60,[open(.72-i*.01)]);run(cube,open(),50);}assert.equal(cube.targetY,270);
+test('a return stroke rearms consecutive short swipes without reversing the cube',()=>{
+ const cube=new GestureCube();run(cube,open());for(let k=0;k<3;k++){for(let i=0;i<22;i++)cube.update(1/60,[open(.5+i*.01)],0);run(cube,open(.72),50);for(let i=0;i<23;i++)cube.update(1/60,[open(.72-i*.01)],0);run(cube,open(),50);}assert.equal(cube.targetY,242);
 });
 test('every scene offers 24 distinct sourced observations in every language with identical geography',()=>{
  const cat=new Catalogue();cat.global=source.cards;assert.equal(cat.global.length,144);assert.equal(new Set(cat.global.map(c=>c.id)).size,144);
@@ -43,12 +43,12 @@ test('melt scars survive leaving the frame, and already released pixels keep fal
 test('two overhead palms protect the complete torso footprint',()=>{
  const bare=new PixelMelt(),shade=new PixelMelt(),cells=Array.from({length:8},(_,i)=>({id:i,x:270+i*35,y:350,color:'#aaa'})),o={width:800,height:600,block:30,progress:.4},hands=[{id:'l',x:300,y:100},{id:'r',x:500,y:100}];for(let i=0;i<300;i++){bare.update(1/60,cells,[],o);shade.update(1/60,cells,hands,o);}for(const c of cells)assert.ok(shade.pixels.get(c.id).damage<bare.pixels.get(c.id).damage*.12);
 });
-test('a moving bucket catches a crossing drop and one unassured drop changes all retained water',()=>{
+test('a moving bucket catches both categories without relabelling the blue collection',()=>{
  const water=new WaterCatch(),o={width:1000,height:700},hands=[{x:400,y:300},{x:600,y:300}];water.update(1/60,hands,o);water.drops=[{x:500,y:307,vx:0,vy:180,unsafe:false,litres:.25}];water.update(1/30,hands,o);assert.equal(water.level,.25);assert.equal(water.summary().safe,.25);
- water.drops=[{x:500,y:307,vx:0,vy:180,unsafe:true,litres:.25}];water.update(1/30,hands,o);assert.equal(water.level,.5);assert.equal(water.summary().safe,0);assert.equal(water.summary().uncertain,.5);
+ water.drops=[{x:500,y:307,vx:0,vy:180,unsafe:true,litres:.25}];water.update(1/30,hands,o);assert.equal(water.level,.5);assert.equal(water.summary().safe,.25);assert.equal(water.summary().uncertain,.25);assert.equal(water.retainedBlue,.25);assert.equal(water.retainedOchre,.25);
 });
 test('tilting drains the bucket and preserves safe versus unassured water volume',()=>{
- const water=new WaterCatch(),o={width:1000,height:700};water.level=10;water.blueCaught=10;for(let i=0;i<300;i++)water.update(1/60,[{x:400,y:200},{x:600,y:500}],o);assert.equal(water.level,0);assert.ok(Math.abs(water.safeDelivered-10)<.001);assert.ok(Math.abs(water.summary().personDays-10/15)<.001);
+ const water=new WaterCatch(),o={width:1000,height:700};water.level=10;water.retainedBlue=10;water.blueCaught=10;for(let i=0;i<300;i++)water.update(1/60,[{x:400,y:200},{x:600,y:500}],o);assert.equal(water.level,0);assert.ok(Math.abs(water.safeDelivered-10)<.001);assert.ok(Math.abs(water.summary().personDays-10/15)<.001);
 });
 test('rain covers the whole viewport and uses the sourced service share rather than a contamination claim',()=>{
  const water=new WaterCatch();for(let i=0;i<180;i++)water.update(1/60,[],{width:1200,height:900,unsafeShare:1-source.interactionRules.thirst.safelyManagedShare2024/100});assert.ok(water.drops.some(p=>p.x<100));assert.ok(water.drops.some(p=>p.x>1100));assert.ok(water.drops.some(p=>p.unsafe));assert.ok(water.drops.some(p=>!p.unsafe));assert.match(source.interactionRules.thirst.nonSafelyManagedMeaning,/not.*contaminated/);
@@ -59,11 +59,11 @@ test('city vacancy follows a census ratio and never invents an observed accessib
 test('gripping and releasing reuses an outlined home without erasing its data-bearing city',()=>{
  const city=new VacancyCity();city.build(1200,800,13.8);const tile=city.tiles.find(t=>t.vacant),centre={x:600,y:440};city.update(1/60,[{id:'a',x:tile.x,y:tile.y,fist:true}],centre,1200,800);assert.equal(city.held.get('a'),tile);for(let i=0;i<80;i++)city.update(1/60,[{id:'a',...centre,fist:true}],centre,1200,800);city.update(1/60,[{id:'a',...centre,fist:false}],centre,1200,800);assert.equal(city.reused,1);assert.equal(tile.shared,true);assert.equal(city.tiles.length,120);
 });
-test('the disconnected side freezes for full intervals while its source timeline stays behind',()=>{assert.equal(offlineTime(4.3),offlineTime(5.4));assert.ok(offlineTime(6)>offlineTime(4.3));assert.ok(offlineTime(6)<=6-1.4);});
+test('the disconnected side steps at five updates a second with less than half a second of delay',()=>{assert.equal(offlineTime(4.3),offlineTime(4.35));for(let n=1;n<200;n++){const time=n/10;assert.ok(time-offlineTime(time)<.421);assert.ok(time-offlineTime(time)>=Math.min(time,.219));}});
 test('dense housing sentences keep their identity and remain visible while springing around movement',()=>{
  const f=new SilhouetteType();f.build(1400,900,26,43,source.cards.filter(c=>c.scene==='space').map(c=>({...c,value:String(c.value),label:c.labels.en})),s=>s.length*13);assert.ok(f.items.length>2000);const identity=f.items.map(g=>g.char).join('');for(let i=0;i<120;i++)f.update(1/60,[{x:700,y:440},{x:700,y:485}],45,1400,[],.4);const before=f.items.map(g=>({x:g.x,y:g.y}));f.update(1/60,[{x:730,y:440},{x:730,y:485}],45,1400,[],.4);assert.equal(f.items.map(g=>g.char).join(''),identity);assert.ok(f.items.every(g=>g.active&&g.alpha===1&&Number.isFinite(g.x)));assert.ok(f.items.every((g,i)=>Math.abs(g.x-before[i].x)<60));
 });
 
 test('water results distinguish the personal collection from the global service-access percentage',()=>{
- const water=new WaterCatch();water.level=15;const result=Renderer.prototype.result.call({water},'thirst','en',source.interactionRules);assert.equal(result.length,4);assert.equal(result[2].value,'1');assert.equal(result[3].value,'26.33%');assert.match(result[3].label,/PEOPLE.*WORLD/);assert.doesNotMatch(result[3].label,/CONTAMINATED/);
+ const water=new WaterCatch();water.level=15;water.blueCaught=15;water.retainedBlue=15;const result=Renderer.prototype.result.call({water},'thirst','en',source.interactionRules);assert.equal(result.length,4);assert.equal(result[2].value,'1');assert.equal(result[3].value,'26.33%');assert.match(result[3].label,/PEOPLE.*WORLD/);assert.doesNotMatch(result[3].label,/CONTAMINATED/);
 });

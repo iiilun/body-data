@@ -1,12 +1,16 @@
-<!doctype html><html><meta charset="utf-8"><title>Hand and arm tracking check</title><style>body{font:18px Helvetica;background:#111;color:#fff;padding:24px}img{max-height:40vh}pre{white-space:pre-wrap;max-width:1000px}</style><h1>Hand and arm tracking check</h1><img src="./hands.jpg"><pre>Initializing lightweight pose, hands and person segmentation…</pre><script type="module">
-const image=document.querySelector('img'),log=document.querySelector('pre');await image.decode();let frames=0;const worker=new Worker('../vision-worker.js');
-async function send(){const bitmap=await createImageBitmap(image,{resizeWidth:480,resizeHeight:Math.round(480*image.naturalHeight/image.naturalWidth)});worker.postMessage({type:'frame',bitmap,timestamp:performance.now(),mode:'menu',debug:true},[bitmap])}
-worker.onmessage=({data:r})=>{
- if(r.type==='ready'){log.textContent+='\nMODELS READY';send()}
+<!doctype html><html><meta charset="utf-8"><title>Body and gesture model check</title><style>body{font:17px Helvetica;background:#111;color:#fff;padding:24px}img{height:240px}pre{white-space:pre-wrap;max-width:1100px}</style><h1>Body and gesture model check</h1><img src="./hands.jpg"><pre>Initializing local models…</pre><script type="module">
+const image=document.querySelector('img'),log=document.querySelector('pre');await image.decode();const worker=new Worker('../vision-worker.js');let phase='body',results=0,passed=true,early=[];
+function append(value){log.textContent+='\n'+(typeof value==='string'?value:JSON.stringify(value));}
+async function send(){const bitmap=await createImageBitmap(image,{resizeWidth:480,resizeHeight:Math.round(480*image.naturalHeight/image.naturalWidth)});worker.postMessage({type:'frame',bitmap,timestamp:performance.now(),mode:'menu',debug:true},[bitmap]);}
+worker.onmessage=async({data:r})=>{
+ if(r.type==='ready'){append('MODELS READY');send();}
+ else if(r.type==='hands'){early.push(r);append({phase,earlyHands:r.hands.length,gestures:r.gestures,handMs:r.elapsed});}
+ else if(r.type==='skipped'){send();}
  else if(r.type==='result'){
-  const result={frame:++frames,pose:r.landmarks.length,hands:r.hands.length,handPoints:r.hands.map(h=>h.length),personPixels:r.mask?.reduce((n,x)=>n+(x>0),0),wrists:[r.landmarks[15]?.visibility,r.landmarks[16]?.visibility],ms:r.elapsed,maskStats:r.maskStats,centre:r.mask?.[Math.floor(r.height/2)*r.width+Math.floor(r.width/2)],corner:r.mask?.[0]};
-  log.textContent+='\n'+JSON.stringify(result);
-  if(frames<3)setTimeout(send,150);else{log.textContent+='\n'+(r.landmarks.length===33&&r.hands.length>0&&r.mask?.some(x=>x>0)&&r.mask[0]===0&&r.mask[Math.floor(r.height/2)*r.width+Math.floor(r.width/2)]===1?'PASS':'FAIL');worker.terminate()}
- }else log.textContent+='\n'+JSON.stringify(r);
-};worker.onerror=e=>log.textContent+='\nFAIL '+e.message;worker.postMessage({type:'init'});
+  const centre=r.mask?.[Math.floor(r.height/2)*r.width+Math.floor(r.width/2)],frame={phase,frame:++results,pose:r.landmarks.length,hands:r.hands.length,handPoints:r.hands.map(h=>h.length),gestures:r.gestures,centre,corner:r.mask?.[0],ms:r.elapsed};append(frame);
+  if(phase==='body')passed&&=r.landmarks.length===33&&r.hands.length===2&&centre===1&&r.mask?.[0]===0;
+  else passed&&=r.gestures?.some(g=>g[0]?.categoryName==='Closed_Fist'&&g[0].score>.55);
+  if(results<3)send();else if(phase==='body'){phase='fist';results=0;image.src='./fist.jpg';await image.decode();send();}else{append(passed&&early.length>=6?'PASS':'FAIL');worker.terminate();}
+ }else if(r.type==='error'||r.type==='frame-error'){append(r);append('FAIL');worker.terminate();}
+};worker.onerror=e=>append('FAIL '+e.message);worker.postMessage({type:'init'});
 </script></html>

@@ -1,4 +1,4 @@
-import {clamp} from './math.js?v=5.0.0';
+import {clamp} from './math.js?v=5.1.0';
 
 export function factText(card){return `${String(card.value).replace(/\s/g,'\u00a0')} ${card.fieldLabel||card.label} · ${card.scope} ${card.yearText||card.year}`;}
 function blockedRanges(cells,top,bottom,block,width,padding){
@@ -13,10 +13,10 @@ export class SilhouetteType{
   // Each lane keeps its own ordered sentence. Reflow never reassigns glyphs to another row.
   for(let y=12,line=0;y<height-38;y+=row,line++){
    const ordered=cards.map((_,i)=>cards[(i+line*3)%cards.length]);
-   const text=ordered.map(factText).join('   /   ')+'   /   ';
+   const text=ordered.map(factText).join(' / ')+' / ';
    const units=/[\u0600-\u06ff]/.test(text)?text.match(/[\p{L}\p{M}]+|[^\p{L}\p{M}]/gu):[...text];
    const lane={items:[],y,index:line,drift:0};let x=-width*.55,index=0;
-   while(x<width*1.7){const char=units[index++%units.length],advance=Math.max(font*.2,measure(char));const glyph={char,width:advance,baseX:x,x,y,drawX:x,drawY:y,vx:0,vy:0,active:true,alpha:1};lane.items.push(glyph);this.items.push(glyph);x+=advance+font*.025;}
+   while(x<width*1.7){const char=units[index++%units.length],advance=Math.max(font*.2,measure(char));const glyph={char,width:advance,baseX:x,x,y,drawX:x,drawY:y,vx:0,vy:0,active:true,alpha:1};lane.items.push(glyph);this.items.push(glyph);x+=advance+font*-.055;}
    for(let n=0;n<lane.items.length;n++){const g=lane.items[n],previous=lane.items[n-1];if(/[≈0-9٠-٩]/.test(g.char[0])&&(!previous||/\s/.test(previous.char))){let word='';for(let j=n;j<lane.items.length;j++){const char=lane.items[j].char;if(/\s/.test(char)&&char!=='\u00a0')break;word+=char;}g.atomicWidth=measure(word);}}
    lane.period=x+width*.55;this.rows.push(lane);
   }
@@ -26,17 +26,17 @@ export class SilhouetteType{
   for(const lane of this.rows){
    lane.drift+=dt*(7+lane.index%4*2)*(lane.index%2?-1:1);
    const blockers=[...cells,...hands.map(h=>({x:h.x,y:h.y}))];
-   const ranges=blockedRanges(blockers,lane.y,lane.y+this.font*.94,block,width,9+progress*5+this.font*.75);
+   const ranges=blockedRanges(blockers,lane.y,lane.y+this.font*.94,block,width,9+progress*5+this.font*.30);
    const removed=ranges.reduce((n,[a,b])=>n+b-a,0);
    const ordered=lane.items.map(g=>{let raw=g.baseX+lane.drift;while(raw<-width*.6)raw+=lane.period;while(raw>width*1.7)raw-=lane.period;return {g,raw};}).sort((a,b)=>a.raw-b.raw);
    let cursor=(ordered[0]?.raw||0)-removed*.5,previous=null;
    for(const {g,raw}of ordered){
     for(const [a,b]of ranges)if(cursor+(g.atomicWidth||g.width)>a&&cursor<b)cursor=b;
-    const target=cursor,targetY=lane.y+Math.sin(this.time*.55+lane.index*.8)*2.5;cursor+=g.width+this.font*.025;
+    const target=cursor,targetY=lane.y+Math.sin(this.time*.55+lane.index*.8)*2.5;cursor+=g.width+this.font*-.055;
     if(Math.abs(g.x-target)>width*.9){g.x=target;g.vx=0;}
     const ax=(target-g.x)*72-g.vx*16,ay=(targetY-g.y)*55-g.vy*14;
     g.vx+=ax*dt;g.vy+=ay*dt;g.x+=g.vx*dt;g.y+=g.vy*dt;
-    g.drawX=Math.max(g.x,previous?previous.drawX+previous.width+this.font*.025:-Infinity);g.drawY=g.y;g.active=true;previous=g;
+    g.drawX=Math.max(g.x,previous?previous.drawX+previous.width+this.font*-.055:-Infinity);g.drawY=g.y;g.active=true;previous=g;
    }
   }
  }

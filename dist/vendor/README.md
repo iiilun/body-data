@@ -206,3 +206,5 @@ const landmarks = poseLandmarker.detect(image);
 ```
 
 For more information, refer to the [Pose Landmarker](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker/web_js) documentation.
+
+V5.1 additionally uses Google's official MediaPipe Gesture Recognizer model bundle at `../models/gesture_recognizer.task` (8,373,440 bytes) for the built-in hand gesture classifier. Source, SHA256, official fixture attribution and verification limits are recorded in `research/v51-interaction.md`. The existing hand-landmarker model remains the initialization fallback. Images in `tests/fixtures` are development assets and are not placed in the production site.

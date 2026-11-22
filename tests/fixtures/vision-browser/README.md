@@ -1,5 +1,8 @@
 # Browser model smoke check
 
-This fixture uses Google's public MediaPipe male_full_height_hands.jpg test image. It does not contain camera data. Source: https://storage.googleapis.com/mediapipe-assets/male_full_height_hands.jpg
+Uses Google’s public MediaPipe test photographs, not camera data:
 
-For a local check, temporarily copy this directory to dist/qa, run npm start, and visit http://localhost:5173/qa/vision.html. PASS requires 33 pose landmarks, detected hands, a nonempty person mask, person at the image centre and background at the corner. The page also reports segmentation pixels and per-frame inference time. Remove dist/qa before packaging a release; this fixture is deliberately outside the static site.
+- https://storage.googleapis.com/mediapipe-assets/male_full_height_hands.jpg
+- https://storage.googleapis.com/mediapipe-assets/fist.jpg
+
+Temporarily copy this directory to `dist/qa`, run the local server, and open `/qa/vision.html`. The harness first requires33 pose points, two21-point hands and correct person/background mask semantics. Then it requires the official fist photo to produce Closed_Fist above0.55. Early hand messages and complete inference times are displayed separately, including menu frames that skip body inference. Remove the temporary production directory before release.

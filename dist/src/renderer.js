@@ -1,11 +1,11 @@
-import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.0.0';
-import {number} from './i18n.js?v=5.0.0';
-import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.0.0';
-import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.0.0';
-import {SilhouetteType,DataFlow} from './spatial-type.js?v=5.0.0';
-import {WaterCatch,VacancyCity,materialKey,offlineTime} from './scene-models.js?v=5.0.0';
-import {framePose} from './controls.js?v=5.0.0';
-import {sceneWords} from './scene-copy.js?v=5.0.0';
+import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.1.0';
+import {number} from './i18n.js?v=5.1.0';
+import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.1.0';
+import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.1.0';
+import {SilhouetteType,DataFlow} from './spatial-type.js?v=5.1.0';
+import {WaterCatch,VacancyCity,materialKey,offlineTime,careSag} from './scene-models.js?v=5.1.0';
+import {framePose} from './controls.js?v=5.1.0';
+import {sceneWords} from './scene-copy.js?v=5.1.0';
 const FONT='"Helvetica Neue",Helvetica,Arial,"Noto Sans TC","Noto Sans JP","Noto Sans KR","Noto Sans Arabic",sans-serif';
 export function demoPose(time,scene='space'){
  const p=framePose(scene),sway=Math.sin(time*.24)*.012;
@@ -16,7 +16,7 @@ export class Renderer{
  constructor(canvas){
   this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.sample=document.createElement('canvas');this.sc=this.sample.getContext('2d',{willReadFrequently:true});
   this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.water=new WaterCatch();this.city=new VacancyCity();this.resize();this.reset('');
-  fetch('./assets/preview-person.json?v=5.0.0').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
+  fetch('./assets/preview-person.json?v=5.1.0').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
  }
  resize(){this.width=innerWidth;this.height=innerHeight;const d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.round(this.width*d);this.canvas.height=Math.round(this.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.ctx.imageSmoothingEnabled=false;this.outline=null;this.cardLayouts=new Map();}
  reset(scene){this.scene=scene;this.physics.reset();this.melt.reset();this.field=new SilhouetteType();this.flow=new DataFlow();this.water.reset();this.city.reset();this.lastSample=-1;this.seeded=false;this.history=[];this.lastHistory=-1;this.outline=null;}
@@ -37,11 +37,8 @@ export class Renderer{
    const centre=c.pose[11]&&c.pose[12]?pointToScreen({x:(c.pose[11].x+c.pose[12].x)/2,y:.5},c.g).x:c.width/2;
    p.x=compressToRoom(p,centre,c.width,c.progress).x;
   }
-  if(c.scene==='hold'&&c.state==='active'){
-   const a=c.pose[11],b=c.pose[12],left=Math.min(a?.x??.35,b?.x??.65),right=Math.max(a?.x??.35,b?.x??.65);
-   const outside=point.x<left?(left-point.x)/.30:point.x>right?(point.x-right)/.30:0;
-   p.y+=c.height*.13+this.physics.loads()[point.x>.5?0:1]*c.height*.22*clamp(outside);
-  }return p;
+  if(c.scene==='hold'&&c.state==='active')p.y+=c.height*.10+careSag(point,c.pose,this.physics.loads(),c.height);
+  return p;
  }
  body(c,alpha=1,cells=this.placed){const ctx=this.ctx,b=c.g.block;ctx.save();ctx.globalAlpha=alpha;for(const cell of cells){ctx.fillStyle=cell.color;ctx.fillRect(cell.x-b/2,cell.y-b/2,b+.7,b+.7)}ctx.restore();}
  type(c,size=c.type.size){this.ctx.font=`300 ${size}px ${this.fontFamily||FONT}`;this.ctx.textAlign='left';this.ctx.textBaseline='top';this.ctx.direction='ltr';}
@@ -60,7 +57,7 @@ export class Renderer{
   ctx.font=`400 11px ${this.fontFamily||FONT}`;ctx.globalAlpha=.6;ctx.fillText(card.scope+' · '+(card.yearText||card.year),c.lang==='ar'?w:0,size.size+lines.length*(size.labelFont+2)+3);ctx.restore();
  }
  footerShade(c,depth=170){const ctx=this.ctx,shade=ctx.createLinearGradient(0,c.height-depth,0,c.height);shade.addColorStop(0,'#0000');shade.addColorStop(.45,'#000d');shade.addColorStop(1,'#000');ctx.fillStyle=shade;ctx.fillRect(0,c.height-depth,c.width,depth);}
- flowFacts(c,options={}){const font=clamp(c.height*.027,18,27);this.type(c,font);this.flow.draw(this.ctx,{width:c.width,height:c.height,font,cards:c.cards,time:c.elapsed,...options});}
+ flowFacts(c,options={}){const font=clamp(c.height*.027,18,27);this.type(c,font);this.flow.draw(this.ctx,{width:c.width,height:Math.max(120,c.height-(c.footerHeight||80)),font,cards:c.cards,time:c.elapsed,...options});}
  supports(c){
   const out=[],pt=i=>this.project(c.pose[i],c);
   for(const [side,chain]of [[0,[11,13,15]],[1,[12,14,16]]])for(let j=0;j<2;j++)if(chain.slice(j,j+2).every(i=>c.pose[i]?.visibility>.3))out.push({id:(j?'forearm':'upperarm')+side,side,a:pt(chain[j]),b:pt(chain[j+1]),thickness:c.g.block*1.05});
@@ -74,7 +71,7 @@ export class Renderer{
  }
  hold(c){
   const segments=this.supports(c),config={width:c.width,height:c.height,interval:lerp(.65,.38,c.progress),cards:c.cards,measure:card=>this.cardSize(card,c)};
-  if(c.demo&&c.dt===0&&c.elapsed>0&&!this.seeded){this.seeded=true;for(let t=0;t<c.elapsed;t+=1/60)this.physics.update(1/60,segments,config);}
+  if(c.demo&&c.dt===0&&c.elapsed>0&&!this.seeded){this.seeded=true;for(let t=0;t<c.elapsed;t+=1/60)this.physics.update(1/60,this.supports(c),config);}
   this.physics.update(c.dt,segments,config);this.flowFacts(c,{color:'#000',alpha:.11,speed:15});this.body(c);
   for(const b of this.physics.bodies)this.drawCard(b.plugin.card,b.position.x,b.position.y,c,{angle:b.angle,center:true,color:'#000',width:b.plugin.width});
  }
@@ -91,11 +88,11 @@ export class Renderer{
   const b=c.g.block;
   for(const cell of this.placed){const p=pixels.get(cell.material??cell.id);if(p?.free)continue;ctx.fillStyle=cell.color;ctx.fillRect(cell.x-b/2,cell.y-b/2,b+.5,b+.5);}
   for(const p of pixels.values())if(p.free&&p.y<c.height+b){ctx.globalAlpha=clamp(1-(p.age-2)/3,.2,1);ctx.fillStyle=p.color;ctx.fillRect(p.x-b/2,p.y-b/2,b,b);}ctx.globalAlpha=1;
-  this.footerShade(c);this.number('≈ '+number((c.metric?.rate||0)*c.elapsed,c.lang,0)+' t CO₂',28,c.height-104,c,'#fff','left',clamp(c.height*.04,25,42));
+
  }
  space(c){
   const ctx=this.ctx,size=clamp(c.height*.032,20,31);this.type(c,size);
-  const previousItems=this.field.items;this.field.build(c.width,c.height,size,size*1.62,c.cards,s=>ctx.measureText(s).width);
+  const previousItems=this.field.items;this.field.build(c.width,c.height-(c.footerHeight||80),size,size*.98,c.cards,s=>ctx.measureText(s).width);
   const hands=c.hands.map(h=>this.project(h,c));
   if(c.demo&&c.dt===0&&previousItems!==this.field.items){for(let n=0;n<120;n++)this.field.update(1/60,this.placed,c.g.block,c.width,hands,c.progress);}
   this.field.update(c.dt,this.placed,c.g.block,c.width,hands,c.progress);ctx.fillStyle='#eee';this.type(c,size);
@@ -103,31 +100,34 @@ export class Renderer{
  }
  thirst(c){
   const ctx=this.ctx,hands=c.hands.map(h=>({...this.project(h,c),id:h.id})),safeCard=c.cards.find(card=>card.id==='water-safely-managed-global'||card.labelKey==='safeWaterPercent'&&card.scopeCode==='World');
-  const options={width:c.width,height:c.height,unsafeShare:1-(c.rules?.thirst?.safelyManagedShare2024??safeCard?.rawValue??74)/100};
+  const options={width:c.width,height:c.height,availableHeight:c.height-(c.footerHeight||160)-10,unsafeShare:1-(c.rules?.thirst?.safelyManagedShare2024??safeCard?.rawValue??74)/100};
   if(c.demo&&c.dt===0&&!this.seeded){this.seeded=true;for(let t=0;t<c.elapsed;t+=1/60)this.water.update(1/60,hands,options);}
   this.water.update(c.dt,hands,options);this.flowFacts(c,{alpha:.36,color:'#80aaff',speed:24});this.body(c,.8);
   for(const p of this.water.drops){ctx.fillStyle=p.unsafe?'#d59c48':'#589cff';ctx.fillRect(p.x,p.y,5,p.unsafe?9:13);}
   const b=this.water.bucket;
-  if(b?.active){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);const w=b.width,h=b.height,level=clamp(this.water.level/24);
+  if(b?.active){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);const w=b.width,h=b.height,level=clamp(this.water.level/this.water.capacity);
    ctx.beginPath();ctx.moveTo(-w/2,0);ctx.lineTo(-w*.43,h);ctx.lineTo(w*.43,h);ctx.lineTo(w/2,0);ctx.closePath();ctx.save();ctx.clip();
-   ctx.fillStyle=this.water.uncertain?'#b9883d':'#327cff';ctx.beginPath();const y=h*(1-level);ctx.moveTo(-w,y);for(let x=-w;x<=w;x+=8)ctx.lineTo(x,y+Math.sin(x*.045+c.time*3)*Math.min(4,level*12));ctx.lineTo(w,h+3);ctx.lineTo(-w,h+3);ctx.fill();ctx.restore();
+   const blueHeight=h*this.water.retainedBlue/this.water.capacity,ochreHeight=h*this.water.retainedOchre/this.water.capacity;
+   ctx.fillStyle='#327cff';ctx.fillRect(-w,h-blueHeight,w*2,blueHeight+1);ctx.fillStyle='#b9883d';ctx.fillRect(-w,h-blueHeight-ochreHeight,w*2,ochreHeight);ctx.restore();
    ctx.beginPath();ctx.moveTo(-w/2,0);ctx.lineTo(-w*.43,h);ctx.lineTo(w*.43,h);ctx.lineTo(w/2,0);ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();
    this.number(number(this.water.level,c.lang,1)+' L',0,h+12,c,'#fff','center',24);ctx.restore();
   }
-  const s=this.water.summary(),w=sceneWords[c.lang];this.footerShade(c);this.number(`${number(s.safe,c.lang,1)} L  ${w.safe}`,28,c.height-112,c,'#79aaff','left',24);this.number(`${number(s.uncertain,c.lang,1)} L  ${w.uncertain}`,28,c.height-79,c,'#d59c48','left',24);
+
  }
  offline(c){
-  if(c.dt>0&&c.elapsed-this.lastHistory>.08){this.history.push({time:c.elapsed,cells:this.placed.map(p=>({...p}))});this.lastHistory=c.elapsed;while(this.history.length>90)this.history.shift();}
-  const ctx=this.ctx,b=c.g.block,half=c.width/2,lag=offlineTime(c.elapsed),old=[...this.history].reverse().find(f=>f.time<=lag),previous=old?.cells||this.placed;
-  this.flowFacts(c,{time:c.elapsed,alpha:.58,speed:32,clip:[0,0,half,c.height]});this.flowFacts(c,{time:lag,alpha:.28,color:'#aaa',speed:32,clip:[half,0,half,c.height]});
+  const centre=this.project({x:(c.pose[11].x+c.pose[12].x)/2,y:(c.pose[11].y+c.pose[12].y)/2},c);
+  if(c.dt>0&&c.elapsed-this.lastHistory>.04){this.history.push({time:c.elapsed,centre,cells:this.placed.map(p=>({...p}))});this.lastHistory=c.elapsed;while(this.history.length>45)this.history.shift();}
+  const ctx=this.ctx,b=c.g.block,half=c.width/2,lag=offlineTime(c.elapsed),old=[...this.history].reverse().find(f=>f.time<=lag),previous=old?.cells||this.placed,dx=old?centre.x-old.centre.x:0,dy=old?centre.y-old.centre.y:0;
+  this.flowFacts(c,{time:c.elapsed,alpha:.58,speed:32,clip:[0,0,half,c.height]});this.flowFacts(c,{time:lag,alpha:.44,color:'#ccc',speed:32,clip:[half,0,half,c.height]});
   ctx.save();ctx.beginPath();ctx.rect(0,0,half,c.height);ctx.clip();this.body(c);ctx.restore();
   ctx.save();ctx.beginPath();ctx.rect(half,0,half,c.height);ctx.clip();
-  for(const cell of previous){if(hash(cell.id*9+Math.floor(lag))<.27)continue;const rgb=cell.rgb||[120,120,120],grey=Math.round(rgb[0]*.3+rgb[1]*.59+rgb[2]*.11)*.64;ctx.fillStyle=`rgb(${grey},${grey},${grey})`;ctx.fillRect(cell.x-b/2,cell.y-b/2,b+.6,b+.6);}ctx.restore();
+  for(const cell of previous){if(hash(cell.id*9)<.035)continue;const rgb=cell.rgb||[120,120,120],grey=clamp(Math.round((rgb[0]*.3+rgb[1]*.59+rgb[2]*.11)*.9),52,220);ctx.fillStyle=`rgb(${grey},${grey},${grey})`;ctx.fillRect(cell.x+dx-b/2,cell.y+dy-b/2,b+.6,b+.6);}ctx.restore();
   ctx.fillStyle='#000b';ctx.fillRect(0,0,c.width,62);const w=sceneWords[c.lang];this.number(w.connected,84,22,c,'#fff','left',22);this.number(w.disconnected,half+28,22,c,'#aaa','left',22);
  }
+
  vacant(c){
   const ctx=this.ctx,w=sceneWords[c.lang],reference=c.rules?.vacant?.cityReference,source=c.cards.find(card=>card.id===(reference?.sourceCard||'vacant-jp-total-2023')),percent=reference?.vacancyPercent||source?.companionPercent||13.8,ratio=source?{...source,value:number(percent,c.lang,1)+'%',label:w.vacancyRate}:null;
-  this.city.build(c.width,c.height,percent);const shoulder=this.project({x:(c.pose[11].x+c.pose[12].x)/2,y:(c.pose[11].y+c.pose[12].y)/2},c),centre={x:shoulder.x,y:shoulder.y+c.height*.18};
+  this.city.build(c.width,c.height,percent,c.footerHeight||80);const shoulder=this.project({x:(c.pose[11].x+c.pose[12].x)/2,y:(c.pose[11].y+c.pose[12].y)/2},c),centre={x:shoulder.x,y:shoulder.y+c.height*.18};
   const hands=c.hands.map(h=>({...h,...this.project(h,c)}));this.city.update(c.dt,hands,centre,c.width,c.height);
   this.flowFacts(c,{alpha:.2,speed:14});this.body(c,.6);
   for(const t of this.city.tiles){if(!t.vacant){ctx.fillStyle='#ffffff1b';ctx.fillRect(t.x-this.city.tileW/2,t.y-this.city.tileH/2,this.city.tileW,this.city.tileH);ctx.strokeStyle='#ffffff15';ctx.lineWidth=1;ctx.strokeRect(t.x-this.city.tileW/2,t.y-this.city.tileH/2,this.city.tileW,this.city.tileH);continue;}
@@ -137,7 +137,7 @@ export class Renderer{
    if(!t.shared){ctx.strokeStyle='#fff5';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(t.x-5,t.y);ctx.lineTo(t.x+5,t.y);ctx.moveTo(t.x,t.y-5);ctx.lineTo(t.x,t.y+5);ctx.stroke();}
   }
   ctx.fillStyle='#000c';ctx.fillRect(0,0,c.width,65);if(ratio)this.number(`${ratio.value}  ${ratio.label} · ${ratio.scope} ${ratio.yearText||ratio.year}`,84,28,c,'#fff','left',clamp(c.width*.018,18,25));
-  this.footerShade(c);this.number(`${number(this.city.reused,c.lang,0)}  ${w.reused}`,28,c.height-104,c,'#fff','left',24);this.number(w.cityScenario,28,c.height-72,c,'#999','left',15);
+
  }
  previewGrip(x,y,closed,pose){
   if(this.scene!=='vacant'||!this.city.tiles.length)return;
@@ -157,7 +157,12 @@ export class Renderer{
   ctx.putImageData(out,0,0);this.outline={key,canvas:mask};return mask;
  }
  alignment(c){this.body(c,.6);const ctx=this.ctx;ctx.save();if(c.scene==='hold')ctx.filter='invert(1)';ctx.drawImage(this.makeOutline(c),0,0);ctx.restore();}
- result(scene,lang,rules){const w=sceneWords[lang];if(scene==='thirst'){const s=this.water.summary();return [{value:number(s.safe,lang,1)+' L',label:w.safe},{value:number(s.uncertain,lang,1)+' L',label:w.uncertain},{value:number(s.personDays,lang,2),label:w.personDays},{value:number(100-(rules?.thirst?.safelyManagedShare2024??74),lang,2)+'%',label:w.worldUnassured}];}if(scene==='vacant')return [{value:number(this.city.reused,lang,0),label:w.reused},{value:'120',label:w.cityScenario}];return null;}
+ stats(scene,lang,metric,elapsed){const w=sceneWords[lang];
+  if(scene==='shelter')return [{value:'≈ '+number((metric?.rate||0)*elapsed,lang,0)+' t CO₂',label:w.elapsedEmissions}];
+  if(scene==='thirst'){const s=this.water.summary();return [{value:number(s.blue,lang,1)+' L',label:w.blueWater,tone:'blue'},{value:number(s.ochre,lang,1)+' L',label:w.ochreWater,tone:'ochre'}];}
+  if(scene==='vacant')return [{value:number(this.city.reused,lang,0),label:w.reused}];return [];
+ }
+ result(scene,lang,rules){const w=sceneWords[lang];if(scene==='thirst'){const s=this.water.summary();return [{value:number(s.safe,lang,1)+' L',label:w.blueWater},{value:number(s.uncertain,lang,1)+' L',label:w.ochreWater},{value:number(s.personDays,lang,2),label:w.personDays},{value:number(100-(rules?.thirst?.safelyManagedShare2024??74),lang,2)+'%',label:w.worldUnassured}];}if(scene==='vacant')return [{value:number(this.city.reused,lang,0),label:w.reused},{value:'120',label:w.cityScenario}];return null;}
  fontsChanged(){this.cardLayouts?.clear();this.flow.key='';this.field.key='';}
  render(input){
   this.fontFamily=input.lang==='ar'?'"Noto Sans Arabic",Arial,sans-serif':FONT;
