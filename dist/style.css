@@ -83,5 +83,7 @@ body[dir="rtl"]{font-family:"Noto Sans Arabic",Arial,sans-serif}body[dir="rtl"] 
 .hand-cursor[data-dwelling="true"] .cursor-ring{opacity:1}
 .hand-cursor[data-dwelling="true"] .dwell-track{opacity:.25}
 .hand-cursor[data-dragging="true"] .pointer-target{fill:currentColor}
+#cube-guidance{top:auto;bottom:24px;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px 24px}
+#cube-caption{margin:0}
 
 body[data-state="error"] .entrance-bottom{z-index:25}
