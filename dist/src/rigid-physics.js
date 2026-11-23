@@ -1,5 +1,5 @@
-import {clamp,lerp,hash} from './math.js?v=5.1.0';
-import {shadeAt} from './scene-models.js?v=5.1.0';
+import {clamp,lerp,hash} from './math.js?v=5.2.0';
+import {shadeAt} from './scene-models.js?v=5.2.0';
 export class RigidCare{
  constructor(Matter=globalThis.Matter){this.M=Matter;this.reset();}
  reset(){
@@ -51,15 +51,15 @@ export class RigidCare{
 export class PixelMelt{
  constructor(){this.reset();}
  reset(){this.pixels=new Map();this.time=0;this.heat=0;this.previousHand=[];this.cooling=0;}
- update(dt,cells,hands,{width,height,block,progress}){
+ update(dt,cells,hands,{width,height,block,progress,occluders=hands}){
   this.time+=dt;
   const shade=hands.filter(h=>h.y<height*.47);let motion=0;
   for(const h of shade){const old=this.previousHand.find(p=>p.id===h.id);if(old)motion+=Math.min(1,Math.hypot(h.x-old.x,h.y-old.y)/Math.max(1,dt*width));}
   this.previousHand=hands.map(h=>({...h}));this.cooling=lerp(this.cooling,clamp(shade.length*.28+motion*.75),1-Math.exp(-dt*8));
   this.heat=clamp(this.heat+dt*(.024+.012*progress)*(1-this.cooling*.7));
-  for(const cell of cells){const id=cell.material??cell.id;let p=this.pixels.get(id);const protection=shadeAt(cell,shade,width,height);
-   if(!p){p={id,free:false,damage:this.heat*(1-protection)*.65,color:cell.color,seed:this.pixels.size};this.pixels.set(id,p);}
-   if(!p.free){p.damage+=dt*(.018+.009*progress)*(1-protection*.98);p.color=cell.color;
+  for(const cell of cells){const id=cell.material??cell.id;let p=this.pixels.get(id);const protection=shadeAt(cell,occluders,width,height);
+   if(!p){p={id,free:false,damage:this.heat*(1-protection)*.65,color:cell.color,rgb:cell.rgb,seed:this.pixels.size};this.pixels.set(id,p);}
+   if(!p.free){p.damage+=dt*(.018+.009*progress)*(1-protection*.98);p.color=cell.color;p.rgb=cell.rgb;
     if(p.damage>.12+hash(p.seed*3)*.75&&progress>.05){p.free=true;p.x=cell.x;p.y=cell.y;p.vx=(hash(p.seed+1)-.5)*width*.09;p.vy=-height*.025;p.age=0;}
    }
   }

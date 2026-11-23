@@ -1,4 +1,4 @@
-import {clamp,lerp,hash} from './math.js?v=5.1.0';
+import {clamp,lerp,hash} from './math.js?v=5.2.0';
 
 export function materialKey(cell,pose){
  if(!pose?.[11]||!pose?.[12])return cell.id;
@@ -16,8 +16,23 @@ export function materialKey(cell,pose){
 }
 export function shadeAt(cell,hands,width,height){
  let shade=0;
- for(const hand of hands){if(hand.y>height*.5||hand.y>cell.y+20)continue;const radius=width*.19+Math.max(0,cell.y-hand.y)*.19;shade=Math.max(shade,clamp((radius-Math.abs(cell.x-hand.x))/(width*.055)));}
+ for(const hand of hands){
+  if(hand.a&&hand.b){
+   const dx=hand.b.x-hand.a.x,t=clamp((cell.x-hand.a.x)/(dx||1)),x=hand.a.x+dx*t,y=hand.a.y+(hand.b.y-hand.a.y)*t;
+   if(cell.y<y-8)continue;
+   const radius=width*.055+Math.max(0,cell.y-y)*.12;
+   shade=Math.max(shade,clamp((radius-Math.abs(cell.x-x))/(width*.035)));
+  }else{if(hand.y>height*.5||hand.y>cell.y+20)continue;const radius=width*.19+Math.max(0,cell.y-hand.y)*.19;shade=Math.max(shade,clamp((radius-Math.abs(cell.x-hand.x))/(width*.055)));}
+ }
  return shade;
+}
+export function shelterOccluders(pose,hands,height){
+ const blockers=hands.filter(h=>h.y<height*.5).map(h=>({...h}));
+ for(const chain of [[11,13,15],[12,14,16]]){
+  if(chain.some(i=>!pose[i]||(pose[i].visibility??1)<.35)||pose[chain[2]].y>pose[chain[0]].y-height*.045)continue;
+  for(let j=0;j<2;j++)blockers.push({id:'shade-'+chain[j],a:pose[chain[j]],b:pose[chain[j+1]]});
+ }
+ return blockers;
 }
 export const WATER_CAPACITY=30;
 export class WaterCatch{

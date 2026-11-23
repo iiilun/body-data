@@ -1,11 +1,12 @@
-import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.1.0';
-import {number} from './i18n.js?v=5.1.0';
-import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.1.0';
-import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.1.0';
-import {SilhouetteType,DataFlow} from './spatial-type.js?v=5.1.0';
-import {WaterCatch,VacancyCity,materialKey,offlineTime,careSag} from './scene-models.js?v=5.1.0';
-import {framePose} from './controls.js?v=5.1.0';
-import {sceneWords} from './scene-copy.js?v=5.1.0';
+import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.2.0';
+import {number} from './i18n.js?v=5.2.0';
+import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.2.0';
+import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.2.0';
+import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.2.0';
+import {WaterCatch,VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.2.0';
+import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.2.0';
+import {framePose} from './controls.js?v=5.2.0';
+import {sceneWords} from './scene-copy.js?v=5.2.0';
 const FONT='"Helvetica Neue",Helvetica,Arial,"Noto Sans TC","Noto Sans JP","Noto Sans KR","Noto Sans Arabic",sans-serif';
 export function demoPose(time,scene='space'){
  const p=framePose(scene),sway=Math.sin(time*.24)*.012;
@@ -15,8 +16,8 @@ export function demoPose(time,scene='space'){
 export class Renderer{
  constructor(canvas){
   this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.sample=document.createElement('canvas');this.sc=this.sample.getContext('2d',{willReadFrequently:true});
-  this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.water=new WaterCatch();this.city=new VacancyCity();this.resize();this.reset('');
-  fetch('./assets/preview-person.json?v=5.1.0').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
+  this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.haze=new HeatHaze();this.water=new WaterCatch();this.city=new VacancyCity();this.resize();this.reset('');
+  fetch('./assets/preview-person.json?v=5.2.0').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
  }
  resize(){this.width=innerWidth;this.height=innerHeight;const d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.round(this.width*d);this.canvas.height=Math.round(this.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.ctx.imageSmoothingEnabled=false;this.outline=null;this.cardLayouts=new Map();}
  reset(scene){this.scene=scene;this.physics.reset();this.melt.reset();this.field=new SilhouetteType();this.flow=new DataFlow();this.water.reset();this.city.reset();this.lastSample=-1;this.seeded=false;this.history=[];this.lastHistory=-1;this.outline=null;}
@@ -57,7 +58,7 @@ export class Renderer{
   ctx.font=`400 11px ${this.fontFamily||FONT}`;ctx.globalAlpha=.6;ctx.fillText(card.scope+' · '+(card.yearText||card.year),c.lang==='ar'?w:0,size.size+lines.length*(size.labelFont+2)+3);ctx.restore();
  }
  footerShade(c,depth=170){const ctx=this.ctx,shade=ctx.createLinearGradient(0,c.height-depth,0,c.height);shade.addColorStop(0,'#0000');shade.addColorStop(.45,'#000d');shade.addColorStop(1,'#000');ctx.fillStyle=shade;ctx.fillRect(0,c.height-depth,c.width,depth);}
- flowFacts(c,options={}){const font=clamp(c.height*.027,18,27);this.type(c,font);this.flow.draw(this.ctx,{width:c.width,height:Math.max(120,c.height-(c.footerHeight||80)),font,cards:c.cards,time:c.elapsed,...options});}
+ flowFacts(c,{context=this.ctx,...options}={}){const {font}=backgroundType(c.height);this.type(c,font);context.font=this.ctx.font;context.textAlign='left';context.textBaseline='top';context.direction='ltr';this.flow.draw(context,{width:c.width,height:Math.max(120,c.height-(c.footerHeight||80)),font,cards:c.cards,time:c.elapsed,...options});}
  supports(c){
   const out=[],pt=i=>this.project(c.pose[i],c);
   for(const [side,chain]of [[0,[11,13,15]],[1,[12,14,16]]])for(let j=0;j<2;j++)if(chain.slice(j,j+2).every(i=>c.pose[i]?.visibility>.3))out.push({id:(j?'forearm':'upperarm')+side,side,a:pt(chain[j]),b:pt(chain[j+1]),thickness:c.g.block*1.05});
@@ -72,27 +73,24 @@ export class Renderer{
  hold(c){
   const segments=this.supports(c),config={width:c.width,height:c.height,interval:lerp(.65,.38,c.progress),cards:c.cards,measure:card=>this.cardSize(card,c)};
   if(c.demo&&c.dt===0&&c.elapsed>0&&!this.seeded){this.seeded=true;for(let t=0;t<c.elapsed;t+=1/60)this.physics.update(1/60,this.supports(c),config);}
-  this.physics.update(c.dt,segments,config);this.flowFacts(c,{color:'#000',alpha:.11,speed:15});this.body(c);
+  this.physics.update(c.dt,segments,config);this.flowFacts(c,{color:'#000',alpha:.18,speed:15});this.body(c);
   for(const b of this.physics.bodies)this.drawCard(b.plugin.card,b.position.x,b.position.y,c,{angle:b.angle,center:true,color:'#000',width:b.plugin.width});
  }
  shelter(c){
-  const hands=c.hands.map(h=>({...this.project(h,c),id:h.id}));
-  if(c.demo&&c.dt===0&&c.elapsed>0&&!this.seeded){this.seeded=true;for(let t=0;t<c.elapsed;t+=1/30)this.melt.update(1/30,this.placed,hands,{...c,block:c.g.block,progress:t/45});}
-  const pixels=this.melt.update(c.dt,this.placed,hands,{...c,block:c.g.block});
+  const hands=c.hands.map(h=>({...this.project(h,c),id:h.id})),pose=c.pose.map(p=>({...p,...this.project(p,c)})),occluders=shelterOccluders(pose,hands,c.height);
+  if(c.demo&&c.dt===0&&c.elapsed>0&&!this.seeded){this.seeded=true;for(let t=0;t<c.elapsed;t+=1/30)this.melt.update(1/30,this.placed,hands,{...c,occluders,block:c.g.block,progress:t/45});}
+  const pixels=this.melt.update(c.dt,this.placed,hands,{...c,occluders,block:c.g.block});
   const depth=c.height*(.35+c.progress*1.3-this.melt.cooling*.2),ctx=this.ctx,light=ctx.createLinearGradient(0,0,0,Math.max(100,depth));
   light.addColorStop(0,'#ff321a');light.addColorStop(.38,'#bd1709');light.addColorStop(1,'#000');ctx.fillStyle=light;ctx.fillRect(0,0,c.width,c.height);
-  this.flowFacts(c,{alpha:.47,speed:48+78*c.progress});
-  for(const hand of hands.filter(h=>h.y<c.height*.5)){
-   const radius=c.width*.23,shade=ctx.createRadialGradient(hand.x,hand.y+c.height*.36,20,hand.x,hand.y+c.height*.36,radius*1.7);shade.addColorStop(0,'#000f');shade.addColorStop(.55,'#000b');shade.addColorStop(1,'#0000');ctx.fillStyle=shade;ctx.fillRect(0,0,c.width,c.height);
-  }
+  this.haze.draw(ctx,{width:c.width,height:Math.max(120,c.height-(c.footerHeight||80)),viewportHeight:c.height,time:c.elapsed,depth,occluders,paint:context=>this.flowFacts(c,{context,alpha:.62,speed:48+78*c.progress})});
   const b=c.g.block;
-  for(const cell of this.placed){const p=pixels.get(cell.material??cell.id);if(p?.free)continue;ctx.fillStyle=cell.color;ctx.fillRect(cell.x-b/2,cell.y-b/2,b+.5,b+.5);}
-  for(const p of pixels.values())if(p.free&&p.y<c.height+b){ctx.globalAlpha=clamp(1-(p.age-2)/3,.2,1);ctx.fillStyle=p.color;ctx.fillRect(p.x-b/2,p.y-b/2,b,b);}ctx.globalAlpha=1;
+  for(const cell of this.placed){const p=pixels.get(cell.material??cell.id);if(p?.free)continue;const heat=heatSample(cell.x,cell.y,c.elapsed,{width:c.width,height:c.height,depth,occluders}).amount;ctx.fillStyle=thermalColor(cell.rgb,heat);ctx.fillRect(cell.x-b/2,cell.y-b/2,b+.5,b+.5);}
+  for(const p of pixels.values())if(p.free&&p.y<c.height+b){ctx.globalAlpha=clamp(1-(p.age-2)/3,.2,1);ctx.fillStyle=thermalColor(p.rgb,.85);ctx.fillRect(p.x-b/2,p.y-b/2,b,b);}ctx.globalAlpha=1;
 
  }
  space(c){
-  const ctx=this.ctx,size=clamp(c.height*.032,20,31);this.type(c,size);
-  const previousItems=this.field.items;this.field.build(c.width,c.height-(c.footerHeight||80),size,size*.98,c.cards,s=>ctx.measureText(s).width);
+  const ctx=this.ctx,{font:size,row}=backgroundType(c.height);this.type(c,size);
+  const previousItems=this.field.items;this.field.build(c.width,c.height-(c.footerHeight||80),size,row,c.cards,s=>ctx.measureText(s).width);
   const hands=c.hands.map(h=>this.project(h,c));
   if(c.demo&&c.dt===0&&previousItems!==this.field.items){for(let n=0;n<120;n++)this.field.update(1/60,this.placed,c.g.block,c.width,hands,c.progress);}
   this.field.update(c.dt,this.placed,c.g.block,c.width,hands,c.progress);ctx.fillStyle='#eee';this.type(c,size);

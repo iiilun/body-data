@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Heat rendering verification</title><style>body{background:#111;color:white;font:18px Helvetica,Arial;margin:24px}canvas{width:min(960px,100%);display:block;border:1px solid #555}pre{white-space:pre-wrap}</style><h1>Heat rendering verification</h1><pre id="report">RUNNING</pre><canvas id="output" width="1000" height="600"></canvas><script type="module">
+import {HeatHaze} from '../src/heat.js?v=5.2.0';
+import {DataFlow,backgroundType} from '../src/spatial-type.js?v=5.2.0';
+const width=1000,height=600,canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true}),haze=new HeatHaze(),flow=new DataFlow(),{font}=backgroundType(700);
+const cards=(await (await fetch('../assets/global-facts.json')).json()).cards.filter(c=>c.scene==='shelter').map(c=>({...c,value:String(c.value),label:c.labels.en}));
+const paint=c=>{c.font=`300 ${font}px Helvetica,Arial,sans-serif`;c.textBaseline='top';flow.draw(c,{width,height,font,cards,time:12,alpha:.8,speed:50});};
+const draw=occluders=>{ctx.fillStyle='#000';ctx.fillRect(0,0,width,height);haze.draw(ctx,{width,height,viewportHeight:700,depth:700,time:12,occluders,paint});return ctx.getImageData(330,270,140,200).data;};
+const gold=document.createElement('canvas');gold.width=width;gold.height=height;const gc=gold.getContext('2d',{willReadFrequently:true});gc.fillStyle='#000';gc.fillRect(0,0,width,height);paint(gc);const expected=gc.getImageData(330,270,140,200).data;
+const error=a=>a.reduce((sum,v,i)=>sum+(i%4===3?0:Math.abs(v-expected[i])),0)/(a.length*.75);
+const hotError=error(draw([])),coldError=error(draw([{x:400,y:100}])),hotAgain=error(draw([])),times=[];
+for(let i=0;i<45;i++){const start=performance.now();haze.draw(ctx,{width,height,viewportHeight:700,depth:700,time:12+i/60,occluders:[{x:400,y:100}],paint});times.push(performance.now()-start);}
+times.sort((a,b)=>a-b);const pass=coldError<.2&&hotError>1&&Math.abs(hotAgain-hotError)<.01;
+document.querySelector('#report').textContent=`${pass?'PASS':'FAIL'}\nUnshaded vs clean text, mean channel error: ${hotError.toFixed(3)}\nShadow vs clean text, mean channel error: ${coldError.toFixed(3)}\nRe-exposed vs first exposed: ${Math.abs(hotAgain-hotError).toFixed(3)}\nBackground rows: ${flow.lanes.length}; font: ${font}px\nHeat draw CPU submission median / p95: ${times[22].toFixed(2)} / ${times[42].toFixed(2)} ms\n45 frames, 1000 × 600. This is a renderer check, not camera FPS.`;
+</script></html>

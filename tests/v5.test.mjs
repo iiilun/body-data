@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {GestureCube,FACE_SCENES} from '../dist/src/controls.js';
+import {FACE_SCENES} from '../dist/src/controls.js';
 import {Catalogue,words} from '../dist/src/catalogue.js';
 import {sceneWords} from '../dist/src/scene-copy.js';
 import {Renderer} from '../dist/src/renderer.js';
@@ -9,19 +9,7 @@ import {PixelMelt} from '../dist/src/rigid-physics.js';
 import {WaterCatch,VacancyCity,materialKey,offlineTime} from '../dist/src/scene-models.js';
 import {SilhouetteType} from '../dist/src/spatial-type.js';
 const source=JSON.parse(await readFile(new URL('../dist/assets/global-facts.json',import.meta.url),'utf8'));
-const open=(x=.5,y=.5)=>({id:'hand',x,y,open:1,fist:false});
-const run=(cube,hand,n=90)=>{let out;for(let i=0;i<n;i++)out=cube.update(1/60,hand?[hand]:[],0);return out;};
 
-test('returning an open hand to centre preserves the completed cube swipe',()=>{
- const cube=new GestureCube();run(cube,open());for(let i=0;i<20;i++)cube.update(1/60,[open(.5+i*.011)],0);run(cube,open(.72));const yaw=cube.targetY;
- for(let i=0;i<20;i++)cube.update(1/60,[open(.72-i*.011)],0);run(cube,open());assert.equal(cube.targetY,yaw);assert.equal(yaw,62);assert.equal(cube.highlight,true);
-});
-test('hover highlights the pointed face immediately and a quick fist confirms that exact face',()=>{
- const cube=new GestureCube();assert.equal(cube.update(1/60,[open()],4).highlight,true);let selected;for(let i=0;i<8;i++){const s=cube.update(1/60,[{...open(),open:0,fist:true}],0);if(s.selected)selected=s.selected;}assert.equal(selected,FACE_SCENES[4]);
-});
-test('a return stroke rearms consecutive short swipes without reversing the cube',()=>{
- const cube=new GestureCube();run(cube,open());for(let k=0;k<3;k++){for(let i=0;i<22;i++)cube.update(1/60,[open(.5+i*.01)],0);run(cube,open(.72),50);for(let i=0;i<23;i++)cube.update(1/60,[open(.72-i*.01)],0);run(cube,open(),50);}assert.equal(cube.targetY,242);
-});
 test('every scene offers 24 distinct sourced observations in every language with identical geography',()=>{
  const cat=new Catalogue();cat.global=source.cards;assert.equal(cat.global.length,144);assert.equal(new Set(cat.global.map(c=>c.id)).size,144);
  for(const scene of FACE_SCENES){const baseline=cat.cards(scene,'en');assert.equal(baseline.length,24,scene);assert.ok(baseline.some(c=>/UN|ILO|WMO|ITU|WHO|UNICEF/i.test(c.source))||scene==='vacant');

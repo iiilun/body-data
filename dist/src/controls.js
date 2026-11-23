@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.1.0';
+import {clamp,lerp} from './math.js?v=5.2.0';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;
@@ -7,41 +7,34 @@ export function facingFace(pitch,yaw){
  const depth=normals.map(([a,b,c])=>Math.sin(x)*b+Math.cos(x)*(-Math.sin(y)*a+Math.cos(y)*c));
  return depth.indexOf(Math.max(...depth));
 }
-// Short swipes turn once; actual face hit-testing is supplied by the view.
+export const CUBE_DWELL_SECONDS=4;
+// Rotation belongs to the object. A fist translates it; an open, resting palm commits.
 export class GestureCube{
- constructor(){this.pitch=-18;this.yaw=-28;this.targetX=-18;this.targetY=-28;this.face=0;this.reset();}
- reset(){this.samples=[];this.anchor=null;this.stroke=null;this.armed=false;this.closed=0;this.cooldown=0;this.highlight=false;this.hover=-1;this.hoverAge=1;this.latched=-1;this.time=0;this.handId=null;}
- update(dt,hands,hitFace=-1){
-  this.time+=dt;this.cooldown=Math.max(0,this.cooldown-dt);this.hoverAge+=dt;let selected=null;
+ constructor(){this.reset();}
+ reset(){this.pitch=-18;this.yaw=-28;this.face=0;this.x=0;this.y=0;this.targetX=0;this.targetY=0;this.spin=0;this.grab=null;this.dwell=null;this.committed=false;this.highlight=false;this.handId=null;}
+ update(dt,hands,hitFace=-1,bounds={left:-.32,right:.32,top:-.18,bottom:.25}){
+  let selected=null;
   const hand=hands.find(h=>h.id===this.handId)||hands[0];
-  if(!hand){this.samples=[];this.stroke=null;this.handId=null;this.armed=false;this.closed=0;this.highlight=false;this.hover=-1;this.hoverAge=1;}
-  else{
-   if(this.handId!==hand.id){this.samples=[];this.stroke=null;this.armed=false;this.closed=0;this.handId=hand.id;}
-   if(!hand.fist){
-    this.closed=0;this.latched=-1;this.armed=true;this.hover=Number.isInteger(hitFace)&&hitFace>=0&&hitFace<6?hitFace:-1;this.highlight=this.hover>=0;
-    if(this.highlight){this.face=this.hover;this.hoverAge=0;}
-    if(this.stroke){
-     const d=this.stroke.axis==='x'?hand.x-this.stroke.x:hand.y-this.stroke.y;
-     if(d*this.stroke.direction<.025){this.stroke=null;this.samples=[];}
-    }else if(hand.open>.65&&(this.highlight||this.hoverAge<.18)){
-     this.samples.push({x:hand.x,y:hand.y,t:this.time});while(this.samples.length>1&&this.time-this.samples[0].t>.2)this.samples.shift();
-     const first=this.samples[0],dx=hand.x-first.x,dy=hand.y-first.y,span=Math.max(.035,this.time-first.t),axis=Math.abs(dx)>Math.abs(dy)?'x':'y',distance=axis==='x'?dx:dy;
-     if(this.cooldown===0&&Math.abs(distance)>.055&&Math.abs(distance)/span>.28){
-      const direction=Math.sign(distance);if(axis==='x')this.targetY+=direction*90;else this.targetX+=direction*90;
-      this.stroke={x:first.x,y:first.y,axis,direction};this.samples=[];this.cooldown=.22;this.highlight=false;this.hover=-1;this.hoverAge=1;
-     }
-    }else this.samples=[];
-   }else{
-    // Keep the last open-palm target while the fingers close; closing changes the palm centre slightly.
-    if(this.latched<0&&this.armed&&this.hoverAge<.2)this.latched=this.hover;
-    this.highlight=this.latched>=0;
-    if(this.highlight){this.face=this.latched;this.closed+=dt;if(this.closed>=.10){selected=FACE_SCENES[this.latched];this.armed=false;this.latched=-1;this.closed=0;this.hoverAge=1;this.highlight=false;}}
-    else this.closed=0;
-   }
+  if(!hand||hand.id!==this.handId){this.grab=null;this.dwell=null;this.committed=false;this.handId=hand?.id??null;}
+  this.highlight=!!hand&&!hand.fist&&hand.open>.65&&Number.isInteger(hitFace)&&hitFace>=0&&hitFace<6;
+  if(hand?.fist){
+   this.dwell=null;this.committed=false;
+   this.grab??={x:hand.x,y:hand.y,objectX:this.x,objectY:this.y};
+   this.targetX=clamp(this.grab.objectX+hand.x-this.grab.x,bounds.left,bounds.right);
+   this.targetY=clamp(this.grab.objectY+hand.y-this.grab.y,bounds.top,bounds.bottom);
+  }else{
+   this.grab=null;
+   if(this.highlight){
+    this.face=hitFace;
+    if(!this.dwell||this.dwell.face!==hitFace||Math.hypot(hand.x-this.dwell.x,hand.y-this.dwell.y)>.045){this.dwell={face:hitFace,x:hand.x,y:hand.y,elapsed:0};this.committed=false;}
+    else this.dwell.elapsed+=dt;
+    if(!this.committed&&this.dwell.elapsed+1e-8>=CUBE_DWELL_SECONDS){selected=FACE_SCENES[hitFace];this.committed=true;}
+   }else{this.dwell=null;this.committed=false;}
   }
-  const blend=1-Math.exp(-dt*19);this.pitch=lerp(this.pitch,this.targetX,blend);this.yaw=lerp(this.yaw,this.targetY,blend);
+  if(!this.highlight&&!this.grab){this.spin+=dt;this.yaw+=dt*5;this.pitch=-18+Math.sin(this.spin*.09)*72;}
+  const blend=1-Math.exp(-dt*22);this.x=lerp(this.x,this.targetX,blend);this.y=lerp(this.y,this.targetY,blend);
   if(!this.highlight)this.face=facingFace(this.pitch,this.yaw);
-  return {pitch:this.pitch,yaw:this.yaw,face:this.face,selected,highlight:this.highlight,progress:clamp(this.closed/.10)};
+  return {pitch:this.pitch,yaw:this.yaw,x:this.x,y:this.y,dragging:!!this.grab,face:this.face,selected,highlight:this.highlight,progress:clamp((this.dwell?.elapsed||0)/CUBE_DWELL_SECONDS)};
  }
 }
 

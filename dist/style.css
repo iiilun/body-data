@@ -72,5 +72,16 @@ body[dir="rtl"]{font-family:"Noto Sans Arabic",Arial,sans-serif}body[dir="rtl"] 
 @media(max-width:700px){.scene-context{padding:16px 68px 16px 20px}.live-stats{gap:24px}.live-stat strong{font-size:44px}.live-stat span{font-size:12px}.scene-context p{font-size:13px}.scene-context p+p{font-size:11px}#fullscreen{right:15px;bottom:15px}.footer{right:64px}}
 
 .hand-cursor .pointer-target{fill:none;stroke:currentColor;stroke-width:1.25}
+/* Continuous object rotation, relative fist translation, four-second palm dwell. */
+.cube-scene{transform:translate(-50%,-50%) translate(var(--drag-x,0px),var(--drag-y,0px));will-change:transform}
+.cube-scene[data-dragging="true"]{cursor:grabbing}
+.cube-face>span{display:block;height:100%;width:100%;text-align:start;overflow:hidden}
+.cube-face>span>b{display:block;width:max-content;min-width:110%;white-space:nowrap;font-weight:700}
+.hand-cursor{width:112px;height:112px}
+.hand-cursor .cursor-ring{stroke-width:3;stroke-dasharray:276.46;stroke-dashoffset:276.46;transform-origin:56px 56px;opacity:0}
+.hand-cursor .dwell-track{fill:none;stroke:currentColor;stroke-width:1;opacity:0}
+.hand-cursor[data-dwelling="true"] .cursor-ring{opacity:1}
+.hand-cursor[data-dwelling="true"] .dwell-track{opacity:.25}
+.hand-cursor[data-dragging="true"] .pointer-target{fill:currentColor}
 
 body[data-state="error"] .entrance-bottom{z-index:25}
