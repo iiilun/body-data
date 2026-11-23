@@ -1,12 +1,12 @@
-# V5.2 · cube, dense type and heat
+# V5.2.1 · cube, dense type and heat
 
 ## Interaction contract
 
-The cube turns continuously at 5°/s around Y (72 s per revolution), with a slow X tilt exposing top and bottom. Closed_Fist starts a relative positional clutch; moving the fist translates the object in screen space, with 22/s exponential smoothing and viewport bounds. Releasing keeps the translated position. Returning an open hand cannot undo a drag. A hand change or tracking loss starts a fresh clutch, without snapping the cube.
+The cube turns continuously at 5°/s around Y (72 s per revolution), with a slow X tilt exposing top and bottom. The cube pivot stays at50% viewport width /50% viewport height. Closed_Fist starts a relative angular clutch: horizontal motion rotates yaw, vertical motion rotates pitch, with22/s exponential smoothing. Releasing keeps the current orientation; unattended spin continues relative to it. Returning an open hand cannot undo a drag. A hand change or tracking loss starts a fresh clutch without jumping. This corrects V5.2's positional-translation interpretation.
 
-Open_Palm over an actual CSS-projected face immediately makes it white. Rotation pauses while pointing. A 112px cursor contains an 88px diameter progress ring; four continuous seconds commit that face. A face change, tracking loss, closing the hand, leaving the cube, or moving more than 4.5% of the normalized viewport resets the dwell. Small tracking jitter is tolerated. Fists never select. No instant click/space selection in the preview; mouse-down simulates the grip and mouse-up simulates an open palm.
+Open_Palm over an actual CSS-projected face immediately makes it white. Rotation pauses while pointing. A 112px cursor contains an 88px diameter progress ring; four continuous seconds commit that face. A face change, tracking loss, closing the hand, leaving the cube, or moving more than 4.5% of the normalized viewport resets the dwell. Small tracking jitter is tolerated. Fists never select. No instant click/space selection in the preview; mouse-down simulates the rotational grip and mouse-up simulates an open palm.
 
-Seven-language titles repeat horizontally and vertically at one shared face font scale, without shrinking short CJK names into one sparse row. Arabic uses the bundled licensed Noto font and RTL layout.
+Seven-language titles repeat horizontally and vertically at one shared face font scale. Repeated titles have no inserted spaces, and every row starts at the same inline edge, without alternating indentation. Arabic uses the bundled licensed Noto font and RTL layout.
 
 ## Shared data field
 
@@ -30,7 +30,7 @@ SHELTER alone maps source RGB luminance through a blue/purple/magenta/red/yellow
 ## Verification
 
 - 64 Node tests passed, including all old source/translation/physics checks and new rotation, grip, dwell, typography, heat and arm-shadow contracts.
-- Browser tested actual face highlighting, relative mouse grip translation (~150px horizontal,60px vertical), position retention, and dwell-to-intro transition.
+- Browser tested actual face highlighting, relative mouse grip rotation, fixed centre, orientation retention, and dwell-to-intro transition.
 - All seven languages: all six faces had seven repeated rows, one shared79.765px font at1280×720, and overflow coverage on both axes. Chinese and Arabic layouts inspected visually.
 - All six active scenes rendered at1280×720; dense type, body colours, split OFFLINE and non-overlapping bottom dock inspected. No browser error logs were recorded in those preview runs.
 - Heat browser fixture: full shadow matched undistorted text exactly (mean RGB channel error0.000); exposed text differed53.282; re-exposure reproduced the original hot rendering exactly (difference0.000).45 frames at1000×600 submitted in median1.90ms / p952.20ms in the test browser. These are renderer submission timings, **not camera FPS, end-to-end frame times, or M4 hardware measurements**.

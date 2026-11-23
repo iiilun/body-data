@@ -1,13 +1,13 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.2.0';
-import {clamp,pointToScreen} from './math.js?v=5.2.0';
-import {DataService} from './data.js?v=5.2.0';
-import {Renderer,demoPose} from './renderer.js?v=5.2.0';
-import {BodyTracker} from './interaction.js?v=5.2.0';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.2.0';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.2.0';
-import {sceneWords} from './scene-copy.js?v=5.2.0';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.2.0';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.2.0';
+import {dictionary,languages,locales} from './i18n.js?v=5.2.1';
+import {clamp,pointToScreen} from './math.js?v=5.2.1';
+import {DataService} from './data.js?v=5.2.1';
+import {Renderer,demoPose} from './renderer.js?v=5.2.1';
+import {BodyTracker} from './interaction.js?v=5.2.1';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.2.1';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.2.1';
+import {sceneWords} from './scene-copy.js?v=5.2.1';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.2.1';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.2.1';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'idle',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,dockHeight:80,statsKey:'',resultReason:'time'};
@@ -45,7 +45,7 @@ function fitCube(){
  document.querySelectorAll('.cube-face > span').forEach((el,i)=>{
   const name=title(FACE_SCENES[i]),layout=faceTypography(name,width,(text,size)=>{ctx.font=`700 ${size}px ${font}`;return ctx.measureText(text).width;});
   el.replaceChildren();el.style.fontSize=layout.font+'px';el.style.lineHeight=layout.lineHeight+'px';el.setAttribute('aria-hidden','true');el.parentElement.setAttribute('aria-label',name);
-  for(let n=0;n<layout.rows;n++){const row=document.createElement('b');row.textContent=layout.text;row.style.marginInlineStart=(n%2?-layout.font*.4:0)+'px';el.append(row);}
+  for(let n=0;n<layout.rows;n++){const row=document.createElement('b');row.textContent=layout.text;el.append(row);}
  });
 }
 function updateCubeCaption(){const scene=FACE_SCENES[ui.cube.face];text('cube-caption',title(scene));$('cube-scene').setAttribute('aria-label',title(scene)+' · '+menuCopy[ui.language].dwell);}
@@ -64,7 +64,7 @@ async function startCamera(){
   stream.getVideoTracks()[0].addEventListener('ended',()=>{if(session===ui.session)error('camera','Camera disconnected')});
  }catch(e){if(session===ui.session)error('camera',e);return;}
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.2.0',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.2.1',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -136,9 +136,8 @@ function tick(now){
  if(ui.state==='scanning'&&!$('sources-dialog').open){
   const hands=ui.demo?ui.mouse?[{x:ui.mouse.x/innerWidth,y:ui.mouse.y/innerHeight,id:'pointer',open:ui.dragging?0:1,fist:ui.dragging}]:[]:ui.hands.map(h=>menuPointer(h,renderer.geometry($('camera').videoWidth/$('camera').videoHeight||16/9),innerWidth,innerHeight));
   const p=hands.find(h=>h.id===ui.cube.handId)||hands[0],hit=p?faceAtPoint(p.x*innerWidth,p.y*innerHeight):-1;
-  const radius=$('cube').offsetWidth*.72,limitX=Math.max(.06,.5-radius/innerWidth),top=Math.min(-.02,.12-.43+radius/innerHeight),bottom=Math.max(.02,.92-.43-radius/innerHeight);
-  const selection=ui.cube.update(dt,hands,hit,{left:-limitX,right:limitX,top,bottom});$('cube').style.transform=`rotateZ(-7deg) rotateX(${selection.pitch}deg) rotateY(${selection.yaw}deg)`;
-  $('cube-scene').style.setProperty('--drag-x',selection.x*innerWidth+'px');$('cube-scene').style.setProperty('--drag-y',selection.y*innerHeight+'px');$('cube-scene').dataset.dragging=String(selection.dragging);
+  const selection=ui.cube.update(dt,hands,hit);$('cube').style.transform=`rotateZ(-7deg) rotateX(${selection.pitch}deg) rotateY(${selection.yaw}deg)`;
+  $('cube-scene').dataset.dragging=String(selection.dragging);
   updateCubeCaption();document.querySelectorAll('.cube-face').forEach((el,i)=>el.dataset.selected=String(selection.highlight&&i===selection.face));
   $('hand-cursor').hidden=!p;if(p){$('hand-cursor').style.transform=`translate(${p.x*innerWidth-56}px,${p.y*innerHeight-56}px)`;$('hand-cursor').dataset.dwelling=String(selection.highlight);$('hand-cursor').dataset.dragging=String(selection.dragging);$('hand-cursor').querySelector('.cursor-ring').style.strokeDashoffset=276.46*(1-selection.progress);}
   if(selection.selected)openBriefing(selection.selected);
@@ -154,7 +153,7 @@ function tick(now){
   ui.exitHold=ui.hands.length>=2&&ui.hands.every(h=>h.fist&&h.y<(ui.pose[0]?.y??.2)+.15)?ui.exitHold+dt:0;
   if(ui.exitHold>1.5||!present&&now-ui.tracker.lastBody>10000)menu();else if(ui.scene==='thirst'&&renderer.water.full)finish('full');else if(ui.elapsed>=45)finish();
  }else if(ui.state==='result'){ui.resultElapsed+=dt;if(ui.resultElapsed>7&&!(ui.demo&&params.get('result')==='1'))menu();}
- if(['idle','loading'].includes(ui.state)){const spin=ui.cube.update(dt,[]);$('cube').style.transform=`rotateZ(-7deg) rotateX(${spin.pitch}deg) rotateY(${spin.yaw}deg)`;$('cube-scene').style.setProperty('--drag-x','0px');$('cube-scene').style.setProperty('--drag-y','0px');}
+ if(['idle','loading'].includes(ui.state)){const spin=ui.cube.update(dt,[]);$('cube').style.transform=`rotateZ(-7deg) rotateX(${spin.pitch}deg) rotateY(${spin.yaw}deg)`;}
  const paused=$('sources-dialog').open||!present||ui.state==='result'||ui.demo&&params.get('still')==='1';
  renderer.render({time:ui.time,dt:paused?0:dt,state:ui.state,scene:ui.scene,elapsed:ui.elapsed,progress:clamp(ui.elapsed/45),pose:ui.pose,hands:ui.hands,mask:ui.mask,video:$('camera'),demo:ui.demo,dict:dictionary(ui.language),lang:ui.language,metric:ui.metric,cards:ui.cards,rules:catalogue.rules,present,alignment:ui.alignment,footerHeight:ui.dockHeight});
  if(ui.state==='active')renderStats();

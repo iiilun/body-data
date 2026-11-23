@@ -14,17 +14,19 @@ test('unattended cube completes a continuous 360-degree turn and exposes top and
  const cube=new GestureCube(),yaw=cube.yaw,faces=new Set();for(let i=0;i<72*60;i++)faces.add(cube.update(1/60,[]).face);
  assert.ok(Math.abs(cube.yaw-yaw-360)<1e-8);assert.deepEqual([...faces].sort(),[0,1,2,3,4,5]);
 });
-test('a fist translates the cube relatively in both axes, then release keeps its position',()=>{
- const cube=new GestureCube(),yaw=cube.yaw;cube.update(1/60,[fist],0);steps(cube,{...fist,x:.7,y:.55},-1,80);
- assert.ok(Math.abs(cube.x-.2)<.001);assert.ok(Math.abs(cube.y-.12)<.001);assert.equal(cube.yaw,yaw);
- const old={x:cube.x,y:cube.y};steps(cube,{...palm,x:.7,y:.55},-1,120);assert.ok(Math.abs(cube.x-old.x)<.001&&Math.abs(cube.y-old.y)<.001);
+test('a fist rotates both axes and opening the hand preserves the dragged orientation',()=>{
+ const cube=new GestureCube();cube.update(1/60,[fist],0);steps(cube,{...fist,x:.7,y:.55},-1,80);
+ assert.ok(Math.abs(cube.yaw-32)<.001);assert.ok(Math.abs(cube.pitch+46.8)<.001);
+ const old={yaw:cube.yaw,pitch:cube.pitch};steps(cube,{...palm,x:.7,y:.55},0,120);assert.equal(cube.yaw,old.yaw);assert.equal(cube.pitch,old.pitch);
+ steps(cube,palm,0,100);assert.equal(cube.yaw,old.yaw);assert.equal(cube.pitch,old.pitch);
 });
-test('regripping away from the cube and changing tracked hands never snaps the object',()=>{
+test('regripping at a new hand position never resets or jumps the dragged orientation',()=>{
  const cube=new GestureCube();cube.update(.02,[fist],0);steps(cube,{...fist,x:.7},-1,80);steps(cube,null,-1,1);
- const x=cube.x;cube.update(.02,[{...fist,id:'new',x:.1}],-1);assert.ok(Math.abs(cube.x-x)<.001);steps(cube,{...fist,id:'new',x:.2},-1,80);assert.ok(Math.abs(cube.x-(x+.1))<.001);
+ const yaw=cube.yaw;cube.update(.02,[{...fist,id:'new',x:.1}],-1);assert.ok(Math.abs(cube.yaw-yaw)<.001);steps(cube,{...fist,id:'new',x:.2},-1,80);assert.ok(Math.abs(cube.yaw-(yaw+30))<.001);
 });
-test('dragging is bounded on screen and never selects a face',()=>{
- const cube=new GestureCube();cube.update(.02,[fist],2);const s=steps(cube,{...fist,x:10,y:-10},2,400);assert.equal(s.selected.length,0);assert.equal(s.progress,0);assert.ok(cube.x<=.32&&cube.y>=-.18);
+test('rotating to viewport edges never selects a face and auto rotation resumes without snapping back',()=>{
+ const cube=new GestureCube();cube.update(.02,[fist],2);const s=steps(cube,{...fist,x:1,y:0},2,400);assert.equal(s.selected.length,0);assert.equal(s.progress,0);assert.ok(cube.yaw>100&&cube.pitch>80);
+ const yaw=cube.yaw,pitch=cube.pitch;cube.update(1/60,[]);assert.ok(cube.yaw>yaw&&cube.yaw-yaw<.1);assert.ok(Math.abs(cube.pitch-pitch)<.2);
 });
 test('an open palm highlights the actual face immediately, freezes rotation, and commits once after four seconds',()=>{
  const cube=new GestureCube(),yaw=cube.yaw;const first=cube.update(1/60,[palm],4);assert.equal(first.highlight,true);assert.equal(first.face,4);
@@ -45,7 +47,7 @@ test('large hand motion restarts dwell while small tracking jitter preserves it'
 test('all seven face layouts repeat titles beyond both edges instead of shrinking short titles',()=>{
  for(const [lang,name]of Object.entries({en:'SHELTER',zh:'遮蔽',es:'REFUGIO',fr:'ABRI',ja:'住まい',ko:'피난처',ar:'مأوى'})){
   const size=360,measure=(text,font)=>[...text].length*font*.6,layout=faceTypography(name,size,measure);
-  assert.equal(layout.font,size*.215);assert.ok(layout.rows*layout.lineHeight>size);assert.ok(measure(layout.text,layout.font)>size);assert.ok(layout.text.split(name).length>=3);assert.ok(menuCopy[lang].dwell);
+  assert.equal(layout.font,size*.215);assert.ok(layout.rows*layout.lineHeight>size);assert.ok(measure(layout.text,layout.font)>size);assert.ok(layout.text.split(name).length>=3);assert.ok(menuCopy[lang].dwell);assert.equal(layout.text.replaceAll(name,''),'');
  }
 });
 test('all six background renderers share SPACE font, row count and tight tracking',()=>{

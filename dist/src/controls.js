@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.2.0';
+import {clamp,lerp} from './math.js?v=5.2.1';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;
@@ -8,20 +8,20 @@ export function facingFace(pitch,yaw){
  return depth.indexOf(Math.max(...depth));
 }
 export const CUBE_DWELL_SECONDS=4;
-// Rotation belongs to the object. A fist translates it; an open, resting palm commits.
+// A fist drags the orientation around a fixed centre; a resting open palm commits.
 export class GestureCube{
  constructor(){this.reset();}
- reset(){this.pitch=-18;this.yaw=-28;this.face=0;this.x=0;this.y=0;this.targetX=0;this.targetY=0;this.spin=0;this.grab=null;this.dwell=null;this.committed=false;this.highlight=false;this.handId=null;}
- update(dt,hands,hitFace=-1,bounds={left:-.32,right:.32,top:-.18,bottom:.25}){
+ reset(){this.pitch=-18;this.yaw=-28;this.targetPitch=-18;this.targetYaw=-28;this.face=0;this.spin=0;this.grab=null;this.dwell=null;this.committed=false;this.highlight=false;this.handId=null;}
+ update(dt,hands,hitFace=-1){
   let selected=null;
   const hand=hands.find(h=>h.id===this.handId)||hands[0];
   if(!hand||hand.id!==this.handId){this.grab=null;this.dwell=null;this.committed=false;this.handId=hand?.id??null;}
   this.highlight=!!hand&&!hand.fist&&hand.open>.65&&Number.isInteger(hitFace)&&hitFace>=0&&hitFace<6;
   if(hand?.fist){
    this.dwell=null;this.committed=false;
-   this.grab??={x:hand.x,y:hand.y,objectX:this.x,objectY:this.y};
-   this.targetX=clamp(this.grab.objectX+hand.x-this.grab.x,bounds.left,bounds.right);
-   this.targetY=clamp(this.grab.objectY+hand.y-this.grab.y,bounds.top,bounds.bottom);
+   this.grab??={x:hand.x,y:hand.y,pitch:this.pitch,yaw:this.yaw};
+   this.targetYaw=this.grab.yaw+(clamp(hand.x)-this.grab.x)*300;
+   this.targetPitch=this.grab.pitch-(clamp(hand.y)-this.grab.y)*240;
   }else{
    this.grab=null;
    if(this.highlight){
@@ -31,10 +31,11 @@ export class GestureCube{
     if(!this.committed&&this.dwell.elapsed+1e-8>=CUBE_DWELL_SECONDS){selected=FACE_SCENES[hitFace];this.committed=true;}
    }else{this.dwell=null;this.committed=false;}
   }
-  if(!this.highlight&&!this.grab){this.spin+=dt;this.yaw+=dt*5;this.pitch=-18+Math.sin(this.spin*.09)*72;}
-  const blend=1-Math.exp(-dt*22);this.x=lerp(this.x,this.targetX,blend);this.y=lerp(this.y,this.targetY,blend);
+  if(!this.highlight&&!this.grab){const previous=this.spin;this.spin+=dt;const tilt=(Math.sin(this.spin*.09)-Math.sin(previous*.09))*72;this.targetYaw+=dt*5;this.targetPitch+=tilt;this.yaw+=dt*5;this.pitch+=tilt;}
+  if(this.grab){const blend=1-Math.exp(-dt*22);this.pitch=lerp(this.pitch,this.targetPitch,blend);this.yaw=lerp(this.yaw,this.targetYaw,blend);}
+  else{this.targetPitch=this.pitch;this.targetYaw=this.yaw;}
   if(!this.highlight)this.face=facingFace(this.pitch,this.yaw);
-  return {pitch:this.pitch,yaw:this.yaw,x:this.x,y:this.y,dragging:!!this.grab,face:this.face,selected,highlight:this.highlight,progress:clamp((this.dwell?.elapsed||0)/CUBE_DWELL_SECONDS)};
+  return {pitch:this.pitch,yaw:this.yaw,dragging:!!this.grab,face:this.face,selected,highlight:this.highlight,progress:clamp((this.dwell?.elapsed||0)/CUBE_DWELL_SECONDS)};
  }
 }
 
