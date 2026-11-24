@@ -1,4 +1,4 @@
-import {clamp} from './math.js?v=5.2.1';
+import {clamp} from './math.js?v=5.3.0';
 
 export function factText(card){return `${String(card.value).replace(/\s/g,'\u00a0')} ${card.fieldLabel||card.label} · ${card.scope} ${card.yearText||card.year}`;}
 export const BACKGROUND_TRACKING=-.055;
@@ -52,10 +52,10 @@ export class DataFlow{
   const key=[width,height,font,cards.map(factText).join('|')].join(':');if(key===this.key)return;this.key=key;this.lanes=[];this.atlases.clear();if(!cards.length)return;
   const row=font*.98;
   for(let y=12,index=0;y<height-38;y+=row,index++){
-   const ordered=cards.map((_,i)=>cards[(i+index*3)%cards.length]),units=textUnits(ordered.map(factText).join(' / ')+' / ');
+   const ordered=cards.map((_,i)=>cards[(i+index*3)%cards.length]),rtl=ordered.some(card=>/[\u0600-\u06ff]/.test(factText(card))),units=rtl?ordered.map(card=>factText(card)+' / '):textUnits(ordered.map(factText).join(' / ')+' / ');
    const items=[];let x=0,n=0;
    while(x<width*2.25){const char=units[n++%units.length],advance=Math.max(font*.2,measure(char));items.push({char,x,width:advance});x+=advance+font*BACKGROUND_TRACKING;}
-   this.lanes.push({y,index,items,period:x});
+   this.lanes.push({y,index,items,period:x,rtl});
   }
  }
  atlas(ctx,font,color){
@@ -63,7 +63,7 @@ export class DataFlow{
   const canvas=document.createElement('canvas'),scale=Math.min(2,ctx.getTransform().a||1),stride=Math.ceil(font*1.8);
   canvas.width=Math.ceil(Math.max(...this.lanes.map(l=>l.period))+font*2)*scale;canvas.height=stride*this.lanes.length*scale;
   const paint=canvas.getContext('2d');paint.scale(scale,scale);paint.font=ctx.font;paint.textBaseline='top';paint.fillStyle=color;paint.direction='ltr';
-  for(const lane of this.lanes)for(const glyph of lane.items)paint.fillText(glyph.char,glyph.x,lane.index*stride);
+  for(const lane of this.lanes){paint.direction=lane.rtl?'rtl':'ltr';paint.textAlign=lane.rtl?'right':'left';for(const glyph of lane.items)paint.fillText(glyph.char,glyph.x+(lane.rtl?glyph.width:0),lane.index*stride);}
   const atlas={canvas,scale,stride};this.atlases.set(key,atlas);return atlas;
  }
  draw(ctx,{width,height,font,cards,time,color='#fff',alpha=.38,speed=22,clip}){

@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.2.1';
+import {clamp,lerp} from './math.js?v=5.3.0';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const alpha=(cutoff,dt)=>1-Math.exp(-2*Math.PI*cutoff*dt);
 
@@ -11,7 +11,7 @@ export class AdaptivePoint{
     this.velocity.x=lerp(this.velocity.x,clamp(dx,-3,3),a);
     this.velocity.y=lerp(this.velocity.y,clamp(dy,-3,3),a);
     const cutoff=2.3+Math.hypot(this.velocity.x,this.velocity.y)*1.8,k=alpha(cutoff,dt);
-    this.value={...point,x:lerp(this.value.x,point.x,k),y:lerp(this.value.y,point.y,k)};
+    this.value={...point,x:lerp(this.value.x,point.x,k),y:lerp(this.value.y,point.y,k),...(Number.isFinite(point.z)?{z:lerp(this.value.z??point.z,point.z,k)}:{})};
     this.raw={...point};this.time=time;
   }
   get(now){
@@ -28,15 +28,15 @@ export function palm(hand,gesture){
   const reach=[8,12,16,20].reduce((n,i)=>n+distance(hand[i],hand[0])/4,0)/span;
   const curled=[8,12,16,20].filter(i=>distance(hand[i],hand[0])<distance(hand[i-2],hand[0])*1.12).length;
   const confident=(gesture?.score||0)>.55,name=confident&&gesture.categoryName!=='None'?gesture.categoryName:'';
-  return {...center,open:name==='Open_Palm'?1:clamp((reach-1.15)/.95),fist:gesture?gesture.categoryName==='Closed_Fist'&&gesture.score>.55:curled>=3&&reach<1.65,gesture:name,visibility:1};
+  return {...center,span,landmarks:hand.map(p=>({...p})),landmarkOrigin:{...center},open:name==='Open_Palm'?1:clamp((reach-1.15)/.95),fist:gesture?gesture.categoryName==='Closed_Fist'&&gesture.score>.55:curled>=3&&reach<1.65,gesture:name,visibility:1};
 }
 export class BodyTracker{
-  constructor(){this.joints=Array.from({length:33},()=>new AdaptivePoint());this.handTracks=new Map();this.lastBody=0;this.lastHandResult=0;this.visibleHands=new Set();}
+  constructor(){this.joints=Array.from({length:33},()=>new AdaptivePoint());this.handTracks=new Map();this.handJoints=new Map();this.lastBody=0;this.lastHandResult=0;this.visibleHands=new Set();}
   updateHands(hands,labels,time,gestures=[]){
     if(time<this.lastHandResult)return;this.lastHandResult=time;this.visibleHands=new Set();
     for(let i=0;i<(hands||[]).length;i++){
       const center=palm(hands[i],gestures[i]?.[0]);if(!center)continue;const id=labels?.[i]?.[0]?.categoryName||String(i);this.visibleHands.add(id);
-      if(!this.handTracks.has(id))this.handTracks.set(id,new AdaptivePoint());const track=this.handTracks.get(id);if(time>track.time)track.update(center,time);
+      if(!this.handTracks.has(id)){this.handTracks.set(id,new AdaptivePoint());this.handJoints.set(id,Array.from({length:21},()=>new AdaptivePoint()));}const track=this.handTracks.get(id);if(time>track.time){track.update(center,time);hands[i].forEach((p,index)=>this.handJoints.get(id)[index].update(p,time));}
     }
   }
   update(points,hands,labels,time,handTime=time,gestures=[]){
@@ -51,5 +51,5 @@ export class BodyTracker{
     if(refined[11]?.visibility>.35&&refined[12]?.visibility>.35)this.lastBody=time;
   }
   pose(now){return this.joints.map(j=>j.get(now)||{x:.5,y:.7,visibility:0});}
-  hands(now){return [...this.handTracks.entries()].filter(([id,track])=>this.visibleHands.has(id)&&now-track.time<180).map(([id,t])=>({...t.get(now),id}));}
+  hands(now){return [...this.handTracks.entries()].filter(([id,track])=>this.visibleHands.has(id)&&now-track.time<180).map(([id,t])=>{const h=t.get(now),points=this.handJoints.get(id).map(p=>p.get(now)),centre=[0,5,9,13,17].reduce((p,i)=>({x:p.x+points[i].x/5,y:p.y+points[i].y/5}),{x:0,y:0}),dx=h.x-centre.x,dy=h.y-centre.y;return {...h,id,landmarks:points.map(p=>({...p,x:p.x+dx,y:p.y+dy}))};});}
 }

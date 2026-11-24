@@ -1,12 +1,14 @@
-import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.2.1';
-import {number} from './i18n.js?v=5.2.1';
-import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.2.1';
-import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.2.1';
-import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.2.1';
-import {WaterCatch,VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.2.1';
-import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.2.1';
-import {framePose} from './controls.js?v=5.2.1';
-import {sceneWords} from './scene-copy.js?v=5.2.1';
+import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.3.0';
+import {number} from './i18n.js?v=5.3.0';
+import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.3.0';
+import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.3.0';
+import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.3.0';
+import {VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.3.0';
+import {Condensation,glassContact} from './glass-model.js?v=5.3.0';
+import {GlassSurface} from './glass-renderer.js?v=5.3.0';
+import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.3.0';
+import {framePose} from './controls.js?v=5.3.0';
+import {sceneWords} from './scene-copy.js?v=5.3.0';
 const FONT='"Helvetica Neue",Helvetica,Arial,"Noto Sans TC","Noto Sans JP","Noto Sans KR","Noto Sans Arabic",sans-serif';
 export function demoPose(time,scene='space'){
  const p=framePose(scene),sway=Math.sin(time*.24)*.012;
@@ -16,11 +18,11 @@ export function demoPose(time,scene='space'){
 export class Renderer{
  constructor(canvas){
   this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.sample=document.createElement('canvas');this.sc=this.sample.getContext('2d',{willReadFrequently:true});
-  this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.haze=new HeatHaze();this.water=new WaterCatch();this.city=new VacancyCity();this.resize();this.reset('');
-  fetch('./assets/preview-person.json?v=5.2.1').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
+  this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.haze=new HeatHaze();this.glass=new Condensation();this.glassView=new GlassSurface();this.city=new VacancyCity();this.resize();this.reset('');
+  fetch('./assets/preview-person.json?v=5.3.0').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
  }
  resize(){this.width=innerWidth;this.height=innerHeight;const d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.round(this.width*d);this.canvas.height=Math.round(this.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.ctx.imageSmoothingEnabled=false;this.outline=null;this.cardLayouts=new Map();}
- reset(scene){this.scene=scene;this.physics.reset();this.melt.reset();this.field=new SilhouetteType();this.flow=new DataFlow();this.water.reset();this.city.reset();this.lastSample=-1;this.seeded=false;this.history=[];this.lastHistory=-1;this.outline=null;}
+ reset(scene){this.scene=scene;this.physics.reset();this.melt.reset();this.field=new SilhouetteType();this.flow=new DataFlow();this.glass.reset();this.city.reset();this.lastSample=-1;this.seeded=false;this.history=[];this.lastHistory=-1;this.outline=null;}
  geometry(aspect=4/3){return artworkGeometry(this.width,this.height,aspect);}
  sampleBody(c){
   if(c.time-this.lastSample<1/30)return;this.lastSample=c.time;
@@ -96,21 +98,10 @@ export class Renderer{
   this.field.update(c.dt,this.placed,c.g.block,c.width,hands,c.progress);ctx.fillStyle='#eee';this.type(c,size);
   for(const g of this.field.items)if(g.x>-150&&g.x<c.width+150)ctx.fillText(g.char,g.drawX,g.drawY);this.body(c);
  }
+ glassHands(c){return c.hands.map(h=>({...h,...pointToScreen(h,c.g),contact:h.contact??glassContact(h,c.pose),radius:clamp((h.span||.045)*c.g.width*.95,c.width*.025,c.width*.065),landmarks:h.landmarks?.map(p=>({...p,...pointToScreen(p,c.g)}))}));}
  thirst(c){
-  const ctx=this.ctx,hands=c.hands.map(h=>({...this.project(h,c),id:h.id})),safeCard=c.cards.find(card=>card.id==='water-safely-managed-global'||card.labelKey==='safeWaterPercent'&&card.scopeCode==='World');
-  const options={width:c.width,height:c.height,availableHeight:c.height-(c.footerHeight||160)-10,unsafeShare:1-(c.rules?.thirst?.safelyManagedShare2024??safeCard?.rawValue??74)/100};
-  if(c.demo&&c.dt===0&&!this.seeded){this.seeded=true;for(let t=0;t<c.elapsed;t+=1/60)this.water.update(1/60,hands,options);}
-  this.water.update(c.dt,hands,options);this.flowFacts(c,{alpha:.36,color:'#80aaff',speed:24});this.body(c,.8);
-  for(const p of this.water.drops){ctx.fillStyle=p.unsafe?'#d59c48':'#589cff';ctx.fillRect(p.x,p.y,5,p.unsafe?9:13);}
-  const b=this.water.bucket;
-  if(b?.active){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);const w=b.width,h=b.height,level=clamp(this.water.level/this.water.capacity);
-   ctx.beginPath();ctx.moveTo(-w/2,0);ctx.lineTo(-w*.43,h);ctx.lineTo(w*.43,h);ctx.lineTo(w/2,0);ctx.closePath();ctx.save();ctx.clip();
-   const blueHeight=h*this.water.retainedBlue/this.water.capacity,ochreHeight=h*this.water.retainedOchre/this.water.capacity;
-   ctx.fillStyle='#327cff';ctx.fillRect(-w,h-blueHeight,w*2,blueHeight+1);ctx.fillStyle='#b9883d';ctx.fillRect(-w,h-blueHeight-ochreHeight,w*2,ochreHeight);ctx.restore();
-   ctx.beginPath();ctx.moveTo(-w/2,0);ctx.lineTo(-w*.43,h);ctx.lineTo(w*.43,h);ctx.lineTo(w/2,0);ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();
-   this.number(number(this.water.level,c.lang,1)+' L',0,h+12,c,'#fff','center',24);ctx.restore();
-  }
-
+  const hands=this.glassHands(c);this.glass.update(c.dt,hands,{width:c.width,height:Math.max(160,c.height-(c.footerHeight||100))});
+  this.glassView.draw(this.ctx,c,this.glass,hands,context=>this.flowFacts(c,{context,color:'#202326',alpha:.83,speed:5}));
  }
  offline(c){
   const centre=this.project({x:(c.pose[11].x+c.pose[12].x)/2,y:(c.pose[11].y+c.pose[12].y)/2},c);
@@ -154,19 +145,20 @@ export class Renderer{
   for(let y=r;y<height-r;y++)for(let x=r;x<width-r;x++){const i=(y*width+x)*4;if(source.data[i+3]>127&&(source.data[i+3-r*4]<127||source.data[i+3+r*4]<127||source.data[i+3-r*width*4]<127||source.data[i+3+r*width*4]<127)){out.data[i]=out.data[i+1]=out.data[i+2]=255;out.data[i+3]=225;}}
   ctx.putImageData(out,0,0);this.outline={key,canvas:mask};return mask;
  }
- alignment(c){this.body(c,.6);const ctx=this.ctx;ctx.save();if(c.scene==='hold')ctx.filter='invert(1)';ctx.drawImage(this.makeOutline(c),0,0);ctx.restore();}
+ alignment(c){if(c.scene==='thirst'){const hands=this.glassHands(c);this.glassView.drawBody(this.ctx,c,hands);this.glassView.drawHands(this.ctx,c,hands);}else this.body(c,.6);const ctx=this.ctx;ctx.save();if(['hold','thirst'].includes(c.scene))ctx.filter='invert(1)';ctx.drawImage(this.makeOutline(c),0,0);ctx.restore();}
  stats(scene,lang,metric,elapsed){const w=sceneWords[lang];
   if(scene==='shelter')return [{value:'≈ '+number((metric?.rate||0)*elapsed,lang,0)+' t CO₂',label:w.elapsedEmissions}];
-  if(scene==='thirst'){const s=this.water.summary();return [{value:number(s.blue,lang,1)+' L',label:w.blueWater,tone:'blue'},{value:number(s.ochre,lang,1)+' L',label:w.ochreWater,tone:'ochre'}];}
+  if(scene==='thirst')return [{value:number(this.glass.summary().clear*100,lang,0)+'%',label:w.glassCleared}];
   if(scene==='vacant')return [{value:number(this.city.reused,lang,0),label:w.reused}];return [];
  }
- result(scene,lang,rules){const w=sceneWords[lang];if(scene==='thirst'){const s=this.water.summary();return [{value:number(s.safe,lang,1)+' L',label:w.blueWater},{value:number(s.uncertain,lang,1)+' L',label:w.ochreWater},{value:number(s.personDays,lang,2),label:w.personDays},{value:number(100-(rules?.thirst?.safelyManagedShare2024??74),lang,2)+'%',label:w.worldUnassured}];}if(scene==='vacant')return [{value:number(this.city.reused,lang,0),label:w.reused},{value:'120',label:w.cityScenario}];return null;}
+ result(scene,lang,rules,cards=[]){const w=sceneWords[lang];if(scene==='thirst'){const gap=cards.find(c=>c.id==='thirst-world-without-safe-2024');return [{value:number(this.glass.summary().best*100,lang,0)+'%',label:w.glassBest},{value:number(100-(rules?.thirst?.safelyManagedShare2024??74),lang,2)+'%',label:w.worldUnassured},...(gap?[{value:gap.value,label:gap.label+' · '+gap.scope+' '+gap.yearText}]:[])];}if(scene==='vacant')return [{value:number(this.city.reused,lang,0),label:w.reused},{value:'120',label:w.cityScenario}];return null;}
  fontsChanged(){this.cardLayouts?.clear();this.flow.key='';this.field.key='';}
  render(input){
   this.fontFamily=input.lang==='ar'?'"Noto Sans Arabic",Arial,sans-serif':FONT;
   const aspect=input.demo?4/3:input.video?.videoWidth/input.video?.videoHeight||16/9,c={...input,aspect,width:this.width,height:this.height,g:this.geometry(aspect),type:typeSystem(this.height,this.width)};
-  this.ctx.fillStyle=c.scene==='hold'&&['active','briefing','align','result'].includes(c.state)?'#fff':'#000';this.ctx.fillRect(0,0,c.width,c.height);
+  this.ctx.fillStyle=['hold','thirst'].includes(c.scene)&&['active','briefing','align','result'].includes(c.state)?c.scene==='thirst'?'#fafaf8':'#fff':'#000';this.ctx.fillRect(0,0,c.width,c.height);
   if(['idle','error'].includes(c.state)||!c.present&&!c.demo)return;
+  if(c.scene==='thirst'&&['active','briefing','align','result'].includes(c.state)){if(c.state==='active')this.thirst(c);else if(c.state==='align')this.alignment(c);return;}
   this.sampleBody(c);this.placed=this.cells.map(cell=>({...cell,...this.project(cell,c),material:materialKey(cell,c.pose)}));
   if(['loading','scanning'].includes(c.state)){this.body(c,.12);return;}if(c.state==='briefing'||c.state==='result')return;if(c.state==='align'){this.alignment(c);return;}if(c.state==='active')this[c.scene]?.(c);
  }

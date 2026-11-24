@@ -52,6 +52,6 @@ test('dense housing sentences keep their identity and remain visible while sprin
  const f=new SilhouetteType();f.build(1400,900,26,43,source.cards.filter(c=>c.scene==='space').map(c=>({...c,value:String(c.value),label:c.labels.en})),s=>s.length*13);assert.ok(f.items.length>2000);const identity=f.items.map(g=>g.char).join('');for(let i=0;i<120;i++)f.update(1/60,[{x:700,y:440},{x:700,y:485}],45,1400,[],.4);const before=f.items.map(g=>({x:g.x,y:g.y}));f.update(1/60,[{x:730,y:440},{x:730,y:485}],45,1400,[],.4);assert.equal(f.items.map(g=>g.char).join(''),identity);assert.ok(f.items.every(g=>g.active&&g.alpha===1&&Number.isFinite(g.x)));assert.ok(f.items.every((g,i)=>Math.abs(g.x-before[i].x)<60));
 });
 
-test('water results distinguish the personal collection from the global service-access percentage',()=>{
- const water=new WaterCatch();water.level=15;water.blueCaught=15;water.retainedBlue=15;const result=Renderer.prototype.result.call({water},'thirst','en',source.interactionRules);assert.equal(result.length,4);assert.equal(result[2].value,'1');assert.equal(result[3].value,'26.33%');assert.match(result[3].label,/PEOPLE.*WORLD/);assert.doesNotMatch(result[3].label,/CONTAMINATED/);
+test('glass results distinguish the personal cleared area from the global service-access percentage',()=>{
+ const glass={summary:()=>({clear:.12,best:.37})},result=Renderer.prototype.result.call({glass},'thirst','en',source.interactionRules);assert.equal(result.length,2);assert.equal(result[0].value,'37%');assert.equal(result[1].value,'26.33%');assert.match(result[0].label,/YOUR SESSION/);assert.match(result[1].label,/PEOPLE.*WORLD/);assert.doesNotMatch(result[1].label,/CONTAMINATED/);
 });

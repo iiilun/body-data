@@ -1,4 +1,4 @@
-import {dictionary,number,compact,countryName} from './i18n.js?v=5.2.1';
+import {dictionary,number,compact,countryName} from './i18n.js?v=5.3.0';
 export function aggregateCarbon(rows,members,scope){
   if(scope==='en'){
     const world=rows.find(r=>r.countryiso3code==='WLD'&&Number.isFinite(r.value));

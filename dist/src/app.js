@@ -1,18 +1,19 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.2.1';
-import {clamp,pointToScreen} from './math.js?v=5.2.1';
-import {DataService} from './data.js?v=5.2.1';
-import {Renderer,demoPose} from './renderer.js?v=5.2.1';
-import {BodyTracker} from './interaction.js?v=5.2.1';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.2.1';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.2.1';
-import {sceneWords} from './scene-copy.js?v=5.2.1';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.2.1';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.2.1';
+import {dictionary,languages,locales} from './i18n.js?v=5.3.0';
+import {clamp,pointToScreen} from './math.js?v=5.3.0';
+import {DataService} from './data.js?v=5.3.0';
+import {Renderer,demoPose} from './renderer.js?v=5.3.0';
+import {BodyTracker} from './interaction.js?v=5.3.0';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.3.0';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.3.0';
+import {sceneWords} from './scene-copy.js?v=5.3.0';
+import {previewHand} from './glass-model.js?v=5.3.0';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.3.0';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.3.0';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'idle',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,dockHeight:80,statsKey:'',resultReason:'time'};
 icons.fist='<path d="M17 58V43L8 29c-3-6 2-10 6-4l5 7V15c0-7 8-7 8 0v12V10c0-7 8-7 8 0v17V12c0-7 8-7 8 0v17V19c0-7 8-7 8 0v21c0 10-4 15-9 18z"/>';
-icons.thirst='<path d="M32 4c-5 9-16 19-16 29a16 16 0 0 0 32 0C48 23 37 13 32 4zM5 44l13 14h28l13-14M24 36c0 6 4 10 8 10"/>';
+icons.thirst='<path d="M6 21V6h15M43 6h15v15M58 43v15H43M21 58H6V43M20 46V31c0-4 5-4 5 0v5-18c0-4 5-4 5 0v15-20c0-4 5-4 5 0v20-17c0-4 5-4 5 0v18-11c0-4 5-4 5 0v18c0 9-5 15-12 15s-13-5-13-10z"/>';
 icons.offline='<path d="M7 9h50v35H7zM21 57h22M32 44v13M9 61 55 3M16 22c10-9 22-9 32 0M25 30c4-4 10-4 14 0"/>';
 icons.vacant='<path d="M7 58V24L32 5l25 19v34H7zM25 58V36h15v22M14 25h10v10H14zM44 25h7v10h-7z"/>';
 const text=(id,value)=>{$(id).textContent=value??'';};
@@ -64,7 +65,7 @@ async function startCamera(){
   stream.getVideoTracks()[0].addEventListener('ended',()=>{if(session===ui.session)error('camera','Camera disconnected')});
  }catch(e){if(session===ui.session)error('camera',e);return;}
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.2.1',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.3.0',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -83,13 +84,13 @@ function openBriefing(scene){
 }
 function renderBriefing(){
  const m=ui.metric;if(!m)return;const w=words[ui.language],result=ui.state==='result';$('brief-symbol').innerHTML=icon(ui.scene);text('brief-title',m.title);
- text('brief-scope',result?(ui.scene==='thirst'&&ui.resultReason==='full'?sceneWords[ui.language].bucketFull:sceneWords[ui.language].resultContext):sceneWords[ui.language].globalData+' · '+w.variousYears);
+ text('brief-scope',result?sceneWords[ui.language].resultContext:sceneWords[ui.language].globalData+' · '+w.variousYears);
  const shown=ui.cards.slice(result?0:ui.introPage*2,(result?0:ui.introPage*2)+2);
- let items=result&&renderer.result(ui.scene,ui.language,catalogue.rules)||shown.map(c=>({value:c.value,label:c.label+' · '+c.scope+' '+(c.yearText||c.year)}));
+ let items=result&&renderer.result(ui.scene,ui.language,catalogue.rules,ui.cards)||shown.map(c=>({value:c.value,label:c.label+' · '+c.scope+' '+(c.yearText||c.year)}));
  const container=$('brief-facts');container.replaceChildren();container.classList.toggle('single',items.length===1);container.classList.toggle('triple',items.length===3);container.classList.toggle('quad',items.length===4);
  for(const fact of items){const div=document.createElement('div');div.className='brief-fact';const value=document.createElement('span');value.className='fact-value';value.textContent=fact.value;const label=document.createElement('p');label.className='fact-label';label.textContent=fact.label;div.append(value,label);container.append(div)}
  text('brief-unit','');$('brief-gesture').innerHTML=icon(ui.scene==='space'?'spread':ui.scene);
- text('brief-action',result?(ui.scene==='thirst'?sceneWords[ui.language].waterResult:m.note):m.action);text('brief-note',result?'':m.note);text('brief-source',result&&ui.scene==='thirst'?'WHO · '+sceneWords[ui.language].personDays:[...new Set(shown.map(c=>c.source))].join(' / '));requestAnimationFrame(fitFacts);
+ text('brief-action',result?(ui.scene==='thirst'?sceneWords[ui.language].waterResult:m.note):m.action);text('brief-note',result?'':m.note);text('brief-source',result&&ui.scene==='thirst'?'WHO / UNICEF JMP · 2024':[...new Set(shown.map(c=>c.source))].join(' / '));requestAnimationFrame(fitFacts);
 }
 function fitFacts(){const values=[...document.querySelectorAll('.fact-value')];if(!values.length)return;const ctx=document.createElement('canvas').getContext('2d');const base=Math.min(innerHeight*(values.length>2?.10:.15),innerWidth*.105,145);let size=base;ctx.font=`300 ${base}px ${ui.language==='ar'?'"Noto Sans Arabic",Arial,sans-serif':'"Helvetica Neue",Helvetica,Arial,sans-serif'}`;for(const el of values)if(el.parentElement.clientWidth)size=Math.min(size,base*el.parentElement.clientWidth*.97/Math.max(1,ctx.measureText(el.textContent).width));$('brief-facts').style.setProperty('--fact-size',Math.max(36,size)+'px');}
 function align(){ui.gate.reset();ui.alignment={ready:false,count:3,progress:0};setState('align');}
@@ -116,18 +117,23 @@ async function sendFrame(now){
  ui.busy=true;ui.lastInference=now;ui.lastVideoTime=v.currentTime;const session=ui.session;
  try{const bitmap=await createImageBitmap(v,{resizeWidth:480,resizeHeight:Math.round(480*v.videoHeight/v.videoWidth),resizeQuality:'low'});if(session!==ui.session||!ui.worker){bitmap.close();return;}ui.worker.postMessage({type:'frame',bitmap,timestamp:now,mode:ui.state==='scanning'?'menu':ui.state==='align'?'align':'active'},[bitmap]);}catch(e){ui.busy=false;if(++ui.frameErrors>=5)error('model',e)}
 }
-function coach(present){const c=copy[ui.language];let message=!present?c.bodyHint:ui.elapsed<7?sceneWords[ui.language][ui.scene+'Action']:'';if(ui.scene==='hold'&&renderer.physics.catches>1&&present)message='';$('coach').hidden=!message;if(message){text('coach-text',message);$('coach-icon').innerHTML=icon(ui.scene);}}
+function coach(present){if(ui.scene==='thirst'){$('coach').hidden=true;return;}const c=copy[ui.language];let message=!present?c.bodyHint:ui.elapsed<7?sceneWords[ui.language][ui.scene+'Action']:'';if(ui.scene==='hold'&&renderer.physics.catches>1&&present)message='';$('coach').hidden=!message;if(message){text('coach-text',message);$('coach-icon').innerHTML=icon(ui.scene);}}
 function tick(now){
  const dt=document.hidden?0:Math.min(.055,(now-ui.lastFrame)/1000);ui.lastFrame=now;ui.time+=dt;
  if(ui.demo){
-  ui.pose=(renderer.preview?.pose||demoPose(ui.time,ui.scene||'hold')).map(p=>({...p}));
+  ui.pose=(ui.scene==='thirst'?demoPose(ui.time,'thirst'):renderer.preview?.pose||demoPose(ui.time,ui.scene||'hold')).map(p=>({...p}));
   if(ui.mouse&&['offline','space'].includes(ui.scene)&&ui.state==='active'){
    const centre=(ui.pose[11].x+ui.pose[12].x)/2,shift=clamp(1-ui.mouse.x/innerWidth,.18,.82)-centre;for(const p of ui.pose)p.x+=shift;
   }
   ui.hands=[ui.pose[15],ui.pose[16]].map((p,i)=>({...p,id:'demo-'+i,open:1,fist:false}));
   if(ui.mouse&&ui.state==='active'){
-   const g=renderer.geometry(4/3),px=1-(ui.mouse.x-g.x)/g.width,py=(ui.mouse.y-g.y)/g.height,offsets=ui.scene==='thirst'?[-.09,.09]:[0];
-   ui.hands=offsets.map((offset,i)=>({x:px+offset,y:py+(ui.scene==='thirst'&&i===1&&ui.pointerFist ? .2 : 0),id:'preview'+i,open:ui.pointerFist?0:1,fist:ui.pointerFist}));
+   const g=renderer.geometry(4/3),px=1-(ui.mouse.x-g.x)/g.width,py=(ui.mouse.y-g.y)/g.height;
+   ui.hands=[{x:px,y:py,id:'preview0',open:ui.pointerFist?0:1,fist:ui.pointerFist}];
+  }
+  if(ui.scene==='thirst'){
+   const g=renderer.geometry(4/3),targets=ui.mouse&&ui.state==='active'?[{x:1-(ui.mouse.x-g.x)/g.width,y:(ui.mouse.y-g.y)/g.height},ui.pose[16]]:[ui.pose[15],ui.pose[16]];
+   ui.hands=targets.map((p,i)=>({...previewHand(p.x,p.y,.05,i?-1:1),id:'glass-preview'+i,open:1,fist:false}));
+   for(let i=0;i<2;i++)ui.pose[15+i]={...ui.pose[15+i],...ui.hands[i].landmarks[0],visibility:1};
   }
  }
  else{ui.pose=ui.tracker.pose(now);ui.hands=ui.tracker.hands(now);}
@@ -151,7 +157,7 @@ function tick(now){
  }else if(ui.state==='active'){
   if(present&&!(ui.demo&&params.get('still')==='1'))ui.elapsed+=dt;coach(present);
   ui.exitHold=ui.hands.length>=2&&ui.hands.every(h=>h.fist&&h.y<(ui.pose[0]?.y??.2)+.15)?ui.exitHold+dt:0;
-  if(ui.exitHold>1.5||!present&&now-ui.tracker.lastBody>10000)menu();else if(ui.scene==='thirst'&&renderer.water.full)finish('full');else if(ui.elapsed>=45)finish();
+  if(ui.exitHold>1.5||!present&&now-ui.tracker.lastBody>10000)menu();else if(ui.elapsed>=45)finish();
  }else if(ui.state==='result'){ui.resultElapsed+=dt;if(ui.resultElapsed>7&&!(ui.demo&&params.get('result')==='1'))menu();}
  if(['idle','loading'].includes(ui.state)){const spin=ui.cube.update(dt,[]);$('cube').style.transform=`rotateZ(-7deg) rotateX(${spin.pitch}deg) rotateY(${spin.yaw}deg)`;}
  const paused=$('sources-dialog').open||!present||ui.state==='result'||ui.demo&&params.get('still')==='1';

@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.2.1';
+import {clamp,lerp} from './math.js?v=5.3.0';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;
@@ -44,7 +44,7 @@ export function framePose(scene){
  p[0]={x:.5,y:.23,visibility:1};p[11]={x:.36,y:.42,visibility:1};p[12]={x:.64,y:.42,visibility:1};p[23]={x:.41,y:.94,visibility:1};p[24]={x:.59,y:.94,visibility:1};
  let a=[.23,.43],b=[.77,.43],c=[.1,.43],d=[.9,.43];
  if(scene==='shelter'){a=[.24,.26];c=[.43,.1];b=[.78,.61];d=[.77,.78];}
- if(scene==='thirst'){a=[.28,.66];b=[.72,.66];c=[.37,.6];d=[.63,.6];}
+ if(scene==='thirst'){a=[.23,.46];b=[.8,.63];c=[.29,.23];d=[.82,.48];}
  if(scene==='offline'){a=[.2,.48];b=[.8,.48];c=[.18,.23];d=[.82,.23];}
  if(scene==='vacant'){a=[.27,.5];b=[.74,.5];c=[.2,.42];d=[.84,.42];}
  [p[13],p[14],p[15],p[16]]=[a,b,c,d].map(([x,y])=>({x,y,visibility:1}));return p;
@@ -58,7 +58,7 @@ export function poseMatch(scene,pose){
  const inView=[l,r].every(p=>p.x>.025&&p.x<.975&&p.y>.025&&p.y<.94);
  let action=false;
  if(scene==='shelter')action=Math.min(l.y,r.y)<head.y+.02;
- else if(scene==='thirst')action=span<width*1.7&&span>width*.4&&Math.abs(l.y-r.y)<.13&&(l.y+r.y)/2>sy+.08;
+ else if(scene==='thirst')action=span>width*1.1&&Math.min(l.y,r.y)<sy+.06&&Math.max(l.y,r.y)<sy+.3;
  else if(scene==='offline')action=l.y<sy&&r.y<sy&&span>width*1.3;
  else if(scene==='vacant')action=span>width*1.65&&Math.abs(l.y-r.y)<.2;
  else action=span>width*1.8&&[l,r].every(p=>Math.abs(p.y-sy)<.17);

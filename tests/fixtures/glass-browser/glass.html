@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><base href="../"><title>Glass camera-pipeline verification</title><style>body{margin:0;background:#fafaf8;font:14px Helvetica}canvas{position:fixed;inset:0;width:100%;height:100%}pre{position:fixed;z-index:2;left:20px;top:10px;background:#ffffffed;padding:15px;max-width:500px;white-space:pre-wrap}img{display:none}</style><canvas id="stage"></canvas><pre id="report">Loading official pose fixture and production vision models…</pre><img id="photo" src="./qa/pose.jpg"><script src="./vendor/matter.min.js"></script><script type="module">
+import {Renderer} from './src/renderer.js?v=5.3.0';
+import {BodyTracker} from './src/interaction.js?v=5.3.0';
+import {Catalogue} from './src/catalogue.js?v=5.3.0';
+const canvas=document.querySelector('canvas'),report=document.querySelector('pre'),photo=document.querySelector('img'),renderer=new Renderer(canvas),tracker=new BodyTracker(),cat=new Catalogue();await Promise.all([photo.decode(),cat.load()]);const worker=new Worker('./vision-worker.js');let frame=0;const inference=[];async function send(){const bitmap=await createImageBitmap(photo,{resizeWidth:480,resizeHeight:Math.round(480*photo.naturalHeight/photo.naturalWidth)});worker.postMessage({type:'frame',bitmap,timestamp:performance.now(),mode:'align'},[bitmap]);}
+worker.onmessage=async({data:r})=>{
+ if(r.type==='ready')send();
+ else if(r.type==='result'){
+  tracker.update(r.landmarks,r.hands,r.handedness,r.timestamp,r.handTime,r.gestures);inference.push(r.elapsed);if(++frame<3){send();return;}const pose=tracker.pose(r.timestamp),hands=tracker.hands(r.timestamp),mask={data:r.mask,width:r.width,height:r.height,timestamp:r.timestamp,origin:{x:(pose[11].x+pose[12].x)/2,y:(pose[11].y+pose[12].y)/2}},cards=cat.cards('thirst','en'),times=[];
+  const input={scene:'thirst',state:'active',time:1,elapsed:1,progress:.02,dt:1/60,pose,hands,mask,video:{videoWidth:photo.naturalWidth,videoHeight:photo.naturalHeight},demo:false,lang:'en',cards,present:true,footerHeight:100};
+  renderer.reset('thirst');for(let i=0;i<60;i++){const start=performance.now();renderer.render({...input,time:1+i/60,elapsed:1+i/60});times.push(performance.now()-start);}times.sort((a,b)=>a-b);
+  const pass=r.landmarks.length===33&&hands.length===2&&hands.every(h=>h.landmarks.length===21)&&r.mask.some(x=>x===1)&&renderer.glass.summary().clear>0;
+  report.textContent=`${pass?'PASS':'FAIL'} · production mask + hand pipeline\nPose points: ${r.landmarks.length}; hands: ${hands.length} × 21\nPerson mask: ${r.width} × ${r.height}\nModel inference, cold / warm still frames: ${inference[0].toFixed(1)} / ${inference.at(-1).toFixed(1)} ms\nGlass render submission median / p95: ${times[30].toFixed(2)} / ${times[57].toFixed(2)} ms\nActual clear area: ${(renderer.glass.summary().clear*100).toFixed(2)}%\n60 rendered frames. Photo fixture only; not webcam FPS.`;worker.terminate();
+ }else if(r.type==='error'||r.type==='frame-error'){report.textContent='FAIL '+r.message;worker.terminate();}
+};worker.postMessage({type:'init'});
+</script></html>

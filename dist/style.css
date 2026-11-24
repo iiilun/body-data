@@ -87,3 +87,8 @@ body[dir="rtl"]{font-family:"Noto Sans Arabic",Arial,sans-serif}body[dir="rtl"] 
 #cube-caption{margin:0}
 
 body[data-state="error"] .entrance-bottom{z-index:25}
+
+/* THIRST: one white glass plane; hands remain monochrome contact silhouettes. */
+body[data-theme="thirst"]{--bg:#fafaf8;--fg:#181a1c;color-scheme:light}
+body[data-theme="thirst"] .alignment{color:#181a1c}
+body[data-theme="thirst"] .live-stat strong{color:#181a1c}
