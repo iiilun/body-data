@@ -1,4 +1,6 @@
-import {clamp,lerp,hash,smoothstep} from './math.js?v=5.3.0';
+import {clamp,lerp,hash,smoothstep} from './math.js?v=5.3.1';
+export const FOG_RETURN_DELAY=5;
+export const FOG_RETURN_RATE=.14;
 
 export function figureDepth(pose,height){
  const span=Math.max(.12,Math.hypot((pose[11]?.x??.35)-(pose[12]?.x??.65),(pose[11]?.y??.4)-(pose[12]?.y??.4)));
@@ -37,7 +39,7 @@ export class Condensation{
  }
  update(dt,hands,{width,height}){
   this.resize(width,height);dt=clamp(dt,0,.055);this.time+=dt;
-  for(let i=0;i<this.fog.length;i++)if(this.time-this.touched[i]>3.5)this.fog[i]+= (1-this.fog[i])*(1-Math.exp(-dt*.035));
+  for(let i=0;i<this.fog.length;i++)if(this.time-this.touched[i]>FOG_RETURN_DELAY)this.fog[i]+= (1-this.fog[i])*(1-Math.exp(-dt*FOG_RETURN_RATE));
   const strokes=[],seen=new Set();
   for(const hand of hands){
    seen.add(hand.id);const previous=this.previous.get(hand.id),contact=hand.contact??1,active=!hand.fist&&(hand.open??1)>.55&&contact>.27;

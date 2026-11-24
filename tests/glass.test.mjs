@@ -16,8 +16,8 @@ test('two open palms clear continuous feathered tracks rather than isolated stam
 test('a closed fist or a withdrawn hand does not wipe the surface',()=>{for(const h of [{...hand(),fist:true},{...hand(),contact:.1}]){const m=new Condensation();for(let i=0;i<30;i++)m.update(1/60,[h],options);assert.equal(m.summary().clear,0);}});
 test('cleared glass stays clear briefly then slowly condenses while retaining its session maximum',()=>{
  const m=new Condensation();for(let i=0;i<5;i++)m.update(1/60,[hand()],options);const initial=at(m,300,250),best=m.best;
- for(let i=0;i<120;i++)m.update(1/60,[],options);assert.equal(at(m,300,250),initial);
- for(let i=0;i<360;i++)m.update(1/60,[],options);assert.ok(at(m,300,250)>initial+.07&&at(m,300,250)<.3);assert.equal(m.best,best);
+ for(let i=0;i<240;i++)m.update(1/60,[],options);assert.equal(at(m,300,250),initial);
+ for(let i=0;i<480;i++)m.update(1/60,[],options);assert.ok(at(m,300,250)>.5&&at(m,300,250)<.8);assert.equal(m.best,best);
 });
 test('tracking loss and a distant reacquisition do not erase a line across the glass',()=>{
  const m=new Condensation();m.update(1/60,[hand(100)],options);m.update(1/60,[],options);m.update(1/60,[hand(900)],options);assert.equal(at(m,500,250),1);

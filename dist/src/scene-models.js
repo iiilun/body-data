@@ -1,4 +1,4 @@
-import {clamp,lerp,hash} from './math.js?v=5.3.0';
+import {clamp,lerp,hash} from './math.js?v=5.3.1';
 
 export function materialKey(cell,pose){
  if(!pose?.[11]||!pose?.[12])return cell.id;
@@ -79,7 +79,7 @@ export class VacancyCity{
  reset(){this.tiles=[];this.held=new Map();this.reused=0;this.key='';this.previous=new Map();}
  build(width,height,percent,footerHeight=0){
   const key=[width,height,percent,footerHeight].join(':');if(this.key===key)return;const previous=this.tiles,oldWidth=this.width||width,oldHeight=this.height||height;this.key=key;this.width=width;this.height=height;
-  const cols=width>1100?20:width>700?15:10,rows=Math.ceil(120/cols),pad=width*.035,gap=8,top=height*.18,bottom=Math.max(height*.15,footerHeight+18);
+  const cols=width>1100?20:width>700?15:10,rows=Math.ceil(120/cols),pad=width*.035,gap=8,top=height*.18,bottom=Math.max(height*.045,footerHeight+18);
   this.tileW=(width-pad*2-gap*(cols-1))/cols;this.tileH=(height-top-bottom-gap*(rows-1))/rows;
   const empty=Math.round(120*percent/100),rank=Array.from({length:120},(_,i)=>i).sort((a,b)=>hash(a+31)-hash(b+31)),vacant=new Set(rank.slice(0,empty));
   this.tiles=[];for(let i=0;i<120;i++){const x=pad+i%cols*(this.tileW+gap)+this.tileW/2,y=top+Math.floor(i/cols)*(this.tileH+gap)+this.tileH/2;const tile=previous[i];if(tile){tile.x*=width/oldWidth;tile.y*=height/oldHeight;tile.homeX=tile.shared?tile.homeX*width/oldWidth:x;tile.homeY=tile.shared?tile.homeY*height/oldHeight:y;this.tiles.push(tile);}else this.tiles.push({id:i,x,y,homeX:x,homeY:y,vx:0,vy:0,vacant:vacant.has(i),shared:false,hover:0});}

@@ -1,10 +1,10 @@
-import {clamp,lerp,hash,pointToScreen} from './math.js?v=5.3.0';
-import {figureDepth} from './glass-model.js?v=5.3.0';
+import {clamp,hash,pointToScreen} from './math.js?v=5.3.1';
+import {figureDepth} from './glass-model.js?v=5.3.1';
 
 function surface(width,height){const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;return {canvas,ctx:canvas.getContext('2d')};}
 function roundedPolygon(ctx,points){ctx.beginPath();const first=points[0],last=points.at(-1);ctx.moveTo((last.x+first.x)/2,(last.y+first.y)/2);for(let i=0;i<points.length;i++){const p=points[i],q=points[(i+1)%points.length];ctx.quadraticCurveTo(p.x,p.y,(p.x+q.x)/2,(p.y+q.y)/2);}ctx.closePath();ctx.fill();}
-export function drawHand(ctx,points,radius){
- if(points?.length!==21)return;ctx.fillStyle='#141516';ctx.strokeStyle='#141516';ctx.lineCap='round';ctx.lineJoin='round';
+function fillHandMask(ctx,points,radius){
+ if(points?.length!==21)return;ctx.fillStyle='#000';ctx.strokeStyle='#000';ctx.lineCap='round';ctx.lineJoin='round';
  roundedPolygon(ctx,[0,1,2,5,9,13,17].map(i=>points[i]));
  for(const chain of [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16],[17,18,19,20]])for(let j=0;j<3;j++){
   const a=points[chain[j]],b=points[chain[j+1]];ctx.lineWidth=radius*(chain[0]===1?.31:.26)*(1-j*.14);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
@@ -16,13 +16,14 @@ export class GlassSurface{
   const scale=Math.min(1,1440/width),w=Math.ceil(width*scale),h=Math.ceil(height*scale),key=w+':'+h;
   if(this.key===key)return;this.key=key;this.scale=scale;this.back=surface(w,h);this.frost=surface(w,h);this.fogMask=surface(128,Math.max(24,Math.round(128*height/width)));
  }
- personMask(c,pose){
+ personMask(c,pose,hands){
   if(c.demo){
    this.previewMask??=surface(640,480);const ctx=this.previewMask.ctx;ctx.clearRect(0,0,640,480);ctx.save();ctx.scale(640/c.width,480/c.height);ctx.fillStyle='#000';ctx.strokeStyle='#000';ctx.lineCap='round';ctx.lineJoin='round';
    const head=pose[0],a=pose[11],b=pose[12],wa=c.width*.065;
    ctx.beginPath();ctx.ellipse(head.x,head.y+c.height*.018,c.height*.065,c.height*.092,-.06,0,Math.PI*2);ctx.fill();
    ctx.beginPath();ctx.moveTo(a.x,a.y-c.height*.025);ctx.quadraticCurveTo(a.x-wa*.45,a.y+c.height*.22,a.x-wa*.13,c.height+80);ctx.lineTo(b.x+wa*.13,c.height+80);ctx.quadraticCurveTo(b.x+wa*.45,b.y+c.height*.22,b.x,b.y-c.height*.025);ctx.quadraticCurveTo(head.x+c.height*.025,head.y+c.height*.085,head.x,head.y+c.height*.06);ctx.quadraticCurveTo(head.x-c.height*.025,head.y+c.height*.085,a.x,a.y-c.height*.025);ctx.fill();
    ctx.lineWidth=c.height*.066;for(const chain of [[11,13,15],[12,14,16]]){ctx.beginPath();for(let j=0;j<3;j++){const p=pose[chain[j]];j?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);}ctx.stroke();}
+   for(const hand of hands)fillHandMask(ctx,hand.landmarks,hand.radius);
    ctx.restore();return {canvas:this.previewMask.canvas,screen:true};
   }
   const mask=c.mask;if(!mask?.data||!mask.width||!mask.height)return null;
@@ -34,7 +35,7 @@ export class GlassSurface{
   return this.mask;
  }
  drawBody(ctx,c,hands){
-  const pose=c.pose.map(p=>({...p,...pointToScreen(p,c.g)})),mask=this.personMask(c,pose);if(!mask)return;
+  const pose=c.pose.map(p=>({...p,...pointToScreen(p,c.g)})),mask=this.personMask(c,pose,hands);if(!mask)return;
   const depth=figureDepth(c.pose,c.height),draw=()=>{
    if(mask.screen){ctx.drawImage(mask.canvas,0,0,c.width,c.height);return;}
    const origin=c.mask.origin,centre={x:(c.pose[11].x+c.pose[12].x)/2,y:(c.pose[11].y+c.pose[12].y)/2},dx=origin?clamp(centre.x-origin.x,-.06,.06):0,dy=origin?clamp(centre.y-origin.y,-.05,.05):0;
@@ -43,20 +44,6 @@ export class GlassSurface{
   ctx.save();ctx.imageSmoothingEnabled=true;const scale=Math.abs(ctx.getTransform().a)||1;
   ctx.filter=`blur(${depth.blur*2.15*scale}px)`;ctx.globalAlpha=depth.opacity*.35;draw();
   ctx.filter=`blur(${depth.blur*scale}px)`;ctx.globalAlpha=depth.opacity*.86;draw();ctx.restore();
- }
- drawHands(ctx,c,hands){
-  const pose=c.pose.map(p=>({...p,...pointToScreen(p,c.g)}));ctx.save();ctx.fillStyle='#161718';ctx.strokeStyle='#161718';ctx.lineCap='round';
-  const scale=Math.abs(ctx.getTransform().a)||1;
-  for(const hand of hands){
-   if(!hand.landmarks?.length)continue;const wrist=hand.landmarks[0],side=[15,16].sort((a,b)=>Math.hypot(pose[a].x-wrist.x,pose[a].y-wrist.y)-Math.hypot(pose[b].x-wrist.x,pose[b].y-wrist.y))[0],elbow=pose[side-2];
-   // One continuous forearm, fading into the remote shadow; no overlapping capsules.
-   if(elbow?.visibility>.3){
-    const gradient=ctx.createLinearGradient(elbow.x,elbow.y,wrist.x,wrist.y);gradient.addColorStop(0,'#16171800');gradient.addColorStop(.4,'#1617180a');gradient.addColorStop(.72,'#1617184d');gradient.addColorStop(1,'#161718cc');
-    ctx.strokeStyle=gradient;ctx.filter=`blur(${3.4*scale}px)`;ctx.globalAlpha=hand.contact;ctx.lineWidth=hand.radius*.63;ctx.beginPath();ctx.moveTo(elbow.x,elbow.y);ctx.lineTo(wrist.x,wrist.y);ctx.stroke();
-   }
-   ctx.filter=`blur(${lerp(5.8,.65,hand.contact)*scale}px)`;ctx.globalAlpha=lerp(.45,.99,hand.contact);drawHand(ctx,hand.landmarks,hand.radius);
-  }
-  ctx.restore();
  }
  dropSprite(radius){
   const key=Math.round(clamp(radius,.5,10)*2);if(this.sprites.has(key))return this.sprites.get(key);
@@ -69,9 +56,9 @@ export class GlassSurface{
   if(this.texture)return this.texture;const s=surface(96,96),p=s.ctx.createImageData(96,96);for(let i=0;i<96*96;i++){const value=hash(i+9)>.5?0:255;p.data[i*4]=p.data[i*4+1]=p.data[i*4+2]=value;p.data[i*4+3]=Math.round(hash(i*5+4)*10);}s.ctx.putImageData(p,0,0);this.texture=s.canvas;return this.texture;
  }
  draw(ctx,c,model,hands,paint){
-  const height=Math.max(160,c.height-(c.footerHeight||100));this.resize(c.width,height);const scale=this.scale,back=this.back.ctx,frost=this.frost.ctx;
+  const height=c.height;this.resize(c.width,height);const scale=this.scale,back=this.back.ctx,frost=this.frost.ctx;
   back.setTransform(scale,0,0,scale,0,0);back.fillStyle='#fafaf8';back.fillRect(0,0,c.width,height);paint(back);this.drawBody(back,c,hands);
-  frost.setTransform(1,0,0,1,0,0);frost.clearRect(0,0,this.frost.canvas.width,this.frost.canvas.height);frost.filter=`blur(${7*scale}px)`;frost.drawImage(this.back.canvas,0,0);frost.filter='none';frost.fillStyle='#fafaf8a8';frost.fillRect(0,0,this.frost.canvas.width,this.frost.canvas.height);
+  frost.setTransform(1,0,0,1,0,0);frost.clearRect(0,0,this.frost.canvas.width,this.frost.canvas.height);frost.filter=`blur(${12*scale}px)`;frost.drawImage(this.back.canvas,0,0);frost.filter='none';frost.fillStyle='#fafaf8bb';frost.fillRect(0,0,this.frost.canvas.width,this.frost.canvas.height);
   const mask=this.fogMask.ctx,p=mask.createImageData(model.cols,model.rows);for(let i=0;i<model.fog.length;i++){p.data[i*4]=p.data[i*4+1]=p.data[i*4+2]=255;p.data[i*4+3]=Math.round(model.fog[i]*255);}mask.putImageData(p,0,0);
   frost.globalCompositeOperation='destination-in';frost.imageSmoothingEnabled=true;frost.drawImage(this.fogMask.canvas,0,0,this.frost.canvas.width,this.frost.canvas.height);frost.globalCompositeOperation='source-over';
   ctx.save();ctx.beginPath();ctx.rect(0,0,c.width,height);ctx.clip();ctx.imageSmoothingEnabled=true;ctx.drawImage(this.back.canvas,0,0,c.width,height);ctx.drawImage(this.frost.canvas,0,0,c.width,height);
@@ -82,6 +69,6 @@ export class GlassSurface{
    if(r>3.5){ctx.save();ctx.beginPath();ctx.ellipse(d.x,d.y,r*.9,r*stretch,0,0,Math.PI*2);ctx.clip();const sx=clamp((d.x-r-2)*scale,0,this.back.canvas.width-r*2*scale),sy=clamp((d.y-r-3)*scale,0,this.back.canvas.height-r*2*scale);ctx.drawImage(this.back.canvas,sx,sy,r*2*scale,r*2*scale,d.x-r,d.y-r*stretch,r*2,r*2*stretch);ctx.restore();}
    ctx.drawImage(sprite,d.x-w/2,d.y-w*stretch/2,w,w*stretch);
   }
-  this.drawHands(ctx,c,hands);ctx.restore();
+  ctx.restore();
  }
 }

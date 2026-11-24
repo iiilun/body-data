@@ -55,7 +55,7 @@ test('all six background renderers share SPACE font, row count and tight trackin
  flow.build(1280,620,font,cards,measure);space.build(1280,620,font,row,cards,measure);assert.equal(flow.lanes.length,space.rows.length);assert.ok(flow.lanes.length>25);
  assert.equal(flow.lanes[1].y-flow.lanes[0].y,row);assert.ok(flow.lanes[0].items[1].x<flow.lanes[0].items[0].width);
  for(const scene of FACE_SCENES.filter(s=>s!=='space')){
-  let seen;const context={font:'',measureText:()=>({width:8})};Renderer.prototype.flowFacts.call({ctx:context,type(){context.font=`300 ${font}px Helvetica`;},flow:{draw(_ctx,options){seen=options;}}},{height:720,width:1280,cards,elapsed:2,footerHeight:100,scene});assert.equal(seen.font,font,scene);
+  let seen;const context={font:'',measureText:()=>({width:8})};Renderer.prototype.flowFacts.call({ctx:context,type(){context.font=`300 ${font}px Helvetica`;},flow:{draw(_ctx,options){seen=options;}}},{height:720,width:1280,cards,elapsed:2,footerHeight:100,scene});assert.equal(seen.font,font,scene);assert.equal(seen.height,720,scene+' fills the viewport regardless of legacy footer settings');
  }
 });
 test('thermal colours remain valid and do not mutate original mosaic colour samples',()=>{

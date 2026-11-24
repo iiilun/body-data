@@ -1,14 +1,14 @@
-import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.3.0';
-import {number} from './i18n.js?v=5.3.0';
-import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.3.0';
-import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.3.0';
-import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.3.0';
-import {VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.3.0';
-import {Condensation,glassContact} from './glass-model.js?v=5.3.0';
-import {GlassSurface} from './glass-renderer.js?v=5.3.0';
-import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.3.0';
-import {framePose} from './controls.js?v=5.3.0';
-import {sceneWords} from './scene-copy.js?v=5.3.0';
+import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.3.1';
+import {number} from './i18n.js?v=5.3.1';
+import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.3.1';
+import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.3.1';
+import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.3.1';
+import {VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.3.1';
+import {Condensation,glassContact} from './glass-model.js?v=5.3.1';
+import {GlassSurface} from './glass-renderer.js?v=5.3.1';
+import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.3.1';
+import {framePose} from './controls.js?v=5.3.1';
+import {sceneWords} from './scene-copy.js?v=5.3.1';
 const FONT='"Helvetica Neue",Helvetica,Arial,"Noto Sans TC","Noto Sans JP","Noto Sans KR","Noto Sans Arabic",sans-serif';
 export function demoPose(time,scene='space'){
  const p=framePose(scene),sway=Math.sin(time*.24)*.012;
@@ -19,7 +19,7 @@ export class Renderer{
  constructor(canvas){
   this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.sample=document.createElement('canvas');this.sc=this.sample.getContext('2d',{willReadFrequently:true});
   this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.haze=new HeatHaze();this.glass=new Condensation();this.glassView=new GlassSurface();this.city=new VacancyCity();this.resize();this.reset('');
-  fetch('./assets/preview-person.json?v=5.3.0').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
+  fetch('./assets/preview-person.json?v=5.3.1').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
  }
  resize(){this.width=innerWidth;this.height=innerHeight;const d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.round(this.width*d);this.canvas.height=Math.round(this.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.ctx.imageSmoothingEnabled=false;this.outline=null;this.cardLayouts=new Map();}
  reset(scene){this.scene=scene;this.physics.reset();this.melt.reset();this.field=new SilhouetteType();this.flow=new DataFlow();this.glass.reset();this.city.reset();this.lastSample=-1;this.seeded=false;this.history=[];this.lastHistory=-1;this.outline=null;}
@@ -59,8 +59,7 @@ export class Renderer{
   const lines=size.lines;ctx.font=`400 ${size.labelFont}px ${this.fontFamily||FONT}`;lines.forEach((line,i)=>ctx.fillText(line,c.lang==='ar'?w:0,size.size+i*(size.labelFont+2)));
   ctx.font=`400 11px ${this.fontFamily||FONT}`;ctx.globalAlpha=.6;ctx.fillText(card.scope+' · '+(card.yearText||card.year),c.lang==='ar'?w:0,size.size+lines.length*(size.labelFont+2)+3);ctx.restore();
  }
- footerShade(c,depth=170){const ctx=this.ctx,shade=ctx.createLinearGradient(0,c.height-depth,0,c.height);shade.addColorStop(0,'#0000');shade.addColorStop(.45,'#000d');shade.addColorStop(1,'#000');ctx.fillStyle=shade;ctx.fillRect(0,c.height-depth,c.width,depth);}
- flowFacts(c,{context=this.ctx,...options}={}){const {font}=backgroundType(c.height);this.type(c,font);context.font=this.ctx.font;context.textAlign='left';context.textBaseline='top';context.direction='ltr';this.flow.draw(context,{width:c.width,height:Math.max(120,c.height-(c.footerHeight||80)),font,cards:c.cards,time:c.elapsed,...options});}
+ flowFacts(c,{context=this.ctx,...options}={}){const {font}=backgroundType(c.height);this.type(c,font);context.font=this.ctx.font;context.textAlign='left';context.textBaseline='top';context.direction='ltr';this.flow.draw(context,{width:c.width,height:c.height,font,cards:c.cards,time:c.elapsed,...options});}
  supports(c){
   const out=[],pt=i=>this.project(c.pose[i],c);
   for(const [side,chain]of [[0,[11,13,15]],[1,[12,14,16]]])for(let j=0;j<2;j++)if(chain.slice(j,j+2).every(i=>c.pose[i]?.visibility>.3))out.push({id:(j?'forearm':'upperarm')+side,side,a:pt(chain[j]),b:pt(chain[j+1]),thickness:c.g.block*1.05});
@@ -84,7 +83,7 @@ export class Renderer{
   const pixels=this.melt.update(c.dt,this.placed,hands,{...c,occluders,block:c.g.block});
   const depth=c.height*(.35+c.progress*1.3-this.melt.cooling*.2),ctx=this.ctx,light=ctx.createLinearGradient(0,0,0,Math.max(100,depth));
   light.addColorStop(0,'#ff321a');light.addColorStop(.38,'#bd1709');light.addColorStop(1,'#000');ctx.fillStyle=light;ctx.fillRect(0,0,c.width,c.height);
-  this.haze.draw(ctx,{width:c.width,height:Math.max(120,c.height-(c.footerHeight||80)),viewportHeight:c.height,time:c.elapsed,depth,occluders,paint:context=>this.flowFacts(c,{context,alpha:.62,speed:48+78*c.progress})});
+  this.haze.draw(ctx,{width:c.width,height:c.height,viewportHeight:c.height,time:c.elapsed,depth,occluders,paint:context=>this.flowFacts(c,{context,alpha:.62,speed:48+78*c.progress})});
   const b=c.g.block;
   for(const cell of this.placed){const p=pixels.get(cell.material??cell.id);if(p?.free)continue;const heat=heatSample(cell.x,cell.y,c.elapsed,{width:c.width,height:c.height,depth,occluders}).amount;ctx.fillStyle=thermalColor(cell.rgb,heat);ctx.fillRect(cell.x-b/2,cell.y-b/2,b+.5,b+.5);}
   for(const p of pixels.values())if(p.free&&p.y<c.height+b){ctx.globalAlpha=clamp(1-(p.age-2)/3,.2,1);ctx.fillStyle=thermalColor(p.rgb,.85);ctx.fillRect(p.x-b/2,p.y-b/2,b,b);}ctx.globalAlpha=1;
@@ -92,7 +91,7 @@ export class Renderer{
  }
  space(c){
   const ctx=this.ctx,{font:size,row}=backgroundType(c.height);this.type(c,size);
-  const previousItems=this.field.items;this.field.build(c.width,c.height-(c.footerHeight||80),size,row,c.cards,s=>ctx.measureText(s).width);
+  const previousItems=this.field.items;this.field.build(c.width,c.height,size,row,c.cards,s=>ctx.measureText(s).width);
   const hands=c.hands.map(h=>this.project(h,c));
   if(c.demo&&c.dt===0&&previousItems!==this.field.items){for(let n=0;n<120;n++)this.field.update(1/60,this.placed,c.g.block,c.width,hands,c.progress);}
   this.field.update(c.dt,this.placed,c.g.block,c.width,hands,c.progress);ctx.fillStyle='#eee';this.type(c,size);
@@ -100,7 +99,7 @@ export class Renderer{
  }
  glassHands(c){return c.hands.map(h=>({...h,...pointToScreen(h,c.g),contact:h.contact??glassContact(h,c.pose),radius:clamp((h.span||.045)*c.g.width*.95,c.width*.025,c.width*.065),landmarks:h.landmarks?.map(p=>({...p,...pointToScreen(p,c.g)}))}));}
  thirst(c){
-  const hands=this.glassHands(c);this.glass.update(c.dt,hands,{width:c.width,height:Math.max(160,c.height-(c.footerHeight||100))});
+  const hands=this.glassHands(c);this.glass.update(c.dt,hands,{width:c.width,height:c.height});
   this.glassView.draw(this.ctx,c,this.glass,hands,context=>this.flowFacts(c,{context,color:'#202326',alpha:.83,speed:5}));
  }
  offline(c){
@@ -116,7 +115,7 @@ export class Renderer{
 
  vacant(c){
   const ctx=this.ctx,w=sceneWords[c.lang],reference=c.rules?.vacant?.cityReference,source=c.cards.find(card=>card.id===(reference?.sourceCard||'vacant-jp-total-2023')),percent=reference?.vacancyPercent||source?.companionPercent||13.8,ratio=source?{...source,value:number(percent,c.lang,1)+'%',label:w.vacancyRate}:null;
-  this.city.build(c.width,c.height,percent,c.footerHeight||80);const shoulder=this.project({x:(c.pose[11].x+c.pose[12].x)/2,y:(c.pose[11].y+c.pose[12].y)/2},c),centre={x:shoulder.x,y:shoulder.y+c.height*.18};
+  this.city.build(c.width,c.height,percent);const shoulder=this.project({x:(c.pose[11].x+c.pose[12].x)/2,y:(c.pose[11].y+c.pose[12].y)/2},c),centre={x:shoulder.x,y:shoulder.y+c.height*.18};
   const hands=c.hands.map(h=>({...h,...this.project(h,c)}));this.city.update(c.dt,hands,centre,c.width,c.height);
   this.flowFacts(c,{alpha:.2,speed:14});this.body(c,.6);
   for(const t of this.city.tiles){if(!t.vacant){ctx.fillStyle='#ffffff1b';ctx.fillRect(t.x-this.city.tileW/2,t.y-this.city.tileH/2,this.city.tileW,this.city.tileH);ctx.strokeStyle='#ffffff15';ctx.lineWidth=1;ctx.strokeRect(t.x-this.city.tileW/2,t.y-this.city.tileH/2,this.city.tileW,this.city.tileH);continue;}
@@ -145,7 +144,7 @@ export class Renderer{
   for(let y=r;y<height-r;y++)for(let x=r;x<width-r;x++){const i=(y*width+x)*4;if(source.data[i+3]>127&&(source.data[i+3-r*4]<127||source.data[i+3+r*4]<127||source.data[i+3-r*width*4]<127||source.data[i+3+r*width*4]<127)){out.data[i]=out.data[i+1]=out.data[i+2]=255;out.data[i+3]=225;}}
   ctx.putImageData(out,0,0);this.outline={key,canvas:mask};return mask;
  }
- alignment(c){if(c.scene==='thirst'){const hands=this.glassHands(c);this.glassView.drawBody(this.ctx,c,hands);this.glassView.drawHands(this.ctx,c,hands);}else this.body(c,.6);const ctx=this.ctx;ctx.save();if(['hold','thirst'].includes(c.scene))ctx.filter='invert(1)';ctx.drawImage(this.makeOutline(c),0,0);ctx.restore();}
+ alignment(c){if(c.scene==='thirst'){const hands=this.glassHands(c);this.glassView.drawBody(this.ctx,c,hands);}else this.body(c,.6);const ctx=this.ctx;ctx.save();if(['hold','thirst'].includes(c.scene))ctx.filter='invert(1)';ctx.drawImage(this.makeOutline(c),0,0);ctx.restore();}
  stats(scene,lang,metric,elapsed){const w=sceneWords[lang];
   if(scene==='shelter')return [{value:'≈ '+number((metric?.rate||0)*elapsed,lang,0)+' t CO₂',label:w.elapsedEmissions}];
   if(scene==='thirst')return [{value:number(this.glass.summary().clear*100,lang,0)+'%',label:w.glassCleared}];

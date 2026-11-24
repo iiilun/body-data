@@ -1,0 +1,9 @@
+# V5.3.1 · uniform shadow, thicker fog, full viewport
+
+THIRST uses one monochrome person mask for the entire figure. Hands, forearms and body go through the same depth-controlled soft blur and opacity; the separate sharp/dark contact-hand and forearm layers are removed. The camera path uses the raw segmentation silhouette. Preview hands are filled into its procedural figure mask before that shared blur. Tracked21-point hands still control wiping; the tracking interface is unchanged.
+
+Fog blur increases from7px to12px and the white veil from0xA8 to0xBB alpha. A wiped region remains clear for5s, then recondenses with an exponential rate of0.14/s: roughly half fogged5s after the delay, and nearly opaque after a longer pause. Continuous contact locally keeps the surface clear. Droplet pushing, coalescence, gravity and source data are unchanged.
+
+All six scenes use the full viewport height for background type and interactions. SPACE's elastic field, SHELTER's heat layer, THIRST's moisture field and VACANT's grid no longer reserve the measured footer. The bottom information container is hidden entirely, with no gradient, solid background, floating counter or full-width strip. In-scene instruction panels are hidden too. Scene identity and data scope remain in the cube, introduction, alignment and result views. OFFLINE and VACANT retain their existing top scene indicators.
+
+Validation:80 Node tests pass, including a longer visible recondensation interval and full-height assertions for the data flow, housing field, heat, glass and city layouts. Browser review covers the six active scenes, uniform shadow, full-height rain/fog, the absence of the bottom information container. Actual camera hardware responsiveness remains unmeasured; this revision does not change the MediaPipe models or tracker.

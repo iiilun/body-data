@@ -92,3 +92,6 @@ body[data-state="error"] .entrance-bottom{z-index:25}
 body[data-theme="thirst"]{--bg:#fafaf8;--fg:#181a1c;color-scheme:light}
 body[data-theme="thirst"] .alignment{color:#181a1c}
 body[data-theme="thirst"] .live-stat strong{color:#181a1c}
+
+/* Information belongs to the introduction and result, never a reserved artwork strip. */
+#scene-context{display:none}
