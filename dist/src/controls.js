@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.4.2';
+import {clamp,lerp} from './math.js?v=5.5.0';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;
@@ -43,7 +43,7 @@ export function framePose(scene){
  const p=Array.from({length:33},()=>({x:.5,y:.8,visibility:1}));
  p[0]={x:.5,y:.23,visibility:1};p[11]={x:.36,y:.42,visibility:1};p[12]={x:.64,y:.42,visibility:1};p[23]={x:.41,y:.94,visibility:1};p[24]={x:.59,y:.94,visibility:1};
  let a=[.23,.43],b=[.77,.43],c=[.1,.43],d=[.9,.43];
- if(scene==='shelter'){a=[.24,.26];c=[.43,.1];b=[.78,.61];d=[.77,.78];}
+ if(scene==='shelter'){a=[.24,.26];c=[.43,.1];b=[.76,.26];d=[.57,.1];}
  if(scene==='thirst'){a=[.23,.46];b=[.8,.63];c=[.29,.23];d=[.82,.48];}
  if(scene==='offline'){a=[.2,.48];b=[.8,.48];c=[.18,.23];d=[.82,.23];}
  if(scene==='vacant'){a=[.27,.5];b=[.74,.5];c=[.2,.42];d=[.84,.42];}
@@ -57,13 +57,14 @@ export function poseMatch(scene,pose){
  const centred=Math.abs((a.x+b.x)/2-.5)<.17&&head.y>.04&&head.y<.42&&width>.1&&width<.55;
  const inView=[l,r].every(p=>p.x>.025&&p.x<.975&&p.y>.025&&p.y<.94);
  let action=false;
- if(scene==='shelter')action=Math.min(l.y,r.y)<head.y+.02;
+ if(scene==='shelter')action=Math.max(l.y,r.y)<head.y+.03;
  else if(scene==='thirst')action=span>width*1.1&&Math.min(l.y,r.y)<sy+.06&&Math.max(l.y,r.y)<sy+.3;
  else if(scene==='offline')action=l.y<sy&&r.y<sy&&span>width*1.3;
  else if(scene==='vacant')action=span>width*1.65&&Math.abs(l.y-r.y)<.2;
- else action=span>width*1.8&&[l,r].every(p=>Math.abs(p.y-sy)<.17);
+ else action=span>width*1.8&&[l,r].every(p=>Math.abs(p.y-sy)<.17)&&[[11,13,15],[12,14,16]].every(([a,b,c])=>elbowAngle(pose[a],pose[b],pose[c])>145);
  return {ready:centred&&inView&&action,score:(Number(centred)+Number(inView)+Number(action))/3,joints:joints.map(i=>({index:i,good:i<15?centred:inView&&action}))};
 }
+export function elbowAngle(a,b,c){const ax=a.x-b.x,ay=a.y-b.y,cx=c.x-b.x,cy=c.y-b.y;return Math.acos(clamp((ax*cx+ay*cy)/Math.max(1e-8,Math.hypot(ax,ay)*Math.hypot(cx,cy)),-1,1))*180/Math.PI;}
 export class PoseGate{
  constructor(){this.reset();}
  reset(){this.elapsed=0;this.lost=0;this.done=false;}

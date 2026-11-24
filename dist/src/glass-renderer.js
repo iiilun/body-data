@@ -1,5 +1,5 @@
-import {clamp,hash,pointToScreen} from './math.js?v=5.4.2';
-import {figureDepth} from './glass-model.js?v=5.4.2';
+import {clamp,hash,pointToScreen} from './math.js?v=5.5.0';
+import {figureDepth} from './glass-model.js?v=5.5.0';
 
 function surface(width,height){const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;return {canvas,ctx:canvas.getContext('2d')};}
 function roundedPolygon(ctx,points){ctx.beginPath();const first=points[0],last=points.at(-1);ctx.moveTo((last.x+first.x)/2,(last.y+first.y)/2);for(let i=0;i<points.length;i++){const p=points[i],q=points[(i+1)%points.length];ctx.quadraticCurveTo(p.x,p.y,(p.x+q.x)/2,(p.y+q.y)/2);}ctx.closePath();ctx.fill();}

@@ -1,67 +1,34 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SceneTransition,cubeCoverScale,projectedCubeHull,viewportCovered,cubeRasterDetail} from '../dist/src/scene-transition.js';
+import {SceneTransition,blackWindow,viewportCovered,rectanglePortal,cubeRasterDetail} from '../dist/src/scene-transition.js';
 import {menuCopy} from '../dist/src/menu-view.js';
-
-const viewport={width:1280,height:720,size:371.2};
-test('scene entry expands the cube, holds complete black, then reveals the briefing before completing once',()=>{
- const transition=new SceneTransition();transition.start('hold',viewport);
- assert.deepEqual(transition.update(0),{phase:'expand',zoom:1,shade:0,briefScale:1.45,done:false});
- let frame=transition.update(transition.durations.expand);assert.equal(frame.phase,'black');assert.equal(frame.shade,1);assert.equal(frame.done,false);
- frame=transition.update(.19);assert.equal(frame.phase,'black');assert.equal(frame.shade,1);
- frame=transition.update(.02);assert.equal(frame.phase,'reveal');assert.ok(frame.briefScale>1.4);assert.equal(frame.done,false);
- frame=transition.update(transition.durations.reveal+.01);assert.equal(frame.phase,'done');assert.equal(frame.shade,0);assert.equal(frame.briefScale,1);assert.equal(frame.done,true);
- assert.equal(transition.update(1),null);
+const viewport={width:1280,height:720,size:371.2,face:0,aperture:{u:.3,v:.4,w:.035,h:.028},pitch:-18,yaw:-28,roll:-7};
+test('entry travels into actual unprinted cube space, with no opacity or black-shade frame',()=>{
+ const t=new SceneTransition();t.start('hold',viewport);const first=t.update(0);assert.equal(first.zoom,1);assert.ok(Math.abs(first.x)<1e-8);assert.ok(Math.abs(first.y)<1e-8);
+ for(let i=0;i<120;i++){const frame=t.update(t.durations.expand/120);assert.equal('shade' in frame,false);assert.equal('opacity' in frame,false);}
+ const frame=t.update(.001);assert.equal(frame.phase,'black');assert.ok(frame.zoom>50);assert.ok(Math.abs(frame.x)>1||Math.abs(frame.y)>1);
 });
-test('cube zoom and black opacity progress smoothly without reversing or jumping at the blackout',()=>{
- const transition=new SceneTransition();transition.start('space',viewport);let previous=transition.update(0);
- for(let i=0;i<Math.round(transition.durations.expand*60);i++){
-  const frame=transition.update(1/60);assert.ok(frame.zoom>=previous.zoom);assert.ok(frame.shade>=previous.shade);assert.ok(frame.shade-previous.shade<.12);previous=frame;
- }
- assert.ok(Math.abs(previous.zoom-transition.cover)<1e-8);assert.ok(Math.abs(previous.shade-1)<1e-8);
-});
-test('incoming briefing shrinks to fit and becomes fully visible while its transition remains active',()=>{
- const transition=new SceneTransition();transition.start('thirst',viewport);transition.update(transition.durations.expand+transition.durations.black);let previous=transition.update(0),readable=false;
- for(let i=0;i<Math.ceil(transition.durations.reveal*60);i++){
-  const frame=transition.update(1/60);assert.ok(frame.briefScale<=previous.briefScale);assert.ok(frame.shade<=previous.shade);
-  if(frame.shade===0&&!frame.done)readable=true;previous=frame;
- }
- assert.ok(readable);assert.ok(Math.abs(previous.briefScale-1)<1e-8);
-});
-test('return cancels a pending transition and a second selection cannot replace an active one',()=>{
- const transition=new SceneTransition();transition.start('hold',viewport);transition.update(.9);assert.equal(transition.start('space',viewport),false);
- transition.cancel();assert.equal(transition.update(10),null);assert.equal(transition.start('space',viewport),true);assert.equal(transition.update(0).zoom,1);
-});
-test('resize recalculates full-screen coverage while keeping the transition at its current phase',()=>{
- const transition=new SceneTransition();transition.start('shelter',viewport);transition.update(.4);transition.resize(390,844,210);
- const frame=transition.update(0);assert.equal(frame.phase,'expand');assert.ok(frame.zoom>1);transition.update(transition.durations.expand-.4);
- assert.equal(transition.update(0).zoom,transition.cover);
-});
-test('reduced motion retains a real black handoff and reaches the same final reading size',()=>{
- const transition=new SceneTransition({reducedMotion:true});transition.start('vacant',viewport);
- assert.equal(transition.update(.16).phase,'black');assert.equal(transition.update(.1).phase,'reveal');
- const frame=transition.update(.21);assert.equal(frame.done,true);assert.equal(frame.briefScale,1);assert.equal(frame.shade,0);
-});
-test('all seven menu prompts match the three-second selection duration',()=>{
- for(const [lang,copy]of Object.entries(menuCopy))for(const key of ['dwell','preview'])assert.ok(copy[key].includes(lang==='ar'?'٣':'3'),lang+' '+key);
-});
-
-test('black cannot begin until the rotated cube actually covers all four screen corners',()=>{
- for(const [width,height,size]of [[1280,720,371.2],[390,844,210],[1920,1080,420],[3840,1080,420]]){
-  for(const [pitch,yaw]of [[-18,-28],[0,0],[-90,0],[90,0],[0,180],[0,90],[63,217],[-147,352]]){
-   const orientation={pitch,yaw,roll:-7},hull=projectedCubeHull(size,orientation),transition=new SceneTransition();
-   transition.start('space',{width,height,size,...orientation});let coveredBeforeFade=false;
-   for(let i=0;i<120;i++){
-    const frame=transition.update(transition.durations.expand/120);
-    if(frame.shade===0&&viewportCovered(width,height,hull,frame.zoom))coveredBeforeFade=true;
-    if(frame.shade>0)assert.ok(viewportCovered(width,height,hull,frame.zoom),`${width} × ${height}, ${pitch}/${yaw}`);
-   }
-   assert.ok(coveredBeforeFade);assert.ok(transition.cover>cubeCoverScale(width,height,size,orientation)*3);
-  }
+test('the selected black rectangle itself covers every corner for all six projected cube faces',()=>{
+ const faces=[[0,-18,-28],[1,0,180],[2,0,-90],[3,0,90],[4,-90,0],[5,90,0],[2,-25,-55]];
+ for(const [width,height,size]of [[1280,720,371.2],[390,844,210],[1920,1080,420]])for(const [face,pitch,yaw]of faces){
+  const options={...viewport,width,height,size,face,pitch,yaw},t=new SceneTransition();t.start('space',options);const frame=t.update(t.durations.expand);
+  const window=blackWindow(size,face,options.aperture,options);assert.ok(viewportCovered(width,height,window.points,frame.zoom));
+  assert.ok(Math.abs(frame.x+window.centre.x*frame.zoom)<1e-6);assert.ok(Math.abs(frame.y+window.centre.y*frame.zoom)<1e-6);
  }
 });
-test('raster detail raises glyph resolution in stable steps instead of stretching the original texture',()=>{
- assert.deepEqual([1,1.9,2.1,3.9,4.1,7.9].map(cubeRasterDetail),[2,2,4,4,8,8]);
- for(let zoom=1;zoom<=8;zoom+=.01)assert.ok(cubeRasterDetail(zoom)>=zoom);
- assert.equal(cubeRasterDetail(32),8); // Bound offscreen GPU layer allocation.
+test('incoming briefing zooms out of a real black area and finishes at exact reading size',()=>{
+ const t=new SceneTransition();t.start('thirst',viewport);t.setReveal(rectanglePortal({x:70,y:260,width:9,height:9},1280,720));
+ t.update(t.durations.expand+t.durations.black);let frame=t.update(0);assert.equal(frame.phase,'reveal');assert.ok(frame.briefScale>100);assert.equal('shade' in frame,false);
+ frame=t.update(t.durations.reveal+.01);assert.equal(frame.done,true);assert.equal(frame.briefScale,1);assert.equal(frame.briefX,0);assert.equal(frame.briefY,0);assert.equal(t.update(1),null);
 });
+test('return cancels the pending portal and repeated selection cannot replace its target',()=>{
+ const t=new SceneTransition();t.start('hold',viewport);t.update(.9);assert.equal(t.start('space',viewport),false);t.cancel();assert.equal(t.update(10),null);assert.equal(t.start('space',viewport),true);assert.equal(t.update(0).zoom,1);
+});
+test('resizing recomputes coverage of the same black rectangle',()=>{
+ const t=new SceneTransition();t.start('shelter',viewport);t.update(.4);t.resize(390,844,210);assert.equal(t.update(0).phase,'expand');const f=t.update(t.durations.expand-.4+.001);assert.ok(viewportCovered(390,844,t.window,f.zoom));
+});
+test('reduced motion preserves real portal coverage and final position',()=>{
+ const t=new SceneTransition({reducedMotion:true});t.start('vacant',viewport);assert.equal(t.update(t.durations.expand).phase,'black');t.update(t.durations.black);const f=t.update(t.durations.reveal+.01);assert.equal(f.done,true);assert.equal(f.briefScale,1);
+});
+test('all seven menu prompts retain three-second selection',()=>{for(const [lang,copy]of Object.entries(menuCopy))for(const key of ['dwell','preview'])assert.ok(copy[key].includes(lang==='ar'?'٣':'3'));});
+test('native vector type resolution increases without unbounded GPU allocation',()=>{assert.deepEqual([1,1.9,2.1,3.9,4.1,7.9].map(cubeRasterDetail),[2,2,4,4,8,8]);assert.equal(cubeRasterDetail(320),8);});

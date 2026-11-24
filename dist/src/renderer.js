@@ -1,14 +1,16 @@
-import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.4.2';
-import {number} from './i18n.js?v=5.4.2';
-import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.4.2';
-import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.4.2';
-import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.4.2';
-import {VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.4.2';
-import {Condensation,glassContact} from './glass-model.js?v=5.4.2';
-import {GlassSurface} from './glass-renderer.js?v=5.4.2';
-import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.4.2';
-import {framePose} from './controls.js?v=5.4.2';
-import {sceneWords} from './scene-copy.js?v=5.4.2';
+import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.5.0';
+import {number} from './i18n.js?v=5.5.0';
+import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.5.0';
+import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.5.0';
+import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.5.0';
+import {VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.5.0';
+import {Condensation,glassContact} from './glass-model.js?v=5.5.0';
+import {GlassSurface} from './glass-renderer.js?v=5.5.0';
+import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.5.0';
+import {framePose} from './controls.js?v=5.5.0';
+import {sceneWords} from './scene-copy.js?v=5.5.0';
+import {paintHuman} from './human-guide.js?v=5.5.0';
+import {CameraAlignment} from './camera-alignment.js?v=5.5.0';
 const FONT='"Helvetica Neue",Helvetica,Arial,"Noto Sans TC","Noto Sans JP","Noto Sans KR","Noto Sans Arabic",sans-serif';
 export function demoPose(time,scene='space'){
  const p=framePose(scene),sway=Math.sin(time*.24)*.012;
@@ -17,9 +19,9 @@ export function demoPose(time,scene='space'){
 }
 export class Renderer{
  constructor(canvas){
-  this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.sample=document.createElement('canvas');this.sc=this.sample.getContext('2d',{willReadFrequently:true});
+  this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.sample=document.createElement('canvas');this.sc=this.sample.getContext('2d',{willReadFrequently:true});this.cameraAlignment=new CameraAlignment();
   this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.haze=new HeatHaze();this.glass=new Condensation();this.glassView=new GlassSurface();this.city=new VacancyCity();this.resize();this.reset('');
-  fetch('./assets/preview-person.json?v=5.4.2').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
+  fetch('./assets/preview-person.json?v=5.5.0').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
  }
  resize(){this.width=innerWidth;this.height=innerHeight;const d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.round(this.width*d);this.canvas.height=Math.round(this.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.ctx.imageSmoothingEnabled=false;this.outline=null;this.cardLayouts=new Map();}
  reset(scene){this.scene=scene;this.physics.reset();this.melt.reset();this.field=new SilhouetteType();this.flow=new DataFlow();this.glass.reset();this.city.reset();this.lastSample=-1;this.seeded=false;this.history=[];this.lastHistory=-1;this.outline=null;}
@@ -132,19 +134,14 @@ export class Renderer{
   const g=this.geometry(4/3),a=pointToScreen(pose[11],g),b=pointToScreen(pose[12],g),centre={x:(a.x+b.x)/2,y:(a.y+b.y)/2+this.height*.18};
   this.city.update(1/60,[{id:'preview0',x,y,fist:closed}],centre,this.width,this.height);
  }
- makeOutline(c){
-  const key=[c.scene,c.width,c.height].join(':');if(this.outline?.key===key)return this.outline.canvas;
-  const p=framePose(c.scene),mask=document.createElement('canvas');mask.width=c.width;mask.height=c.height;const ctx=mask.getContext('2d',{willReadFrequently:true}),pt=i=>({x:p[i].x*c.width,y:p[i].y*c.height});ctx.fillStyle='#fff';ctx.strokeStyle='#fff';
-  const head=pt(0),a=pt(11),b=pt(12),hipA=pt(23),hipB=pt(24);
-  ctx.beginPath();ctx.ellipse(head.x,head.y,c.height*.053,c.height*.078,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.moveTo(head.x-c.height*.024,head.y+c.height*.065);ctx.lineTo(a.x,a.y-c.height*.025);ctx.quadraticCurveTo(a.x-c.width*.015,a.y+c.height*.18,hipA.x-c.width*.012,hipA.y);ctx.lineTo(hipB.x+c.width*.012,hipB.y);ctx.quadraticCurveTo(b.x+c.width*.015,b.y+c.height*.18,b.x,b.y-c.height*.025);ctx.lineTo(head.x+c.height*.024,head.y+c.height*.065);ctx.closePath();ctx.fill();
-  ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=c.height*.062;
-  for(const chain of [[11,13,15],[12,14,16]]){ctx.beginPath();chain.forEach((i,j)=>{const q=pt(i);j?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)});ctx.stroke();const hand=pt(chain[2]);ctx.beginPath();ctx.ellipse(hand.x,hand.y,c.height*.029,c.height*.04,0,0,Math.PI*2);ctx.fill();}
-  const source=ctx.getImageData(0,0,mask.width,mask.height),out=ctx.createImageData(mask.width,mask.height),width=mask.width,height=mask.height,r=2;
-  for(let y=r;y<height-r;y++)for(let x=r;x<width-r;x++){const i=(y*width+x)*4;if(source.data[i+3]>127&&(source.data[i+3-r*4]<127||source.data[i+3+r*4]<127||source.data[i+3-r*width*4]<127||source.data[i+3+r*width*4]<127)){out.data[i]=out.data[i+1]=out.data[i+2]=255;out.data[i+3]=225;}}
-  ctx.putImageData(out,0,0);this.outline={key,canvas:mask};return mask;
+ zoomBriefing(bitmap,frame){
+  if(!bitmap)return;const ctx=this.ctx;ctx.save();ctx.imageSmoothingEnabled=true;ctx.fillStyle='#000';ctx.fillRect(0,0,this.width,this.height);ctx.translate(this.width/2+frame.briefX,this.height/2+frame.briefY);ctx.scale(frame.briefScale,frame.briefScale);ctx.drawImage(bitmap,-this.width/2,-this.height/2,this.width,this.height);ctx.restore();
  }
- alignment(c){if(c.scene==='thirst'){const hands=this.glassHands(c);this.glassView.drawBody(this.ctx,c,hands);}else this.body(c,.6);const ctx=this.ctx;ctx.save();if(['hold','thirst'].includes(c.scene))ctx.filter='invert(1)';ctx.drawImage(this.makeOutline(c),0,0);ctx.restore();}
+ guide(c){
+  const mobile=c.width<760,scale=mobile?Math.min(c.height*.56/850,c.width*.9/760):Math.min(c.height*.78/850,c.width*.57/760);
+  paintHuman(this.ctx,c.scene,c.guideElapsed,{x:c.width*(mobile?.5:.69),y:c.height*(mobile?.13:.12),scale,color:['hold','thirst'].includes(c.scene)?'#111':'#fff'});
+ }
+ alignment(c){this.cameraAlignment.draw(this.ctx,c);}
  stats(scene,lang,metric,elapsed){const w=sceneWords[lang];
   if(scene==='shelter')return [{value:'≈ '+number((metric?.rate||0)*elapsed,lang,0)+' t CO₂',label:w.elapsedEmissions}];
   if(scene==='thirst')return [{value:number(this.glass.summary().clear*100,lang,0)+'%',label:w.glassCleared}];
@@ -155,9 +152,10 @@ export class Renderer{
  render(input){
   this.fontFamily=input.lang==='ar'?'"Noto Sans Arabic",Arial,sans-serif':FONT;
   const aspect=input.demo?4/3:input.video?.videoWidth/input.video?.videoHeight||16/9,c={...input,aspect,width:this.width,height:this.height,g:this.geometry(aspect),type:typeSystem(this.height,this.width)};
-  this.ctx.fillStyle=['hold','thirst'].includes(c.scene)&&['active','briefing','align','result'].includes(c.state)?c.scene==='thirst'?'#fafaf8':'#fff':'#000';this.ctx.fillRect(0,0,c.width,c.height);
-  if(['idle','error'].includes(c.state)||!c.present&&!c.demo)return;
-  if(c.scene==='thirst'&&['active','briefing','align','result'].includes(c.state)){if(c.state==='active')this.thirst(c);else if(c.state==='align')this.alignment(c);return;}
+  this.ctx.fillStyle=['hold','thirst'].includes(c.scene)&&['active','briefing','guide','result'].includes(c.state)?c.scene==='thirst'?'#fafaf8':'#fff':'#000';this.ctx.fillRect(0,0,c.width,c.height);
+  if(c.state==='guide'){this.guide(c);return;}if(c.state==='align'){this.alignment(c);return;}
+  if(['idle','error','briefing','result'].includes(c.state)||!c.present&&!c.demo)return;
+  if(c.scene==='thirst'&&['active','briefing','guide','result'].includes(c.state)){if(c.state==='active')this.thirst(c);else if(c.state==='align')this.alignment(c);return;}
   this.sampleBody(c);this.placed=this.cells.map(cell=>({...cell,...this.project(cell,c),material:materialKey(cell,c.pose)}));
   if(['loading','scanning'].includes(c.state)){this.body(c,.12);return;}if(c.state==='briefing'||c.state==='result')return;if(c.state==='align'){this.alignment(c);return;}if(c.state==='active')this[c.scene]?.(c);
  }
