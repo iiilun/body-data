@@ -125,5 +125,6 @@ body[data-state="arrival"] #stage{visibility:hidden}
 body[data-state="scene-transition"] .cube-scene{left:50%;top:50%;--cube:clamp(230px,29vw,420px);transition:none;pointer-events:none;will-change:transform}
 .briefing{animation:none;transform-origin:50% 50%}
 body[data-state="scene-transition"] .briefing{pointer-events:none;will-change:transform}
+body[data-state="scene-transition"] .cube-face{transition:none;text-rendering:geometricPrecision}
 body[data-state="result"] .briefing{animation:brief-enter .55s ease both}
 @media(max-width:700px){body[data-state="scene-transition"] .cube-scene{--cube:clamp(210px,50vw,300px)}}

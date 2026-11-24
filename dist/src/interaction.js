@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.4.1';
+import {clamp,lerp} from './math.js?v=5.4.2';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const alpha=(cutoff,dt)=>1-Math.exp(-2*Math.PI*cutoff*dt);
 

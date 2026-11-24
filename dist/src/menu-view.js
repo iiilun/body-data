@@ -1,4 +1,4 @@
-import {CUBE_DWELL_SECONDS as seconds} from './controls.js?v=5.4.1';
+import {CUBE_DWELL_SECONDS as seconds} from './controls.js?v=5.4.2';
 // CSS 3D already projects the cube. Browser hit-testing finds the actual face under the cursor.
 export function faceAtPoint(x,y,doc=document){
  const face=doc.elementFromPoint(x,y)?.closest('.cube-face');

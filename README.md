@@ -1,4 +1,4 @@
-# BODY / DATA · V5.4.1
+# BODY / DATA · V5.4.2
 
 [公開作品](https://iiilun.github.io/body-data/) · [同學測試說明](TESTING.md) · [回報問題](https://github.com/iiilun/body-data/issues/new/choose)
 
@@ -64,3 +64,5 @@ V5.3.1更新：[`research/v531-fullscreen-fog.md`](research/v531-fullscreen-fog.
 V5.4入口與授權時機的驗證：[`research/v54-arrival.md`](research/v54-arrival.md)。`?demo=1`可完整預覽語言入口與選單；帶有`scene=`的明確預覽連結保留直接檢查關卡的捷徑，均不使用相機。
 
 V5.4.1關卡轉場驗證：[`research/v541-scene-transition.md`](research/v541-scene-transition.md)。
+
+V5.4.2：依旋轉後的實際方塊投影計算螢幕四角覆蓋，再拉近與轉黑；放大時文字以2／4／8倍尺寸重繪，減少原尺寸圖層放大造成的模糊。詳見[`research/v542-full-cover.md`](research/v542-full-cover.md)。

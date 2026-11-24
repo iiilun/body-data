@@ -1,14 +1,14 @@
-import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.4.1';
-import {number} from './i18n.js?v=5.4.1';
-import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.4.1';
-import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.4.1';
-import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.4.1';
-import {VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.4.1';
-import {Condensation,glassContact} from './glass-model.js?v=5.4.1';
-import {GlassSurface} from './glass-renderer.js?v=5.4.1';
-import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.4.1';
-import {framePose} from './controls.js?v=5.4.1';
-import {sceneWords} from './scene-copy.js?v=5.4.1';
+import {clamp,lerp,pointToScreen,hash} from './math.js?v=5.4.2';
+import {number} from './i18n.js?v=5.4.2';
+import {colourMosaic,artworkGeometry,typeSystem,MOSAIC_COLUMNS,compressToRoom} from './visual-system.js?v=5.4.2';
+import {RigidCare,PixelMelt} from './rigid-physics.js?v=5.4.2';
+import {SilhouetteType,DataFlow,backgroundType} from './spatial-type.js?v=5.4.2';
+import {VacancyCity,materialKey,offlineTime,careSag,shelterOccluders} from './scene-models.js?v=5.4.2';
+import {Condensation,glassContact} from './glass-model.js?v=5.4.2';
+import {GlassSurface} from './glass-renderer.js?v=5.4.2';
+import {HeatHaze,thermalColor,heatSample} from './heat.js?v=5.4.2';
+import {framePose} from './controls.js?v=5.4.2';
+import {sceneWords} from './scene-copy.js?v=5.4.2';
 const FONT='"Helvetica Neue",Helvetica,Arial,"Noto Sans TC","Noto Sans JP","Noto Sans KR","Noto Sans Arabic",sans-serif';
 export function demoPose(time,scene='space'){
  const p=framePose(scene),sway=Math.sin(time*.24)*.012;
@@ -19,7 +19,7 @@ export class Renderer{
  constructor(canvas){
   this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.sample=document.createElement('canvas');this.sc=this.sample.getContext('2d',{willReadFrequently:true});
   this.cells=[];this.placed=[];this.preview=null;this.lastSample=-1;this.physics=new RigidCare();this.melt=new PixelMelt();this.field=new SilhouetteType();this.flow=new DataFlow();this.haze=new HeatHaze();this.glass=new Condensation();this.glassView=new GlassSurface();this.city=new VacancyCity();this.resize();this.reset('');
-  fetch('./assets/preview-person.json?v=5.4.1').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
+  fetch('./assets/preview-person.json?v=5.4.2').then(r=>r.json()).then(p=>this.preview=p).catch(()=>{});
  }
  resize(){this.width=innerWidth;this.height=innerHeight;const d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.round(this.width*d);this.canvas.height=Math.round(this.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.ctx.imageSmoothingEnabled=false;this.outline=null;this.cardLayouts=new Map();}
  reset(scene){this.scene=scene;this.physics.reset();this.melt.reset();this.field=new SilhouetteType();this.flow=new DataFlow();this.glass.reset();this.city.reset();this.lastSample=-1;this.seeded=false;this.history=[];this.lastHistory=-1;this.outline=null;}
