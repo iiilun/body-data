@@ -1,17 +1,19 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.3.1';
-import {clamp,pointToScreen} from './math.js?v=5.3.1';
-import {DataService} from './data.js?v=5.3.1';
-import {Renderer,demoPose} from './renderer.js?v=5.3.1';
-import {BodyTracker} from './interaction.js?v=5.3.1';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.3.1';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.3.1';
-import {sceneWords} from './scene-copy.js?v=5.3.1';
-import {previewHand} from './glass-model.js?v=5.3.1';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.3.1';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.3.1';
+import {dictionary,languages,locales} from './i18n.js?v=5.4.0';
+import {clamp,pointToScreen} from './math.js?v=5.4.0';
+import {DataService} from './data.js?v=5.4.0';
+import {Renderer,demoPose} from './renderer.js?v=5.4.0';
+import {BodyTracker} from './interaction.js?v=5.4.0';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.4.0';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.4.0';
+import {sceneWords} from './scene-copy.js?v=5.4.0';
+import {previewHand} from './glass-model.js?v=5.4.0';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.4.0';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.4.0';
+import {ArrivalView} from './arrival-view.js?v=5.4.0';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
-const ui={state:'idle',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
+const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
+const arrival=new ArrivalView($('arrival'),{onSelect:language=>{ui.language=language;translate();},titles:()=>FACE_SCENES.map(title)});
 icons.fist='<path d="M17 58V43L8 29c-3-6 2-10 6-4l5 7V15c0-7 8-7 8 0v12V10c0-7 8-7 8 0v17V12c0-7 8-7 8 0v17V19c0-7 8-7 8 0v21c0 10-4 15-9 18z"/>';
 icons.thirst='<path d="M6 21V6h15M43 6h15v15M58 43v15H43M21 58H6V43M20 46V31c0-4 5-4 5 0v5-18c0-4 5-4 5 0v15-20c0-4 5-4 5 0v20-17c0-4 5-4 5 0v18-11c0-4 5-4 5 0v18c0 9-5 15-12 15s-13-5-13-10z"/>';
 icons.offline='<path d="M7 9h50v35H7zM21 57h22M32 44v13M9 61 55 3M16 22c10-9 22-9 32 0M25 30c4-4 10-4 14 0"/>';
@@ -22,23 +24,24 @@ function datum(scene){const m=catalogue.primary(scene,ui.language);if(scene==='s
 function setState(state){
  ui.state=state;if(['idle','scanning'].includes(state))text('announcement','');if(state!=='scanning')document.querySelectorAll('.cube-face').forEach(el=>el.dataset.selected='false');document.body.dataset.state=state;document.body.dataset.scene=ui.scene;
  const menu=['idle','loading','scanning','error'].includes(state),ready=state==='scanning';
- $('entrance').hidden=!['idle','scanning','error'].includes(state);$('cube-scene').hidden=!['idle','loading','scanning'].includes(state);$('cube-guidance').hidden=!['idle','scanning'].includes(state);
+ $('arrival').hidden=state!=='arrival';$('entrance').hidden=state!=='error';$('cube-scene').hidden=!['idle','loading','scanning'].includes(state);$('cube-guidance').hidden=!['idle','scanning'].includes(state);
  $('scan-copy').hidden=state!=='loading';$('error').hidden=state!=='error';$('briefing').hidden=!['briefing','result'].includes(state);$('alignment').hidden=state!=='align';
  $('scene-context').hidden=true;$('coach').hidden=true;$('hand-cursor').hidden=true;
  document.querySelector('.masthead').hidden=!menu;document.querySelector('.footer').hidden=!['idle','scanning','error'].includes(state);
- $('back').hidden=state==='idle';$('end').hidden=!ready;$('restart-camera').hidden=state!=='idle';$('preview').hidden=ready;
+ $('back').hidden=['arrival','idle'].includes(state);$('end').hidden=!ready;$('preview').hidden=state!=='error'||!ui.loaded||!ui.entranceComplete;
  document.body.dataset.theme=['briefing','align','active','result'].includes(state)?ui.scene:'menu';translate();
 }
 function translate(){
  const d=dictionary(ui.language),w=words[ui.language],c=copy[ui.language];document.documentElement.lang=ui.language==='zh'?'zh-Hant':ui.language;document.body.dir=ui.language==='ar'?'rtl':'ltr';
- $('language').value=ui.language;$('language').setAttribute('aria-label',d.language);text('language-label',d.language);$('restart-camera').setAttribute('aria-label',d.retry);text('preview',d.preview);text('demo-badge',d.simulation);$('demo-badge').hidden=!ui.demo;
+ text('preview',d.preview);text('demo-badge',d.simulation);$('demo-badge').hidden=!ui.demo;
  text('end',d.end);text('sources-toggle',d.data);text('sources-title',d.data);text('retry',d.retry);text('scope',sceneWords[ui.language].globalData);text('entrance-title',d.home.join(' '));$('sources-close').setAttribute('aria-label',d.close);$('back').setAttribute('aria-label',d.back);$('fullscreen').setAttribute('aria-label',d.fullscreen);
  $('stage').setAttribute('aria-label',ui.metric?ui.metric.title+' · '+ui.metric.short:'BODY / DATA');document.title='BODY / DATA'+(ui.demo?' · '+d.preview:'');
  const hint=menuCopy[ui.language];$('menu-hint').innerHTML=icon('fist');$('menu-hint').append(document.createTextNode(ui.demo?hint.preview:hint.drag+' · '));if(!ui.demo){$('menu-hint').insertAdjacentHTML('beforeend',icon('palm'));$('menu-hint').append(document.createTextNode(hint.dwell));}
  updateCubeCaption();fitCube();
  if(['briefing','result'].includes(ui.state))renderBriefing();if(ui.state==='align'){text('align-title',w.align);text('align-action',ui.metric.action);}
  if(ui.state==='active')renderContext();
- if(ui.state==='error'){text('error-title',ui.errorType==='camera'?d.cameraError:d.modelError);text('error-message',ui.errorType==='unsupported'?d.notSupported:ui.errorType==='camera'?d.cameraHelp:d.modelHelp);}
+ if(ui.state==='error'&&ui.errorType==='data'){text('error-title','DATA UNAVAILABLE.');text('error-message','Please check your connection and try again.');}
+ else if(ui.state==='error'){text('error-title',ui.errorType==='camera'?d.cameraError:d.modelError);text('error-message',ui.errorType==='unsupported'?d.notSupported:ui.errorType==='camera'?d.cameraHelp:d.modelHelp);}
  if($('sources-dialog').open)renderSources();
 }
 function fitCube(){
@@ -51,11 +54,11 @@ function fitCube(){
 }
 function updateCubeCaption(){const scene=FACE_SCENES[ui.cube.face];text('cube-caption',title(scene));$('cube-scene').setAttribute('aria-label',title(scene)+' · '+menuCopy[ui.language].dwell);}
 function cleanup(){ui.session++;ui.worker?.terminate();ui.worker=null;ui.visionReady=false;ui.busy=false;ui.booting=false;ui.stream?.getTracks().forEach(t=>t.stop());ui.stream=null;$('camera').srcObject=null;ui.tracker=new BodyTracker();ui.pose=[];ui.hands=[];ui.mask=null;}
-function stop(){cleanup();ui.cube=new GestureCube();ui.demo=false;ui.scene='';ui.metric=null;ui.cards=[];renderer.reset('');renderer.cells=[];setState('idle');}
-function menu(){if(!ui.stream&&!ui.demo){stop();return;}ui.scene='';ui.metric=null;ui.cards=[];ui.elapsed=0;ui.cube.reset();ui.exitHold=0;renderer.reset('');setState('scanning');}
+function stop(){cleanup();ui.entranceComplete=false;ui.cube=new GestureCube();ui.demo=false;ui.scene='';ui.metric=null;ui.cards=[];ui.mouse=null;ui.dragging=false;ui.pointerFist=false;renderer.reset('');renderer.cells=[];arrival.reset();setState('arrival');}
+function menu(preserveOrientation=false){if(!ui.stream&&!ui.demo){stop();return;}ui.scene='';ui.metric=null;ui.cards=[];ui.elapsed=0;if(!preserveOrientation)ui.cube.reset();ui.exitHold=0;renderer.reset('');setState('scanning');}
 function error(type,message){console.error('[BODY / DATA]',type,message);cleanup();ui.errorType=type;setState('error');}
 async function startCamera(){
- if(ui.booting)return;cleanup();ui.demo=false;ui.booting=true;ui.modelProgress=0;setState('loading');const session=ui.session;
+ if(!ui.entranceComplete||!ui.loaded||ui.booting)return;cleanup();ui.demo=false;ui.booting=true;ui.modelProgress=0;setState('loading');const session=ui.session;
  if(!navigator.mediaDevices?.getUserMedia||typeof Worker==='undefined'||typeof createImageBitmap==='undefined'){error('unsupported','Browser APIs unavailable');return;}
  try{
   const request=navigator.mediaDevices.getUserMedia({audio:false,video:{width:{ideal:1280},height:{ideal:720},aspectRatio:{ideal:innerWidth/innerHeight},frameRate:{ideal:30,max:30},facingMode:'user'}});
@@ -65,11 +68,11 @@ async function startCamera(){
   stream.getVideoTracks()[0].addEventListener('ended',()=>{if(session===ui.session)error('camera','Camera disconnected')});
  }catch(e){if(session===ui.session)error('camera',e);return;}
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.3.1',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.4.0',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
-   if(r.type==='ready'){clearTimeout(timeout);ui.visionReady=true;ui.booting=false;menu();return;}
+   if(r.type==='ready'){clearTimeout(timeout);ui.visionReady=true;ui.booting=false;menu(true);return;}
    if(r.type==='hands'){ui.tracker.updateHands(r.hands,r.handedness,r.timestamp,r.gestures);return;}
    if(r.type==='result'){ui.busy=false;ui.frameErrors=0;ui.inferenceMs=r.elapsed;ui.tracker.update(r.landmarks,r.hands,r.handedness,r.timestamp,r.handTime,r.gestures);if(r.mask)ui.mask={data:r.mask,width:r.width,height:r.height,origin:r.landmarks?.[11]&&r.landmarks?.[12]?{x:(r.landmarks[11].x+r.landmarks[12].x)/2,y:(r.landmarks[11].y+r.landmarks[12].y)/2}:null,timestamp:r.timestamp};}
    else if(r.type==='skipped'){ui.busy=false;if(r.elapsed)ui.inferenceMs=r.elapsed;}else if(r.type==='frame-error'){ui.busy=false;if(++ui.frameErrors>=5)error('model',r.message)}else if(r.type==='error'){clearTimeout(timeout);error('model',r.message)}
@@ -77,9 +80,9 @@ async function startCamera(){
   ui.worker.onerror=e=>{clearTimeout(timeout);if(session===ui.session)error('model',e.message)};ui.worker.postMessage({type:'init'});
  }catch(e){if(session===ui.session)error('model',e)}
 }
-function preview(){cleanup();ui.demo=true;ui.cube.reset();ui.scene='';ui.metric=null;ui.cards=[];setState('scanning');}
+function preview(){if(!ui.loaded||!ui.entranceComplete)return;cleanup();ui.previewRequested=true;ui.demo=true;ui.cube.reset();ui.scene='';ui.metric=null;ui.cards=[];setState('scanning');}
 function openBriefing(scene){
- if(!ui.loaded)return;ui.scene=scene;ui.metric=datum(scene);if(!ui.metric){error('model','No source data for '+scene);return;}
+ if(!ui.loaded||!ui.entranceComplete)return;ui.scene=scene;ui.metric=datum(scene);if(!ui.metric){error('model','No source data for '+scene);return;}
  ui.cards=catalogue.cards(scene,ui.language);ui.elapsed=0;ui.introElapsed=0;ui.introPage=0;ui.gate.reset();ui.gestureSeen=false;ui.resultReason='time';ui.exitHold=0;renderer.reset(scene);setState('briefing');text('announcement',ui.metric.title);
 }
 function renderBriefing(){
@@ -119,6 +122,11 @@ async function sendFrame(now){
 function coach(){ $('coach').hidden=true; }
 function tick(now){
  const dt=document.hidden?0:Math.min(.055,(now-ui.lastFrame)/1000);ui.lastFrame=now;ui.time+=dt;
+ if(ui.state==='arrival'){
+  const chosen=arrival.tick(dt);
+  if(chosen){ui.entranceComplete=true;ui.cube.reset();$('cube').style.transform='rotateZ(-7deg) rotateX(-18deg) rotateY(-28deg)';ui.previewRequested?preview():startCamera();}
+  requestAnimationFrame(tick);return;
+ }
  if(ui.demo){
   ui.pose=(ui.scene==='thirst'?demoPose(ui.time,'thirst'):renderer.preview?.pose||demoPose(ui.time,ui.scene||'hold')).map(p=>({...p}));
   if(ui.mouse&&['offline','space'].includes(ui.scene)&&ui.state==='active'){
@@ -163,24 +171,35 @@ function tick(now){
  renderer.render({time:ui.time,dt:paused?0:dt,state:ui.state,scene:ui.scene,elapsed:ui.elapsed,progress:clamp(ui.elapsed/45),pose:ui.pose,hands:ui.hands,mask:ui.mask,video:$('camera'),demo:ui.demo,dict:dictionary(ui.language),lang:ui.language,metric:ui.metric,cards:ui.cards,rules:catalogue.rules,present,alignment:ui.alignment});
  requestAnimationFrame(tick);
 }
-$('restart-camera').addEventListener('click',startCamera);$('retry').addEventListener('click',startCamera);$('preview').addEventListener('click',preview);$('end').addEventListener('click',stop);$('back').addEventListener('click',menu);
-$('language').addEventListener('change',e=>{ui.language=e.target.value;if(ui.scene){ui.metric=datum(ui.scene);ui.cards=catalogue.cards(ui.scene,ui.language);}translate();document.fonts.ready.then(()=>{fitCube();fitFacts();renderer.fontsChanged();})});$('sources-toggle').addEventListener('click',()=>{if(ui.loaded){renderSources();$('sources-dialog').showModal()}});$('sources-close').addEventListener('click',()=>$('sources-dialog').close());
+$('retry').addEventListener('click',()=>ui.loaded?startCamera():loadData());$('preview').addEventListener('click',preview);$('end').addEventListener('click',stop);$('back').addEventListener('click',()=>['scanning','loading','error'].includes(ui.state)?stop():menu());
+$('sources-toggle').addEventListener('click',()=>{if(ui.loaded){renderSources();$('sources-dialog').showModal()}});$('sources-close').addEventListener('click',()=>$('sources-dialog').close());
 $('sources-dialog').addEventListener('click',e=>{if(e.target===$('sources-dialog'))$('sources-dialog').close()});
 window.addEventListener('pointermove',e=>{if(ui.demo)ui.mouse={x:e.clientX,y:e.clientY};});
 window.addEventListener('pointerdown',e=>{if(!ui.demo||e.target.closest('button,select,dialog'))return;ui.mouse={x:e.clientX,y:e.clientY};if(ui.state==='scanning')ui.dragging=true;if(ui.state==='active'){ui.pointerFist=true;renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);}});window.addEventListener('pointerup',e=>{if(ui.demo&&ui.state==='active'&&ui.pointerFist){renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);renderer.previewGrip(e.clientX,e.clientY,false,ui.pose);}ui.dragging=false;ui.pointerFist=false;});window.addEventListener('pointercancel',()=>{ui.dragging=false;ui.pointerFist=false;});
-window.addEventListener('resize',()=>{renderer.resize();fitFacts();fitCube()});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
+window.addEventListener('resize',()=>{renderer.resize();fitFacts();fitCube();arrival.resize()});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
 window.addEventListener('keydown',e=>{
  if(e.target.matches('input,select,textarea')||$('sources-dialog').open)return;
  if(e.key==='Escape'&&document.fullscreenElement)return;
- if(e.key==='Escape'&&ui.state!=='idle')ui.state==='scanning'?stop():menu();
+ if(e.key==='Escape'&&!['arrival','idle'].includes(ui.state))['scanning','loading','error'].includes(ui.state)?stop():menu();
  if(e.key.toLowerCase()==='f')toggleFullscreen();
  if(ui.demo&&e.code==='Space'){e.preventDefault();if(ui.state==='briefing')align();else if(ui.state==='align'&&params.get('frame')==='1')activate();}
- if(ui.demo&&/^[1-6]$/.test(e.key)){openBriefing(topics[Number(e.key)-1]);}
+ if(ui.demo&&ui.state!=='arrival'&&/^[1-6]$/.test(e.key)){openBriefing(topics[Number(e.key)-1]);}
 });
 window.__artwork={get state(){return ui.state},get scene(){return ui.scene},get diagnostics(){return {preview:ui.demo,inferenceMs:ui.inferenceMs,hands:ui.hands.length,modelReady:ui.visionReady,catches:renderer.physics.catches,face:ui.cube.face,cards:ui.cards.length}}};
 document.querySelectorAll('.cube-face').forEach((el,i)=>el.dataset.face=String(i));
 async function toggleFullscreen(){try{document.fullscreenElement?await document.exitFullscreen():await document.documentElement.requestFullscreen();}catch(error){text('announcement',error.message);}}
 $('fullscreen').addEventListener('click',toggleFullscreen);document.addEventListener('fullscreenchange',()=>$('fullscreen').setAttribute('aria-pressed',String(!!document.fullscreenElement)));
-setState('idle');requestAnimationFrame(tick);if(params.get('demo')!=='1')startCamera();Promise.all([data.load(),catalogue.load()]).then(()=>{ui.loaded=true;translate();if(params.get('demo')==='1'){preview();if(topics.includes(params.get('scene')))openBriefing(params.get('scene'))}}).catch(e=>error('model',e));
+async function loadData(){
+ setState('arrival');
+ try{
+  await Promise.all([data.load(),catalogue.load()]);ui.loaded=true;translate();
+  const groups=topics.map(scene=>catalogue.cards(scene,'en')),entranceCards=[];
+  for(let i=0;i<Math.max(...groups.map(group=>group.length));i++)for(const group of groups)if(group[i])entranceCards.push(group[i]);
+  arrival.load(entranceCards);
+  // Explicit scene links are a camera-free inspection shortcut; the public entrance always asks for a language.
+  if(params.get('demo')==='1'&&topics.includes(params.get('scene'))){ui.entranceComplete=true;preview();openBriefing(params.get('scene'));}
+ }catch(e){error('data',e);}
+}
+setState('arrival');requestAnimationFrame(tick);loadData();
 
-document.fonts.ready.then(()=>{fitCube();fitFacts();renderer.fontsChanged()});
+document.fonts.ready.then(()=>{fitCube();fitFacts();renderer.fontsChanged();arrival.resize()});

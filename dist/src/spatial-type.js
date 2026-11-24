@@ -1,4 +1,4 @@
-import {clamp} from './math.js?v=5.3.1';
+import {clamp} from './math.js?v=5.4.0';
 
 export function factText(card){return `${String(card.value).replace(/\s/g,'\u00a0')} ${card.fieldLabel||card.label} · ${card.scope} ${card.yearText||card.year}`;}
 export const BACKGROUND_TRACKING=-.055;

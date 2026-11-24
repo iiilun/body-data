@@ -7,38 +7,29 @@
   <meta name="description" content="An interactive study of heat, care, and the space a body needs.">
   <title>BODY / DATA</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23111' d='M0 0h64v64H0z'/%3E%3Ctext x='8' y='49' fill='white' font-family='Helvetica,Arial' font-size='49' font-weight='900'%3EB%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./style.css?v=5.3.1">
+  <link rel="stylesheet" href="./style.css?v=5.4.0">
 </head>
-<body data-state="idle" data-theme="menu">
+<body data-state="arrival" data-theme="menu">
   <canvas id="stage" aria-label="Interactive artwork"></canvas>
   <video id="camera" autoplay playsinline muted aria-hidden="true"></video>
-  <header class="masthead">
+  <header class="masthead" hidden>
     <div class="header-right">
       <span id="demo-badge" class="demo-badge" hidden></span>
-      <div class="language-control">
-        <label for="language" class="sr-only" id="language-label">Language</label>
-        <select id="language" aria-label="Language">
-          <option value="en">ENGLISH</option>
-          <option value="es">ESPAÑOL</option>
-          <option value="fr">FRANÇAIS</option>
-          <option value="zh">繁體中文</option>
-          <option value="ja">日本語</option>
-          <option value="ko">한국어</option>
-          <option value="ar">العربية</option>
-        </select>
-        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg>
-      </div>
     </div>
   </header>
   <main>
-    <section id="entrance" class="entrance">
+    <section id="arrival" class="arrival" aria-labelledby="arrival-title" data-phase="data">
+      <h1 id="arrival-title" class="sr-only">Choose your language</h1>
+      <canvas id="arrival-data" aria-hidden="true"></canvas>
+      <div class="language-constellation"></div>
+    </section>
+    <section id="entrance" class="entrance" hidden>
       <h1 id="entrance-title">HOW MUCH<br>CAN YOU<br>TAKE<span class="period">.</span></h1>
       <div class="entrance-bottom">
-        <button id="restart-camera" class="icon-button" aria-label="Restart camera"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h12v12H3zM15 10l6-3v10l-6-3"/></svg></button>
         <button id="preview" class="text-button">PREVIEW</button>
       </div>
     </section>
-    <div id="cube-scene" class="cube-scene" role="img" aria-label="Six-sided gesture selector">
+    <div id="cube-scene" class="cube-scene" role="img" aria-label="Six-sided gesture selector" hidden>
       <div id="cube" class="cube">
         <div class="cube-face front"><span>SHELTER<br>SHELTER<br>SHELTER<br>SHELTER</span></div>
         <div class="cube-face back"><span>SPACE<br>SPACE<br>SPACE<br>SPACE</span></div>
@@ -48,7 +39,7 @@
         <div class="cube-face bottom"><span>SHELTER<br>SHELTER<br>SHELTER<br>SHELTER</span></div>
       </div>
     </div>
-    <div id="cube-guidance"><p id="cube-caption"></p><p id="menu-hint" class="menu-hint"></p></div>
+    <div id="cube-guidance" hidden><p id="cube-caption"></p><p id="menu-hint" class="menu-hint"></p></div>
     <div id="scan-copy" class="scan-copy" hidden>
       <h2 id="scan-title">A BODY<br>IN VIEW.</h2>
       <div class="scan-progress"><div id="scan-progress-fill"></div></div>
@@ -72,7 +63,7 @@
   <div id="coach" class="coach" hidden><span id="coach-icon"></span><p id="coach-text"></p></div>
   <button id="back" class="back-button" hidden aria-label="Back"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M30 12H3m9-9-9 9 9 9"/></svg></button>
       <button id="fullscreen" class="icon-button" aria-label="Fullscreen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4"/></svg></button>
-  <footer class="footer">
+  <footer class="footer" hidden>
     <div class="footer-left" hidden><span id="scope">WORLD</span><span id="status">THREE ENCOUNTERS</span></div>
     <div class="footer-right">
       <button id="sources-toggle" class="text-button" aria-haspopup="dialog">DATA</button>
@@ -87,6 +78,6 @@
   </dialog>
   <div id="announcement" class="sr-only" aria-live="polite"></div>
   <script src="./vendor/matter.min.js"></script>
-  <script type="module" src="./src/app.js?v=5.3.1"></script>
+  <script type="module" src="./src/app.js?v=5.4.0"></script>
 </body>
 </html>
