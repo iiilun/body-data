@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.4.0';
+import {clamp,lerp} from './math.js?v=5.4.1';
 export const MOSAIC_COLUMNS=32;
 export const MOSAIC_ROWS=24;
 

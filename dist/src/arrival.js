@@ -1,4 +1,4 @@
-import {clamp} from './math.js?v=5.4.0';
+import {clamp} from './math.js?v=5.4.1';
 
 export const LANGUAGE_CUBES=[
  {id:'en',name:'ENGLISH'}, {id:'es',name:'ESPAÑOL'}, {id:'fr',name:'FRANÇAIS'},

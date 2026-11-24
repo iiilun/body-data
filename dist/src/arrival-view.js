@@ -1,6 +1,6 @@
-import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.4.0';
-import {faceTypography} from './menu-view.js?v=5.4.0';
-import {DataFlow} from './spatial-type.js?v=5.4.0';
+import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.4.1';
+import {faceTypography} from './menu-view.js?v=5.4.1';
+import {DataFlow} from './spatial-type.js?v=5.4.1';
 
 const sides=['front','back','right','left','top','bottom'];
 const fontStack='"Helvetica Neue",Helvetica,Arial,sans-serif';

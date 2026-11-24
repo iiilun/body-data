@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.4.0';
+import {clamp,lerp} from './math.js?v=5.4.1';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;
@@ -7,7 +7,7 @@ export function facingFace(pitch,yaw){
  const depth=normals.map(([a,b,c])=>Math.sin(x)*b+Math.cos(x)*(-Math.sin(y)*a+Math.cos(y)*c));
  return depth.indexOf(Math.max(...depth));
 }
-export const CUBE_DWELL_SECONDS=4;
+export const CUBE_DWELL_SECONDS=3;
 // A fist drags the orientation around a fixed centre; a resting open palm commits.
 export class GestureCube{
  constructor(){this.reset();}

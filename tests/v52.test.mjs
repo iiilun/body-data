@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GestureCube,FACE_SCENES} from '../dist/src/controls.js';
+import {GestureCube,FACE_SCENES,CUBE_DWELL_SECONDS} from '../dist/src/controls.js';
 import {faceTypography,menuCopy} from '../dist/src/menu-view.js';
 import {DataFlow,SilhouetteType,backgroundType} from '../dist/src/spatial-type.js';
 import {thermalRgb,thermalColor,heatSample} from '../dist/src/heat.js';
@@ -28,16 +28,16 @@ test('rotating to viewport edges never selects a face and auto rotation resumes 
  const cube=new GestureCube();cube.update(.02,[fist],2);const s=steps(cube,{...fist,x:1,y:0},2,400);assert.equal(s.selected.length,0);assert.equal(s.progress,0);assert.ok(cube.yaw>100&&cube.pitch>80);
  const yaw=cube.yaw,pitch=cube.pitch;cube.update(1/60,[]);assert.ok(cube.yaw>yaw&&cube.yaw-yaw<.1);assert.ok(Math.abs(cube.pitch-pitch)<.2);
 });
-test('an open palm highlights the actual face immediately, freezes rotation, and commits once after four seconds',()=>{
- const cube=new GestureCube(),yaw=cube.yaw;const first=cube.update(1/60,[palm],4);assert.equal(first.highlight,true);assert.equal(first.face,4);
- let s=steps(cube,palm,4,239);assert.equal(s.selected.length,0);assert.ok(s.progress>.99&&s.progress<1);assert.equal(cube.yaw,yaw);
+test('an open palm highlights the actual face immediately, freezes rotation, and commits once after three seconds',()=>{
+ assert.equal(CUBE_DWELL_SECONDS,3);const cube=new GestureCube(),yaw=cube.yaw;const first=cube.update(1/60,[palm],4);assert.equal(first.highlight,true);assert.equal(first.face,4);
+ let s=steps(cube,palm,4,179);assert.equal(s.selected.length,0);assert.ok(s.progress>.99&&s.progress<1);assert.equal(cube.yaw,yaw);
  s=steps(cube,palm,4,120);assert.deepEqual(s.selected,[FACE_SCENES[4]]);assert.equal(s.progress,1);
 });
 test('switching faces, leaving the face, a fist, and tracking loss reset the full dwell',()=>{
  for(const interruption of ['face','off','fist','lost','hand']){
-  const cube=new GestureCube();steps(cube,palm,0,180);
+  const cube=new GestureCube();steps(cube,palm,0,120);
   const s=cube.update(1/60,interruption==='lost'?[]:[interruption==='fist'?fist:interruption==='hand'?{...palm,id:'other'}:palm],interruption==='face'?2:interruption==='off'?-1:0);
-  assert.equal(s.progress,0,interruption);assert.equal(s.selected,null);assert.equal(steps(cube,palm,0,180).selected.length,0);
+  assert.equal(s.progress,0,interruption);assert.equal(s.selected,null);assert.equal(steps(cube,palm,0,120).selected.length,0);
  }
 });
 test('large hand motion restarts dwell while small tracking jitter preserves it',()=>{
