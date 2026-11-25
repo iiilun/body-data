@@ -7,7 +7,7 @@ test('entry reveals languages after the data wall and never advances without a s
  assert.equal(sequence.advance(1.35),null);assert.equal(sequence.phase,'opening');assert.equal(sequence.select('zh'),false);
  sequence.advance(1.9);assert.equal(sequence.phase,'languages');assert.equal(sequence.advance(600),null);assert.equal(sequence.phase,'languages');
 });
-test('camera handoff is delivered only after the selected language has finished merging, once',()=>{
+test('menu handoff is delivered only after the selected language has finished merging, once',()=>{
  for(const {id}of LANGUAGE_CUBES){
   const sequence=new ArrivalSequence();sequence.advance(4);assert.equal(sequence.select(id),true);assert.equal(sequence.select('en'),false);
   assert.equal(sequence.advance(2.64),null);assert.equal(sequence.phase,'merging');assert.equal(sequence.advance(.011),id);
@@ -22,7 +22,7 @@ test('invalid languages and inactive frame deltas cannot advance a handoff',()=>
  const sequence=new ArrivalSequence();sequence.advance(4);assert.equal(sequence.select('xx'),false);sequence.select('fr');
  for(const dt of [0,-1,NaN,Infinity])assert.equal(sequence.advance(dt),null);assert.equal(sequence.elapsed,0);
 });
-test('reduced motion shortens the effect while preserving consent order and a deliberate choice',()=>{
+test('reduced motion shortens the effect while preserving a deliberate language choice',()=>{
  const sequence=new ArrivalSequence({reducedMotion:true});sequence.advance(.38);assert.equal(sequence.phase,'languages');
  assert.equal(sequence.advance(100),null);sequence.select('ar');assert.equal(sequence.advance(.44),null);assert.equal(sequence.advance(.02),'ar');
 });

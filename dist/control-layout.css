@@ -1,0 +1,13 @@
+.language-island[data-gesture-hover="true"] .language-face{background:#fff;color:#000;outline-color:#fff}
+.camera-startup{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:14px;align-items:center;color:#fff;pointer-events:none}
+.camera-startup>svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.2}
+.camera-startup>div{width:100px;height:1px;background:#454545;overflow:hidden}
+.camera-startup i{display:block;width:5%;height:100%;background:#fff;transition:width .2s}
+.hand-cursor{z-index:120}
+.motion-guide #guide-count{top:96px}
+.fullscreen-hint{position:fixed;right:22px;bottom:96px;z-index:90;font-size:13px;line-height:1.2;color:#fff;mix-blend-mode:difference;pointer-events:none}
+.sources-dialog{overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#999 #222}
+#sources-close.gesture-cube-button{position:fixed;left:12px;right:auto;top:8px;--gesture-edge:40px;width:80px;height:80px}
+.sources-dialog[data-hand-scroll="up"]{box-shadow:inset 0 22px 24px -24px #fff8}
+.sources-dialog[data-hand-scroll="down"]{box-shadow:inset 0 -22px 24px -24px #fff8}
+@media(max-width:700px){.camera-startup{bottom:22px}.fullscreen-hint{right:14px;bottom:82px}#sources-close.gesture-cube-button{left:4px;top:3px;--gesture-edge:34px;width:70px;height:70px}}

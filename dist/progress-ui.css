@@ -1,0 +1,11 @@
+/* One visible timing line for reading, movement, alignment and results. */
+body{--page-progress-fill:#fff;--page-progress-track:#4c4c4c}
+body[data-theme="hold"],body[data-theme="thirst"]{--page-progress-fill:#111;--page-progress-track:#c8c8c3}
+body[data-state="align"]{--page-progress-fill:#fff;--page-progress-track:rgba(255,255,255,.28)}
+#brief-progress,.guide-progress,.alignment-progress{height:2px;background:var(--page-progress-track);overflow:hidden;opacity:1;direction:ltr;mix-blend-mode:normal}
+#brief-progress>i,.guide-progress>i,.alignment-progress>i{display:block;height:100%;width:0;background:var(--page-progress-fill);opacity:1;transition:none}
+body[data-state="briefing"] .brief-bottom,body[data-state="scene-transition"] .brief-bottom,body[data-state="result"] .brief-bottom{height:2px;min-height:2px;flex:0 0 2px;padding:0;border:0;margin-top:auto}
+body[data-state="result"] .brief-instruction{display:none}
+#brief-progress{top:0;right:48px}
+.guide-progress,.alignment-progress{position:absolute;left:5%;right:calc(5% + 48px);bottom:35px}
+@media(max-width:759px){.guide-progress,.alignment-progress{bottom:28px}}

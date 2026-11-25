@@ -1,6 +1,6 @@
-import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.6.4';
-import {faceTypography} from './menu-view.js?v=5.6.4';
-import {DataFlow} from './spatial-type.js?v=5.6.4';
+import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.7.0';
+import {faceTypography} from './menu-view.js?v=5.7.0';
+import {DataFlow} from './spatial-type.js?v=5.7.0';
 
 const sides=['front','back','right','left','top','bottom'];
 const fontStack='"Helvetica Neue",Helvetica,Arial,sans-serif';
@@ -9,7 +9,7 @@ export class ArrivalView{
   this.root=root;this.canvas=root.querySelector('canvas');this.ctx=this.canvas.getContext('2d');
   this.sequence=new ArrivalSequence({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
   this.flow=new DataFlow();this.layer=document.createElement('canvas');this.layerCtx=this.layer.getContext('2d');
-  this.onSelect=onSelect;this.titles=titles;this.time=0;this.loaded=false;this.frames=[];this.nodes=[];
+  this.onSelect=onSelect;this.titles=titles;this.time=0;this.loaded=false;this.inputReady=false;this.frames=[];this.nodes=[];
   const constellation=root.querySelector('.language-constellation');
   for(const [i,language]of LANGUAGE_CUBES.entries()){
    const button=document.createElement('button');button.className='language-island';button.type='button';button.lang=language.id==='zh'?'zh-Hant':language.id;
@@ -28,7 +28,7 @@ export class ArrivalView{
   this.canvas.width=Math.round(this.width*this.ratio);this.canvas.height=Math.round(this.height*this.ratio);
   this.layer.width=this.canvas.width;this.layer.height=this.canvas.height;this.layout=languageLayout(this.width,this.height);
   this.flow.key='';this.flow.atlases.clear();
-  for(const [i,node]of this.nodes.entries())this.fit(node,[node.language.name],this.layout[i].size);
+  for(const [i,node]of this.nodes.entries()){node.frozen=null;this.fit(node,[node.language.name],this.layout[i].size);}
   if(this.sequence.phase==='merging'){
    // Continue the same transaction using positions in the resized coordinate space.
    const sx=this.width/(this.previousWidth||this.width),sy=this.height/(this.previousHeight||this.height);
@@ -37,10 +37,14 @@ export class ArrivalView{
   this.previousWidth=this.width;this.previousHeight=this.height;
  }
  load(cards){this.cards=cards;this.loaded=true;this.sequence.reset();}
+ setInputReady(ready){this.inputReady=!!ready;this.root.dataset.inputReady=String(this.inputReady);}
+ getTargets(){if(!this.loaded||!this.inputReady||this.sequence.phase!=='languages')return [];return this.nodes.map(node=>({id:'language:'+node.language.id,...bounds(node.button)}));}
+ setHover(targetId){for(const node of this.nodes){const active=targetId==='language:'+node.language.id;node.button.dataset.gestureHover=String(active);if(!active)node.frozen=null;else node.frozen??={...this.frames[this.nodes.indexOf(node)]};}}
+ chooseLanguage(language){return this.choose(this.nodes.findIndex(node=>node.language.id===language));}
  reset({languagesOnly=true}={}){
   this.sequence.reset({languagesOnly});this.time=0;this.origins=null;this.changed=false;this.root.dataset.phase=this.sequence.phase;
   for(const [i,node]of this.nodes.entries()){
-   node.button.dataset.chosen='false';node.button.tabIndex=languagesOnly?0:-1;
+   node.button.dataset.chosen='false';node.button.tabIndex=languagesOnly?0:-1;node.frozen=null;node.button.dataset.gestureHover='false';
    this.fit(node,[node.language.name],this.layout[i].size);node.button.lang=node.language.id==='zh'?'zh-Hant':node.language.id;
   }
  }
@@ -55,10 +59,10 @@ export class ArrivalView{
  }
  fitSelected(){if(this.selectedIndex!=null)this.fit(this.nodes[this.selectedIndex],this.titles(),this.layout[this.selectedIndex].size);}
  choose(index){
-  const node=this.nodes[index];if(!this.loaded||!this.sequence.select(node.language.id))return;
+  const node=this.nodes[index];if(!this.loaded||!this.inputReady||!node||!this.sequence.select(node.language.id))return false;
   this.selectedIndex=index;this.origins=this.frames.map(p=>({...p}));this.changed=false;
   for(const n of this.nodes){n.button.disabled=true;n.button.tabIndex=-1;n.button.dataset.chosen=String(n===node);}
-  node.button.blur();this.onSelect(node.language.id);
+  node.button.blur();this.onSelect(node.language.id);return true;
  }
  paintData(){
   const ctx=this.ctx,w=this.width,h=this.height,sequence=this.sequence;
@@ -86,16 +90,17 @@ export class ArrivalView{
   const reveal=phase==='data'?0:phase==='opening'?ease((p-.26)/.74):1;
   if(phase==='merging'&&p>.58&&!this.changed){this.changed=true;this.fitSelected();this.nodes[this.selectedIndex].button.lang=document.documentElement.lang;}
   this.frames=this.layout.map((base,i)=>{
-   const node=this.nodes[i],floating=floatingCube(base,i,this.time,this.sequence.reducedMotion);
+   const node=this.nodes[i],floating=node.frozen||floatingCube(base,i,this.time,this.sequence.reducedMotion);
    const frame=phase==='merging'||phase==='ready'?mergeCube(this.origins[i],this.origins[this.selectedIndex],i,this.selectedIndex,phase==='ready'?1:p,this.width,this.height):{...floating,opacity:reveal};
    const scale=frame.size/base.size;
    node.button.style.left=frame.x+'px';node.button.style.top=frame.y+'px';node.button.style.width=base.size*1.65+'px';node.button.style.height=base.size*1.75+'px';node.button.style.setProperty('--caption-offset',base.size*.92+'px');
    node.scene.style.setProperty('--language-size',base.size+'px');node.scene.style.perspective=1200/scale+'px';node.scene.style.transform=`translate(-50%,-50%) scale(${scale})`;
    node.cube.style.transform=`rotateZ(${frame.roll}deg) rotateX(${frame.pitch}deg) rotateY(${frame.yaw}deg)`;
    node.button.style.opacity=frame.opacity;node.button.style.zIndex=phase==='merging'&&i===this.selectedIndex?'3':'1';
-   node.label.style.opacity=phase==='merging'?1-ease(p/.24):1;node.button.disabled=phase!=='languages';node.button.tabIndex=phase==='languages'?0:-1;
+   node.label.style.opacity=phase==='merging'?1-ease(p/.24):1;node.button.disabled=phase!=='languages'||!this.inputReady;node.button.tabIndex=phase==='languages'&&this.inputReady?0:-1;
    return frame;
   });
   this.paintData();return completed;
  }
 }
+function bounds(el){const r=el.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom};}

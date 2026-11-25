@@ -1,5 +1,5 @@
-import {clamp,lerp,hash} from './math.js?v=5.6.4';
-import {shadeAt} from './scene-models.js?v=5.6.4';
+import {clamp,lerp,hash} from './math.js?v=5.7.0';
+import {shadeAt} from './scene-models.js?v=5.7.0';
 export class RigidCare{
  constructor(Matter=globalThis.Matter){this.M=Matter;this.reset();}
  reset(){
