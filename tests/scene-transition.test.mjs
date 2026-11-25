@@ -11,7 +11,7 @@ test('hinged side walls unfold in a staggered sequence while the inside page rem
  const t=new UnfoldTransition();t.start('thirst',viewport);const f=t.update(t.durations.lid+t.durations.spread*.3);assert.equal(f.phase,'spread');assert.ok(Math.abs(f.lid)<1e-8);assert.ok(Math.abs(f.left)<Math.abs(f.right));assert.ok(Math.abs(f.right)<Math.abs(f.bottom));assert.equal(f.top,-90);assert.equal(f.depth,0);
  const flat=t.update(t.durations.spread*.7+.001);for(const side of ['left','right','top','bottom','lid'])assert.ok(Math.abs(flat[side])<1e-8);assert.equal(flat.phase,'settle');
 });
-test('only the interior page advances after the complete net has been exposed',()=>{
+test('the connected net advances with all folds flat after it has been exposed',()=>{
  const t=new UnfoldTransition();t.start('space',viewport);const d=t.durations;t.update(d.lid+d.spread+d.settle);const flight=t.update(d.advance*.5);assert.equal(flight.phase,'advance');assert.ok(flight.depth>0);for(const side of ['left','right','top','bottom','lid'])assert.ok(Math.abs(flight[side])<1e-8);assert.equal(flight.done,false);
 });
 test('contained page preview keeps its aspect and fills every viewport exactly at the final dolly depth',()=>{

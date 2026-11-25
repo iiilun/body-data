@@ -1,5 +1,4 @@
-// Render the existing reading layout once. Zooming a fixed viewport avoids allocating
-// enormous DOM/SVG layers while coming out of a small piece of black printing.
+// Print the actual reading layout on the inside panel at viewport resolution.
 export function captureBriefing(root,width,height){
  const canvas=document.createElement('canvas'),ratio=Math.min(devicePixelRatio||1,2);canvas.width=Math.ceil(width*ratio);canvas.height=Math.ceil(height*ratio);
  const ctx=canvas.getContext('2d',{alpha:false});ctx.scale(ratio,ratio);ctx.fillStyle=getComputedStyle(root).backgroundColor;ctx.fillRect(0,0,width,height);

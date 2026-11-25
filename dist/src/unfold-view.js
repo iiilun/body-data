@@ -1,4 +1,4 @@
-import {previewSize} from './unfold-transition.js?v=5.6.0';
+import {previewSize} from './unfold-transition.js?v=5.6.1';
 
 export class UnfoldView{
  constructor(root){this.root=root;this.rig=root.querySelector('.unfold-rig');this.net=root.querySelector('.unfold-net');this.hinges={};}
@@ -30,7 +30,7 @@ export class UnfoldView{
  setBitmap(bitmap){if(this.canvas){this.canvas.width=bitmap.width;this.canvas.height=bitmap.height;this.canvas.getContext('2d').drawImage(bitmap,0,0);}}
  draw(frame){
   const s=this.size;this.root.dataset.phase=frame.phase;this.rig.style.transform=`translateY(${frame.y}px) scale(${frame.scale}) rotateZ(${frame.roll}deg) rotateX(${frame.pitch}deg) rotateY(${frame.yaw}deg)`;
-  this.net.style.transform=`translateZ(${-s/2}px)`;this.core.style.transform=`translateZ(${frame.depth}px)`;this.core.style.setProperty('--edge',String(frame.edge));
+  this.net.style.transform=`translateZ(${frame.depth-s/2}px)`;this.core.style.setProperty('--edge',String(frame.edge));
   this.hinges.left.style.transform=`translateX(${-s/2}px) rotateY(${frame.left}deg)`;
   this.hinges.right.style.transform=`translateX(${s/2}px) rotateY(${frame.right}deg)`;
   this.hinges.top.style.transform=`translateY(${-s/2}px) rotateX(${frame.top}deg)`;

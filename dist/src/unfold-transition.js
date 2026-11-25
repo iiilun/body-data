@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.6.0';
+import {clamp,lerp} from './math.js?v=5.6.1';
 const ease=t=>{t=clamp(t);return t*t*t*(t*(t*6-15)+10);};
 const wrap=angle=>((angle+180)%360+360)%360-180;
 const near=(from,to)=>to+360*Math.round((from-to)/360);
@@ -26,7 +26,7 @@ export class UnfoldTransition{
    pitch:lerp(lerp(this.origin.pitch,stagePitch,open),near(stagePitch,0),flight),yaw:lerp(lerp(this.origin.yaw,stageYaw,open),near(stageYaw,0),flight),roll:lerp(lerp(this.origin.roll,stageRoll,open),near(stageRoll,0),flight),
    scale,y:this.size*.5*scale*unfolding*(1-flight),depth:0,edge:1-flight,progress,done};
   if(progress>0){
-   // A perspective dolly, ending with the contained reading image exactly full-screen.
+   // Dolly the connected net as one piece until its central reading image fills the screen.
    const start=scale*1200/(1200+this.size/2),target=Math.max(this.width,this.height)/this.size,magnification=Math.exp(lerp(Math.log(start),Math.log(target),flight));
    frame.depth=1200+this.size/2-1200*scale/magnification;
   }

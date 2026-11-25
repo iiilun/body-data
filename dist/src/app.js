@@ -1,23 +1,23 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.6.0';
-import {clamp,pointToScreen} from './math.js?v=5.6.0';
-import {DataService} from './data.js?v=5.6.0';
-import {Renderer,demoPose} from './renderer.js?v=5.6.0';
-import {BodyTracker} from './interaction.js?v=5.6.0';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.6.0';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.6.0';
-import {sceneWords} from './scene-copy.js?v=5.6.0';
-import {previewHand} from './glass-model.js?v=5.6.0';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.6.0';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.6.0';
-import {ArrivalView} from './arrival-view.js?v=5.6.0';
-import {UnfoldTransition} from './unfold-transition.js?v=5.6.0';
-import {UnfoldView} from './unfold-view.js?v=5.6.0';
-import {menuCubeSize} from './arrival.js?v=5.6.0';
-import {typeMetrics,vectorType} from './vector-type.js?v=5.6.0';
-import {GUIDE_SECONDS} from './human-guide.js?v=5.6.0';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.6.0';
-import {freshPersonMask} from './camera-alignment.js?v=5.6.0';
-import {captureBriefing} from './briefing-snapshot.js?v=5.6.0';
+import {dictionary,languages,locales} from './i18n.js?v=5.6.1';
+import {clamp,pointToScreen} from './math.js?v=5.6.1';
+import {DataService} from './data.js?v=5.6.1';
+import {Renderer,demoPose} from './renderer.js?v=5.6.1';
+import {BodyTracker} from './interaction.js?v=5.6.1';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.6.1';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.6.1';
+import {sceneWords} from './scene-copy.js?v=5.6.1';
+import {previewHand} from './glass-model.js?v=5.6.1';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.6.1';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.6.1';
+import {ArrivalView} from './arrival-view.js?v=5.6.1';
+import {UnfoldTransition} from './unfold-transition.js?v=5.6.1';
+import {UnfoldView} from './unfold-view.js?v=5.6.1';
+import {menuCubeSize} from './arrival.js?v=5.6.1';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.6.1';
+import {GUIDE_SECONDS} from './human-guide.js?v=5.6.1';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.6.1';
+import {freshPersonMask} from './camera-alignment.js?v=5.6.1';
+import {captureBriefing} from './briefing-snapshot.js?v=5.6.1';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
@@ -80,7 +80,7 @@ async function startCamera(){
   stream.getVideoTracks()[0].addEventListener('ended',()=>{if(session===ui.session)error('camera','Camera disconnected')});
  }catch(e){if(session===ui.session)error('camera',e);return;}
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.6.0',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.6.1',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -120,7 +120,7 @@ function renderBriefing(){
  text('brief-unit','');$('brief-gesture').innerHTML=icon(ui.scene==='space'?'spread':ui.scene);
  text('brief-action',result?(ui.scene==='thirst'?sceneWords[ui.language].waterResult:m.note):m.action);text('brief-note',result?'':m.note);text('brief-source',result&&ui.scene==='thirst'?'WHO / UNICEF JMP · 2024':[...new Set(shown.map(c=>c.source))].join(' / '));requestAnimationFrame(fitFacts);
 }
-function fitFacts(){const values=[...document.querySelectorAll('.fact-value')];if(!values.length)return;const ctx=document.createElement('canvas').getContext('2d');const base=Math.min(innerHeight*(values.length>2?.10:.15),innerWidth*.105,145);let size=base;ctx.font=`300 ${base}px ${ui.language==='ar'?'"Noto Sans Arabic",Arial,sans-serif':'"Helvetica Neue",Helvetica,Arial,sans-serif'}`;for(const el of values)if(el.parentElement.clientWidth)size=Math.min(size,base*el.parentElement.clientWidth*.97/Math.max(1,ctx.measureText(el.textContent).width));$('brief-facts').style.setProperty('--fact-size',Math.max(36,size)+'px');
+function fitFacts(){if($('briefing').hidden)return;const values=[...document.querySelectorAll('.fact-value')];if(!values.length)return;const ctx=document.createElement('canvas').getContext('2d');const base=Math.min(innerHeight*(values.length>2?.10:.15),innerWidth*.105,145);let size=base;ctx.font=`300 ${base}px ${ui.language==='ar'?'"Noto Sans Arabic",Arial,sans-serif':'"Helvetica Neue",Helvetica,Arial,sans-serif'}`;for(const el of values)if(el.parentElement.clientWidth)size=Math.min(size,base*el.parentElement.clientWidth*.97/Math.max(1,ctx.measureText(el.textContent).width));$('brief-facts').style.setProperty('--fact-size',Math.max(36,size)+'px');
  for(const el of values){const value=el.dataset.value||el.textContent;el.dataset.value=value;const px=parseFloat(getComputedStyle(el).fontSize),width=el.clientWidth/px*512,metrics=typeMetrics(value,{size:512,family:ui.language==='ar'?'"Noto Sans Arabic",Arial,sans-serif':'"Helvetica Neue",Helvetica,Arial,sans-serif',weight:300,tracking:-.045,row:1});const svg=vectorType(metrics,width,512);svg.removeAttribute('aria-hidden');svg.setAttribute('role','img');svg.setAttribute('aria-label',value);el.replaceChildren(svg);}
 }
 function guide(){ui.guideElapsed=0;setState('guide');}

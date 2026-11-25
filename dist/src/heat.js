@@ -1,5 +1,5 @@
-import {clamp,lerp} from './math.js?v=5.6.0';
-import {shadeAt} from './scene-models.js?v=5.6.0';
+import {clamp,lerp} from './math.js?v=5.6.1';
+import {shadeAt} from './scene-models.js?v=5.6.1';
 
 const palette=[[8,10,42],[35,28,132],[109,17,167],[199,23,106],[245,66,33],[255,157,31],[255,231,114],[255,253,226]];
 // RGB luminance drives an artistic false-colour palette, never measured temperature.
