@@ -1,25 +1,25 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.7.0';
-import {clamp,pointToScreen} from './math.js?v=5.7.0';
-import {DataService} from './data.js?v=5.7.0';
-import {Renderer,demoPose} from './renderer.js?v=5.7.0';
-import {BodyTracker} from './interaction.js?v=5.7.0';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.7.0';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.7.0';
-import {sceneWords} from './scene-copy.js?v=5.7.0';
-import {previewHand} from './glass-model.js?v=5.7.0';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.7.0';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.7.0';
-import {ArrivalView} from './arrival-view.js?v=5.7.0';
-import {UnfoldTransition} from './unfold-transition.js?v=5.7.0';
-import {UnfoldView} from './unfold-view.js?v=5.7.0';
-import {menuCubeSize} from './arrival.js?v=5.7.0';
-import {typeMetrics,vectorType} from './vector-type.js?v=5.7.0';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.7.0';
-import {freshPersonMask} from './camera-alignment.js?v=5.7.0';
-import {captureBriefing} from './briefing-snapshot.js?v=5.7.0';
-import {DwellTargets} from './gesture-targets.js?v=5.7.0';
-import {GestureToolbar} from './gesture-toolbar.js?v=5.7.0';
-import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.7.0';
+import {dictionary,languages,locales} from './i18n.js?v=5.7.1';
+import {clamp,pointToScreen} from './math.js?v=5.7.1';
+import {DataService} from './data.js?v=5.7.1';
+import {Renderer,demoPose} from './renderer.js?v=5.7.1';
+import {BodyTracker} from './interaction.js?v=5.7.1';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.7.1';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.7.1';
+import {sceneWords} from './scene-copy.js?v=5.7.1';
+import {previewHand} from './glass-model.js?v=5.7.1';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.7.1';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.7.1';
+import {ArrivalView} from './arrival-view.js?v=5.7.1';
+import {UnfoldTransition} from './unfold-transition.js?v=5.7.1';
+import {UnfoldView} from './unfold-view.js?v=5.7.1';
+import {menuCubeSize} from './arrival.js?v=5.7.1';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.7.1';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.7.1';
+import {freshPersonMask} from './camera-alignment.js?v=5.7.1';
+import {captureBriefing} from './briefing-snapshot.js?v=5.7.1';
+import {DwellTargets} from './gesture-targets.js?v=5.7.1';
+import {GestureToolbar} from './gesture-toolbar.js?v=5.7.1';
+import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.7.1';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
@@ -86,7 +86,7 @@ async function startCamera(){
  }catch(e){if(session===ui.session)error('camera',e);return;}
  if(session!==ui.session)return;
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.7.0',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.7.1',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -164,7 +164,7 @@ function drawCursor(hand,progress=0,highlight=false,dragging=false){
 }
 function handControls(dt,hands){
  const tools=toolbar.getTargets(),targets=[...tools,...(ui.state==='arrival'&&!$('sources-dialog').open?arrival.getTargets():[])],dwell=dwellTargets.update(dt,hands,targets);
- toolbar.update(dwell);arrival.setHover(dwell.highlight?dwell.targetId:null);drawCursor(dwell.hand||hands[0],dwell.progress,dwell.highlight);
+ toolbar.update(dwell);arrival.setHover(dwell.highlight?dwell.targetId:null);const toolActive=tools.some(target=>target.id===dwell.targetId);drawCursor(dwell.hand||hands[0],toolActive?0:dwell.progress,dwell.highlight&&!toolActive);$('hand-cursor').dataset.tool=String(toolActive);
  const consumed=tools.some(t=>hands.some(h=>h.x>=t.left&&h.x<=t.right&&h.y>=t.top&&h.y<=t.bottom)),before=ui.state,dialog=$('sources-dialog').open;
  if(dwell.selected){if(dwell.selected.startsWith('language:'))arrival.chooseLanguage(dwell.selected.slice(9));else $(dwell.selected)?.click();}
  return {consumed,changed:before!==ui.state||dialog!==$('sources-dialog').open};

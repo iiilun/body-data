@@ -1,14 +1,14 @@
-import {clamp} from './math.js?v=5.7.0';
-import {artworkGeometry} from './visual-system.js?v=5.7.0';
-import {TemporalSilhouette} from './temporal-silhouette.js?v=5.7.0';
-import {maskContours,strokeContours} from './person-contour.js?v=5.7.0';
+import {clamp} from './math.js?v=5.7.1';
+import {artworkGeometry} from './visual-system.js?v=5.7.1';
+import {TemporalSilhouette} from './temporal-silhouette.js?v=5.7.1';
+import {maskContours,strokeContours} from './person-contour.js?v=5.7.1';
 export const alignmentStyle=ready=>({color:ready?'#35ef86':'#fff',width:ready?20:12});
 export const blendedAlignmentStyle=blend=>({color:`rgb(${Math.round(255-202*blend)},${Math.round(255-16*blend)},${Math.round(255-121*blend)})`,width:12+8*blend});
 export function freshPersonMask(mask,now){return !!mask?.data&&mask.width>0&&mask.height>0&&Number.isFinite(mask.timestamp)&&now>=mask.timestamp&&now-mask.timestamp<700&&(mask.hasPerson??mask.data.some(v=>v>0));}
 export class CameraAlignment{
  constructor(){
   this.preview=new Image();this.preview.src='./assets/alignment-preview.jpg';this.reset();
-  fetch('./assets/alignment-mask.json?v=5.7.0').then(r=>r.ok?r.json():null).then(m=>{if(m)this.previewMask={...m,data:Uint8Array.from(atob(m.bytes),c=>c.charCodeAt(0))};}).catch(()=>{});
+  fetch('./assets/alignment-mask.json?v=5.7.1').then(r=>r.ok?r.json():null).then(m=>{if(m)this.previewMask={...m,data:Uint8Array.from(atob(m.bytes),c=>c.charCodeAt(0))};}).catch(()=>{});
  }
  reset(){this.stamp=null;this.contours=[];this.silhouette=new TemporalSilhouette();this.readyMix=0;this.offsetX=0;this.offsetY=0;this.lastTrace=-Infinity;}
  draw(ctx,c){

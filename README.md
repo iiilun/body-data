@@ -1,4 +1,4 @@
-# BODY / DATA · V5.7.0
+# BODY / DATA · V5.7.1
 
 [公開作品](https://iiilun.github.io/body-data/) · [同學測試說明](TESTING.md) · [回報問題](https://github.com/iiilun/body-data/issues/new/choose)
 
@@ -78,3 +78,5 @@ V5.6以立體刀模展開取代V5.5的黑色空隙轉場，並加粗、穩定相
 V5.6.1–5.6.2：六面保持相連，整張展開圖一起前進；閱讀期間沿用同一張內頁畫面，更新第二組數據與閱讀進度，避免切換圖層造成文字短暫空白。數據頁6秒後自動進入動作示範，即使舊預覽網址帶有`intro=1`也會繼續。
 
 V5.7：以相機先啟動、語言及工具三秒手勢停留取代V5.4的相機授權時機，補齊白底與結果頁進度。流程、平台限制與驗證見[`research/v57-gesture-navigation.md`](research/v57-gesture-navigation.md)。
+
+V5.7.1：工具只保留方塊本身的一圈進度，手部游標改為光點，移除重複進度圈；語言及主選單仍保留原本的大圓進度。
