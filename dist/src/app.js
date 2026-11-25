@@ -1,31 +1,33 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.7.1';
-import {clamp,pointToScreen} from './math.js?v=5.7.1';
-import {DataService} from './data.js?v=5.7.1';
-import {Renderer,demoPose} from './renderer.js?v=5.7.1';
-import {BodyTracker} from './interaction.js?v=5.7.1';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.7.1';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.7.1';
-import {sceneWords} from './scene-copy.js?v=5.7.1';
-import {previewHand} from './glass-model.js?v=5.7.1';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.7.1';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.7.1';
-import {ArrivalView} from './arrival-view.js?v=5.7.1';
-import {UnfoldTransition} from './unfold-transition.js?v=5.7.1';
-import {UnfoldView} from './unfold-view.js?v=5.7.1';
-import {menuCubeSize} from './arrival.js?v=5.7.1';
-import {typeMetrics,vectorType} from './vector-type.js?v=5.7.1';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.7.1';
-import {freshPersonMask} from './camera-alignment.js?v=5.7.1';
-import {captureBriefing} from './briefing-snapshot.js?v=5.7.1';
-import {DwellTargets} from './gesture-targets.js?v=5.7.1';
-import {GestureToolbar} from './gesture-toolbar.js?v=5.7.1';
-import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.7.1';
+import {dictionary,languages,locales} from './i18n.js?v=5.7.2';
+import {clamp,pointToScreen} from './math.js?v=5.7.2';
+import {DataService} from './data.js?v=5.7.2';
+import {Renderer,demoPose} from './renderer.js?v=5.7.2';
+import {BodyTracker} from './interaction.js?v=5.7.2';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.7.2';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.7.2';
+import {sceneWords} from './scene-copy.js?v=5.7.2';
+import {previewHand} from './glass-model.js?v=5.7.2';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.7.2';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.7.2';
+import {ArrivalView} from './arrival-view.js?v=5.7.2';
+import {UnfoldTransition} from './unfold-transition.js?v=5.7.2';
+import {UnfoldView} from './unfold-view.js?v=5.7.2';
+import {menuCubeSize} from './arrival.js?v=5.7.2';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.7.2';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.7.2';
+import {freshPersonMask} from './camera-alignment.js?v=5.7.2';
+import {captureBriefing} from './briefing-snapshot.js?v=5.7.2';
+import {DwellTargets} from './gesture-targets.js?v=5.7.2';
+import {GestureToolbar} from './gesture-toolbar.js?v=5.7.2';
+import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.7.2';
+import {DataDrag} from './data-drag.js?v=5.7.2';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
 const sceneTransition=new UnfoldTransition({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
 const unfoldView=new UnfoldView($('unfold-scene'));
 const dwellTargets=new DwellTargets(),toolbar=new GestureToolbar(document);
+const dataDrag=new DataDrag();
 const arrival=new ArrivalView($('arrival'),{onSelect:language=>{dwellTargets.cancel();ui.language=language;translate();},titles:()=>FACE_SCENES.map(title)});
 icons.fist='<path d="M17 58V43L8 29c-3-6 2-10 6-4l5 7V15c0-7 8-7 8 0v12V10c0-7 8-7 8 0v17V12c0-7 8-7 8 0v17V19c0-7 8-7 8 0v21c0 10-4 15-9 18z"/>';
 icons.thirst='<path d="M6 21V6h15M43 6h15v15M58 43v15H43M21 58H6V43M20 46V31c0-4 5-4 5 0v5-18c0-4 5-4 5 0v15-20c0-4 5-4 5 0v20-17c0-4 5-4 5 0v18-11c0-4 5-4 5 0v18c0 9-5 15-12 15s-13-5-13-10z"/>';
@@ -86,7 +88,7 @@ async function startCamera(){
  }catch(e){if(session===ui.session)error('camera',e);return;}
  if(session!==ui.session)return;
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.7.1',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.7.2',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -156,8 +158,8 @@ async function sendFrame(now){
 }
 function coach(){ $('coach').hidden=true; }
 function screenHands(){
- if(ui.demo)return ui.mouse?[{id:'pointer',x:ui.mouse.x,y:ui.mouse.y,open:ui.dragging?0:1,fist:ui.dragging}]:[];
- return ui.hands.map(hand=>{const p=menuPointer(hand,renderer.geometry($('camera').videoWidth/$('camera').videoHeight||16/9),innerWidth,innerHeight);return {...p,x:p.x*innerWidth,y:p.y*innerHeight};});
+ if(ui.demo)return ui.mouse?[{id:'pointer',x:ui.mouse.x,y:ui.mouse.y,open:ui.dragging||ui.pointerFist&&$('sources-dialog').open?0:1,fist:ui.dragging,pinch:ui.pointerFist&&$('sources-dialog').open}]:[];
+ return ui.hands.map(hand=>{const tip=$('sources-dialog').open&&hand.pinch&&hand.landmarks?.[8]?{...hand,x:(hand.landmarks[4].x+hand.landmarks[8].x)/2,y:(hand.landmarks[4].y+hand.landmarks[8].y)/2}:hand,p=menuPointer(tip,renderer.geometry($('camera').videoWidth/$('camera').videoHeight||16/9),innerWidth,innerHeight);return {...p,x:p.x*innerWidth,y:p.y*innerHeight};});
 }
 function drawCursor(hand,progress=0,highlight=false,dragging=false){
  const cursor=$('hand-cursor');cursor.hidden=!hand;if(!hand)return;cursor.style.transform=`translate(${hand.x-56}px,${hand.y-56}px)`;cursor.dataset.dwelling=String(highlight);cursor.dataset.dragging=String(dragging);cursor.querySelector('.cursor-ring').style.strokeDashoffset=276.46*(1-progress);
@@ -170,9 +172,8 @@ function handControls(dt,hands){
  return {consumed,changed:before!==ui.state||dialog!==$('sources-dialog').open};
 }
 function scrollSources(dt,hands){
- const dialog=$('sources-dialog');if(!dialog.open)return;const r=dialog.getBoundingClientRect(),hand=hands.find(h=>!h.fist&&h.open>.65&&h.x>r.left+24&&h.x<r.right-24&&h.y>r.top+78&&h.y<r.bottom);
- let velocity=0;if(hand){const top=r.top+80,bottom=r.bottom-22,band=Math.min(100,(bottom-top)*.23);if(hand.y<top+band)velocity=-650*(1-(hand.y-top)/band);else if(hand.y>bottom-band)velocity=650*(1-(bottom-hand.y)/band);}
- dialog.scrollTop+=velocity*dt;dialog.dataset.handScroll=velocity<0?'up':velocity>0?'down':'';
+ if(!$('sources-dialog').open)return;const panel=$('sources-panel'),r=panel.getBoundingClientRect(),drag=dataDrag.update(dt,hands,{left:r.left,top:r.top,right:r.right,bottom:r.bottom,scrollTop:panel.scrollTop,maxScroll:panel.scrollHeight-panel.clientHeight});
+ panel.scrollTop=drag.scrollTop;panel.dataset.dragging=String(drag.dragging);if(drag.dragging){dwellTargets.cancel();drawCursor(drag.cursor,0,false,true);$('hand-cursor').dataset.tool='false';}
 }
 function tick(now){
  const dt=document.hidden?0:Math.min(.055,(now-ui.lastFrame)/1000);ui.lastFrame=now;ui.time+=dt;
@@ -233,10 +234,14 @@ function tick(now){
  requestAnimationFrame(tick);
 }
 $('retry').addEventListener('click',()=>ui.loaded?startCamera():loadData());$('preview').addEventListener('click',preview);$('back').addEventListener('click',()=>['scanning','loading','error'].includes(ui.state)?stop():menu());
-$('sources-toggle').addEventListener('click',()=>{if(ui.loaded&&!$('sources-dialog').open){dwellTargets.cancel();renderSources();$('sources-dialog').showModal();$('sources-dialog').scrollTop=0;$('sources-dialog').append($('hand-cursor'));}});$('sources-close').addEventListener('click',()=>$('sources-dialog').close());
-$('sources-dialog').addEventListener('close',()=>{dwellTargets.cancel();document.body.append($('hand-cursor'));});
-window.addEventListener('pointermove',e=>{if(ui.demo)ui.mouse={x:e.clientX,y:e.clientY};});
-window.addEventListener('pointerdown',e=>{if(!ui.demo||e.target.closest('button,select,dialog'))return;ui.mouse={x:e.clientX,y:e.clientY};if(ui.state==='scanning')ui.dragging=true;if(ui.state==='active'){ui.pointerFist=true;renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);}});window.addEventListener('pointerup',e=>{if(ui.demo&&ui.state==='active'&&ui.pointerFist){renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);renderer.previewGrip(e.clientX,e.clientY,false,ui.pose);}ui.dragging=false;ui.pointerFist=false;});window.addEventListener('pointercancel',()=>{ui.dragging=false;ui.pointerFist=false;});
+$('sources-toggle').addEventListener('click',()=>{if(ui.loaded&&!$('sources-dialog').open){dwellTargets.cancel();dataDrag.reset();ui.pointerFist=false;ui.dataPointerStart=null;ui.dataPointerMoved=false;renderSources();$('sources-dialog').showModal();$('sources-panel').scrollTop=0;$('sources-dialog').append($('hand-cursor'));}});$('sources-close').addEventListener('click',()=>$('sources-dialog').close());
+$('sources-dialog').addEventListener('close',()=>{dwellTargets.cancel();dataDrag.reset();ui.pointerFist=false;ui.dataPointerStart=null;ui.dataPointerMoved=false;$('sources-panel').dataset.dragging='false';document.body.append($('hand-cursor'));});
+$('sources-panel').addEventListener('click',event=>{if(ui.demo&&ui.dataPointerMoved){event.preventDefault();ui.dataPointerMoved=false;}});
+window.addEventListener('pointermove',e=>{if(ui.demo){ui.mouse={x:e.clientX,y:e.clientY};if(ui.dataPointerStart&&Math.hypot(e.clientX-ui.dataPointerStart.x,e.clientY-ui.dataPointerStart.y)>3)ui.dataPointerMoved=true;}});
+window.addEventListener('pointerdown',e=>{
+ if(!ui.demo)return;if($('sources-dialog').open){if(e.target.closest('#sources-panel')&&!e.target.closest('button')){ui.pointerFist=true;ui.mouse={x:e.clientX,y:e.clientY};ui.dataPointerStart={...ui.mouse};ui.dataPointerMoved=false;e.preventDefault();}return;}
+ if(e.target.closest('button,select,dialog'))return;ui.mouse={x:e.clientX,y:e.clientY};if(ui.state==='scanning')ui.dragging=true;if(ui.state==='active'){ui.pointerFist=true;renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);}
+});window.addEventListener('pointerup',e=>{if(ui.demo&&ui.state==='active'&&ui.pointerFist&&!$('sources-dialog').open){renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);renderer.previewGrip(e.clientX,e.clientY,false,ui.pose);}ui.dragging=false;ui.pointerFist=false;ui.dataPointerStart=null;});window.addEventListener('pointercancel',()=>{ui.dragging=false;ui.pointerFist=false;ui.dataPointerStart=null;dataDrag.reset();});
 window.addEventListener('resize',()=>{renderer.resize();arrival.resize();if(ui.state==='scene-transition'){const size=menuCubeSize(innerWidth);sceneTransition.resize(innerWidth,innerHeight,size);ui.briefBitmap=captureSceneBriefing();unfoldView.setBitmap(ui.briefBitmap);unfoldView.resize(innerWidth,innerHeight,size);renderSceneTransition(0);}else{refreshReading();fitCube();}});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
 window.addEventListener('keydown',e=>{
  if(e.target.matches('input,select,textarea')||$('sources-dialog').open)return;

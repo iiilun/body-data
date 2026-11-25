@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.7.1';
+import {clamp,lerp} from './math.js?v=5.7.2';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const alpha=(cutoff,dt)=>1-Math.exp(-2*Math.PI*cutoff*dt);
 
@@ -25,19 +25,23 @@ export function palm(hand,gesture){
   if(!hand?.[17])return null;
   const center=indices.reduce((p,i)=>({x:p.x+hand[i].x/indices.length,y:p.y+hand[i].y/indices.length}),{x:0,y:0});
   const span=Math.max(.015,distance(hand[0],hand[9]));
+  const pinchRatio=distance(hand[4],hand[8])/span;
   const reach=[8,12,16,20].reduce((n,i)=>n+distance(hand[i],hand[0])/4,0)/span;
   const curled=[8,12,16,20].filter(i=>distance(hand[i],hand[0])<distance(hand[i-2],hand[0])*1.12).length;
   const confident=(gesture?.score||0)>.55,name=confident&&gesture.categoryName!=='None'?gesture.categoryName:'';
-  return {...center,span,landmarks:hand.map(p=>({...p})),landmarkOrigin:{...center},open:name==='Open_Palm'?1:clamp((reach-1.15)/.95),fist:gesture?gesture.categoryName==='Closed_Fist'&&gesture.score>.55:curled>=3&&reach<1.65,gesture:name,visibility:1};
+  return {...center,span,pinchRatio,pinch:pinchRatio<.30,landmarks:hand.map(p=>({...p})),landmarkOrigin:{...center},open:name==='Open_Palm'?1:clamp((reach-1.15)/.95),fist:gesture?gesture.categoryName==='Closed_Fist'&&gesture.score>.55:curled>=3&&reach<1.65,gesture:name,visibility:1};
 }
 export class BodyTracker{
-  constructor(){this.joints=Array.from({length:33},()=>new AdaptivePoint());this.handTracks=new Map();this.handJoints=new Map();this.lastBody=0;this.lastHandResult=0;this.visibleHands=new Set();}
+  constructor(){this.joints=Array.from({length:33},()=>new AdaptivePoint());this.handTracks=new Map();this.handJoints=new Map();this.pinchStates=new Map();this.lastBody=0;this.lastHandResult=0;this.visibleHands=new Set();}
   updateHands(hands,labels,time,gestures=[]){
     if(time<this.lastHandResult)return;this.lastHandResult=time;this.visibleHands=new Set();
     for(let i=0;i<(hands||[]).length;i++){
       const center=palm(hands[i],gestures[i]?.[0]);if(!center)continue;const id=labels?.[i]?.[0]?.categoryName||String(i);this.visibleHands.add(id);
+      const held=this.pinchStates.get(id)&&time-(this.handTracks.get(id)?.time??-Infinity)<180;
+      center.pinch=center.pinchRatio<(held ? .45 : .30);this.pinchStates.set(id,center.pinch);
       if(!this.handTracks.has(id)){this.handTracks.set(id,new AdaptivePoint());this.handJoints.set(id,Array.from({length:21},()=>new AdaptivePoint()));}const track=this.handTracks.get(id);if(time>track.time){track.update(center,time);hands[i].forEach((p,index)=>this.handJoints.get(id)[index].update(p,time));}
     }
+    for(const id of this.pinchStates.keys())if(!this.visibleHands.has(id))this.pinchStates.delete(id);
   }
   update(points,hands,labels,time,handTime=time,gestures=[]){
     this.updateHands(hands,labels,handTime,gestures);

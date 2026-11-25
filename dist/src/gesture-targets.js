@@ -5,7 +5,7 @@ function bounds(target){
  return {left,top,right:target.right??left+target.width,bottom:target.bottom??top+target.height};
 }
 function contains(hand,target){const b=bounds(target);return Number.isFinite(hand.x)&&Number.isFinite(hand.y)&&hand.x>=b.left&&hand.x<=b.right&&hand.y>=b.top&&hand.y<=b.bottom;}
-const eligible=hand=>hand.id!=null&&!hand.fist&&(hand.open??0)>.65&&hand.present!==false;
+const eligible=hand=>hand.id!=null&&!hand.fist&&!hand.pinch&&(hand.open??0)>.65&&hand.present!==false;
 
 // Coordinates are CSS pixels. A single tracked palm owns each continuous dwell.
 export class DwellTargets{
