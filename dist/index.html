@@ -7,11 +7,11 @@
   <meta name="description" content="An interactive study of heat, care, and the space a body needs.">
   <title>BODY / DATA</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23111' d='M0 0h64v64H0z'/%3E%3Ctext x='8' y='49' fill='white' font-family='Helvetica,Arial' font-size='49' font-weight='900'%3EB%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./style.css?v=5.8.0">
-  <link rel="stylesheet" href="./gesture-ui.css?v=5.8.0">
-  <link rel="stylesheet" href="./progress-ui.css?v=5.8.0">
-  <link rel="stylesheet" href="./control-layout.css?v=5.8.0">
-  <link rel="stylesheet" href="./cube-art.css?v=5.8.0">
+  <link rel="stylesheet" href="./style.css?v=5.9.0">
+  <link rel="stylesheet" href="./gesture-ui.css?v=5.9.0">
+  <link rel="stylesheet" href="./progress-ui.css?v=5.9.0">
+  <link rel="stylesheet" href="./control-layout.css?v=5.9.0">
+  <link rel="stylesheet" href="./cube-art.css?v=5.9.0">
 </head>
 <body data-state="arrival" data-theme="menu">
   <canvas id="stage" aria-label="Interactive artwork"></canvas>
@@ -70,7 +70,7 @@
   <div id="coach" class="coach" hidden><span id="coach-icon"></span><p id="coach-text"></p></div>
   <button id="back" class="back-button" hidden aria-label="Back"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M30 12H3m9-9-9 9 9 9"/></svg></button>
       <button id="fullscreen" class="icon-button" aria-label="Fullscreen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4"/></svg></button>
-  <span id="fullscreen-hint" class="fullscreen-hint" role="status" hidden></span>
+  <button id="fullscreen-hint" class="fullscreen-hint" type="button" hidden></button>
   <button id="sources-toggle" class="text-button" aria-label="Data" aria-haspopup="dialog" hidden>DATA</button>
   <footer class="footer" hidden>
     <div class="footer-left" hidden><span id="scope">WORLD</span><span id="status">THREE ENCOUNTERS</span></div>
@@ -88,6 +88,6 @@
   </dialog>
   <div id="announcement" class="sr-only" aria-live="polite"></div>
   <script src="./vendor/matter.min.js"></script>
-  <script type="module" src="./src/app.js?v=5.8.0"></script>
+  <script type="module" src="./src/app.js?v=5.9.0"></script>
 </body>
 </html>

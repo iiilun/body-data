@@ -1,39 +1,57 @@
 export const GUIDE_SECONDS=6;
 const point=(x,y)=>({x,y});
+const mix=(a,b,t)=>point(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t);
+const normalise=p=>{const n=Math.hypot(p.x,p.y)||1;return point(p.x/n,p.y/n);};
+
+// The same quiet, single-piece figure is articulated for all six instructions.
 export function humanPose(scene,time=0){
  const wave=Math.sin(time*1.2),breath=Math.sin(time*1.5)*1.1;
  const p={head:point(0,94),leftShoulder:point(-82,194),rightShoulder:point(82,194),leftElbow:point(-198,192),rightElbow:point(198,192),leftWrist:point(-298,187),rightWrist:point(298,187),leftPalm:point(-1,0),rightPalm:point(1,0),closedLeft:false};
  if(scene==='shelter'){p.leftElbow=point(-177,110);p.rightElbow=point(177,110);p.leftWrist=point(-79,15+wave*4);p.rightWrist=point(79,15+wave*4);p.leftPalm=point(1,-.15);p.rightPalm=point(-1,-.15);}
- if(scene==='thirst'){p.leftElbow=point(-158,272);p.rightElbow=point(158,272);p.leftWrist=point(-163+wave*30,164);p.rightWrist=point(163-wave*30,164);p.leftPalm=p.rightPalm=point(0,-1);}
- if(scene==='space'){p.leftElbow=point(-190,182);p.rightElbow=point(190,182);p.leftWrist=point(-279-wave*16,194);p.rightWrist=point(279+wave*16,194);p.leftPalm=p.rightPalm=point(0,-1);}
+ if(scene==='thirst'){p.leftElbow=point(-200,270);p.rightElbow=point(200,270);p.leftWrist=point(-222+wave*15,155);p.rightWrist=point(222-wave*15,155);p.leftPalm=p.rightPalm=point(0,-1);}
+ if(scene==='space'){p.leftElbow=point(-190,182);p.rightElbow=point(190,182);p.leftWrist=point(-279-wave*16,194);p.rightWrist=point(279+wave*16,194);p.leftPalm=point(-1,0);p.rightPalm=point(1,0);}
  if(scene==='offline'){p.leftElbow=point(-188,224);p.rightElbow=point(188,224);p.leftWrist=point(-193,119);p.rightWrist=point(193,119);p.leftPalm=p.rightPalm=point(0,-1);p.shift=wave*25;}
  if(scene==='vacant'){p.leftElbow=point(-183,201);p.rightElbow=point(183,211);p.leftWrist=point(-274+wave*18,211-wave*12);p.rightWrist=point(279,205);p.leftPalm=point(-1,-.2);p.rightPalm=point(1,-.2);p.closedLeft=wave>.1;}
  for(const name of ['head','leftShoulder','rightShoulder','leftElbow','rightElbow','leftWrist','rightWrist'])p[name].y+=breath;
  return p;
 }
-function limb(ctx,a,b,ra,rb){
- const dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy),nx=-dy/length,ny=dx/length,ux=dx/length,uy=dy/length;
- ctx.beginPath();ctx.moveTo(a.x+nx*ra,a.y+ny*ra);ctx.bezierCurveTo(a.x+dx*.3+nx*ra*1.02,a.y+dy*.3+ny*ra*1.02,b.x-dx*.23+nx*rb*1.12,b.y-dy*.23+ny*rb*1.12,b.x+nx*rb,b.y+ny*rb);
- ctx.quadraticCurveTo(b.x+ux*rb,b.y+uy*rb,b.x-nx*rb,b.y-ny*rb);ctx.bezierCurveTo(b.x-dx*.23-nx*rb*1.12,b.y-dy*.23-ny*rb*1.12,a.x+dx*.3-nx*ra,a.y+dy*.3-ny*ra,a.x-nx*ra,a.y-ny*ra);ctx.quadraticCurveTo(a.x-ux*ra,a.y-uy*ra,a.x+nx*ra,a.y+ny*ra);ctx.fill();
- for(const [p,r]of [[a,ra],[b,rb]]){ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fill();}
-}
-function hand(ctx,wrist,direction,closed){
- const length=Math.hypot(direction.x,direction.y),ux=direction.x/length,uy=direction.y/length;
- ctx.save();ctx.translate(wrist.x,wrist.y);ctx.transform(-uy,ux,ux,uy,0,0);
- ctx.beginPath();ctx.moveTo(-10,-3);ctx.bezierCurveTo(-15,5,-19,18,-17,29);ctx.quadraticCurveTo(-10,37,0,36);ctx.quadraticCurveTo(14,37,18,27);ctx.bezierCurveTo(20,17,12,4,11,-3);ctx.closePath();ctx.fill();
- if(closed){ctx.beginPath();ctx.ellipse(0,29,21,16,-.1,0,Math.PI*2);ctx.fill();}
- else{
-  const fingers=[[-12,26,-21,53,4.8],[-5,31,-8,66,4.9],[3,31,6,70,5.0],[11,27,19,60,4.6],[15,14,34,36,5.2]];
-  for(const [x,y,tx,ty,r]of fingers)limb(ctx,point(x,y),point(tx,ty),r,r*.78);
+
+function armEdges(p,side){
+ const key=side<0?'left':'right',a=p[key+'Shoulder'],b=p[key+'Elbow'],w=p[key+'Wrist'],direction=normalise(p[key+'Palm']);
+ const end=point(w.x+direction.x*22,w.y+direction.y*22),centres=[a,mix(a,b,.5),b,mix(b,w,.5),w,end],radii=[32,31,28,26,24,24];
+ const outer=[],inner=[];
+ for(let i=0;i<centres.length;i++){
+  const before=centres[Math.max(0,i-1)],after=centres[Math.min(centres.length-1,i+1)],tangent=normalise(point(after.x-before.x,after.y-before.y));
+  const n=point(side*tangent.y,-side*tangent.x),c=centres[i],r=radii[i];
+  outer.push(point(c.x+n.x*r,c.y+n.y*r));inner.push(point(c.x-n.x*r,c.y-n.y*r));
  }
- ctx.restore();
+ // Rounded mitten ends continue the arm contour; no separate hand or finger shapes.
+ const n=normalise(point(outer.at(-1).x-end.x,outer.at(-1).y-end.y)),cap=[];
+ for(let i=1;i<4;i++){const t=i*Math.PI/4;cap.push(point(end.x+(n.x*Math.cos(t)+direction.x*Math.sin(t))*24,end.y+(n.y*Math.cos(t)+direction.y*Math.sin(t))*24));}
+ return {outer,inner,cap};
 }
-export function paintHuman(ctx,scene,time,{x,y,scale,color='#fff'}={}){
- const p=humanPose(scene,time);ctx.save();ctx.translate(x+(p.shift||0)*scale,y);ctx.scale(scale,scale);ctx.fillStyle=color;
- // Natural leg lengths, a soft knee, narrow ankles, and asymmetric feet.
- for(const side of [-1,1]){const hip=point(side*44,408),knee=point(side*48,585),ankle=point(side*51,767);limb(ctx,hip,knee,32,21);limb(ctx,knee,ankle,21,12);ctx.save();ctx.translate(ankle.x,ankle.y);ctx.scale(side,1);ctx.beginPath();ctx.moveTo(-11,-9);ctx.bezierCurveTo(-14,-1,-13,12,-5,16);ctx.lineTo(30,16);ctx.quadraticCurveTo(40,13,32,7);ctx.lineTo(14,0);ctx.lineTo(10,-9);ctx.closePath();ctx.fill();ctx.restore();}
- for(const side of ['left','right']){const a=p[side+'Shoulder'],b=p[side+'Elbow'],c=p[side+'Wrist'];limb(ctx,a,b,26,18);limb(ctx,b,c,19,10.5);hand(ctx,c,p[side+'Palm'],side==='left'&&p.closedLeft);}
- // One continuous anatomical torso: trapezius, deltoids, rib cage, waist and pelvis.
- ctx.beginPath();ctx.moveTo(-17,137);ctx.bezierCurveTo(-17,164,-49,167,-78,176);ctx.bezierCurveTo(-97,178,-111,195,-101,218);ctx.quadraticCurveTo(-91,235,-74,239);ctx.bezierCurveTo(-68,275,-55,313,-61,346);ctx.bezierCurveTo(-66,369,-83,393,-76,416);ctx.quadraticCurveTo(-48,444,0,437);ctx.quadraticCurveTo(48,444,76,416);ctx.bezierCurveTo(83,393,66,369,61,346);ctx.bezierCurveTo(55,313,68,275,74,239);ctx.quadraticCurveTo(91,235,101,218);ctx.bezierCurveTo(111,195,97,178,78,176);ctx.bezierCurveTo(49,167,17,164,17,137);ctx.closePath();ctx.fill();
- ctx.save();ctx.translate(p.head.x,p.head.y-94);ctx.beginPath();ctx.moveTo(0,48);ctx.bezierCurveTo(-28,47,-36,64,-34,88);ctx.quadraticCurveTo(-40,92,-34,105);ctx.bezierCurveTo(-30,125,-18,140,0,142);ctx.bezierCurveTo(18,140,30,125,34,105);ctx.quadraticCurveTo(40,92,34,88);ctx.bezierCurveTo(36,64,28,47,0,48);ctx.fill();ctx.restore();ctx.restore();
+
+export function humanOutline(scene,time=0,variant=0){
+ const p=humanPose(scene,time),right=armEdges(p,1),left=armEdges(p,-1),breath=p.head.y-94;
+ const torso=[point(86,252),point(77,330),point(85,406),point(104,476),point(118,555),point(118,641),point(117,709),point(141,751),point(137,775),point(88,783),point(59,768),point(59,715),point(65,642),point(52,568),point(31,514),point(0,497),point(-31,514),point(-52,568),point(-65,642),point(-59,715),point(-59,768),point(-88,783),point(-137,775),point(-141,751),point(-117,709),point(-118,641),point(-118,555),point(-104,476),point(-85,406),point(-77,330),point(-86,252)];
+ const points=[point(0,47),point(43,58),point(65,96),point(63,136),point(47,174),...right.outer,...right.cap,...right.inner.slice().reverse(),...torso,...left.inner,...left.cap.slice().reverse(),...left.outer.slice().reverse(),point(-47,174),point(-63,136),point(-65,96),point(-43,58)];
+ // Three close impressions reproduce the flowing, offset outline in the reference.
+ // Their offsets stay fixed over time so the image never flickers between shapes.
+ const spread=variant-1;
+ return points.map((v,i)=>point(v.x*(1+spread*.012)+spread*12+Math.sin(i*.23)*spread*1.4,v.y+breath+spread*8));
+}
+
+function trace(ctx,points){
+ ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);
+ for(let i=0;i<points.length;i++){
+  const a=points[(i-1+points.length)%points.length],b=points[i],c=points[(i+1)%points.length],d=points[(i+2)%points.length];
+  ctx.bezierCurveTo(b.x+(c.x-a.x)/6,b.y+(c.y-a.y)/6,c.x-(d.x-b.x)/6,c.y-(d.y-b.y)/6,c.x,c.y);
+ }
+ ctx.closePath();
+}
+
+export function paintHuman(ctx,scene,time=0,{x=0,y=0,scale=1,color='#fff'}={}){
+ const p=humanPose(scene,time);ctx.save();ctx.translate(x+(p.shift||0)*scale,y);ctx.scale(scale,scale);ctx.strokeStyle=color;ctx.lineWidth=4.6;ctx.lineCap='round';ctx.lineJoin='round';
+ for(let variant=0;variant<3;variant++){trace(ctx,humanOutline(scene,time,variant));ctx.stroke();}
+ ctx.restore();
 }

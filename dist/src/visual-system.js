@@ -1,6 +1,6 @@
-import {clamp,lerp} from './math.js?v=5.8.0';
-export const MOSAIC_COLUMNS=32;
-export const MOSAIC_ROWS=24;
+import {clamp,lerp} from './math.js?v=5.9.0';
+export const MOSAIC_COLUMNS=48;
+export const MOSAIC_ROWS=36;
 
 // Average the original colour inside the person mask; no grey conversion,
 // colour quantization, or background colour on silhouette-edge blocks.

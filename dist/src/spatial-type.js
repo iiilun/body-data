@@ -1,8 +1,9 @@
-import {clamp} from './math.js?v=5.8.0';
+import {clamp} from './math.js?v=5.9.0';
 
 export function factText(card){return `${String(card.value).replace(/\s/g,'\u00a0')} ${card.fieldLabel||card.label} · ${card.scope} ${card.yearText||card.year}`;}
 export const BACKGROUND_TRACKING=-.055;
 export function backgroundType(height){const font=clamp(height*.032,20,31);return {font,row:font*.98,tracking:BACKGROUND_TRACKING};}
+export function spaceType(height){const font=clamp(height*.022,16,24);return {font,row:font*.98,tracking:BACKGROUND_TRACKING};}
 function textUnits(text){return /[\u0600-\u06ff]/.test(text)?text.match(/[\p{L}\p{M}]+|[^\p{L}\p{M}]/gu):[...text];}
 function blockedRanges(cells,top,bottom,block,width,padding){
  const rows=cells.filter(c=>c.y+block*.5>top&&c.y-block*.5<bottom).map(c=>[clamp(c.x-block*.5-padding,0,width),clamp(c.x+block*.5+padding,0,width)]).sort((a,b)=>a[0]-b[0]);
@@ -18,28 +19,37 @@ export class SilhouetteType{
    const ordered=cards.map((_,i)=>cards[(i+line*3)%cards.length]);
    const text=ordered.map(factText).join(' / ')+' / ';
    const units=textUnits(text);
-   const lane={items:[],y,index:line,drift:0};let x=-width*.55,index=0;
+   const lane={items:[],y,index:line,drift:0,ranges:[]};let x=-width*.55,index=0;
    while(x<width*1.7){const char=units[index++%units.length],advance=Math.max(font*.2,measure(char));const glyph={char,width:advance,baseX:x,x,y,drawX:x,drawY:y,vx:0,vy:0,active:true,alpha:1};lane.items.push(glyph);this.items.push(glyph);x+=advance+font*BACKGROUND_TRACKING;}
    for(let n=0;n<lane.items.length;n++){const g=lane.items[n],previous=lane.items[n-1];if(/[≈0-9٠-٩]/.test(g.char[0])&&(!previous||/\s/.test(previous.char))){let word='';for(let j=n;j<lane.items.length;j++){const char=lane.items[j].char;if(/\s/.test(char)&&char!=='\u00a0')break;word+=char;}g.atomicWidth=measure(word);}}
    lane.period=x+width*.55;this.rows.push(lane);
   }
  }
  update(dt,cells,block,width,hands,progress){
-  dt=Math.min(dt,.04);this.time+=dt;
+  dt=Math.max(0,Math.min(dt,.04));this.time+=dt;
+  const blockers=[...cells,...hands.map(h=>({x:h.x,y:h.y}))],blend=1-Math.exp(-dt/.10);
   for(const lane of this.rows){
-   lane.drift+=dt*(7+lane.index%4*2)*(lane.index%2?-1:1);
-   const blockers=[...cells,...hands.map(h=>({x:h.x,y:h.y}))];
-   const ranges=blockedRanges(blockers,lane.y,lane.y+this.font*.94,block,width,9+progress*5+this.font*.30);
+   lane.drift+=dt*(4+lane.index%4)*(lane.index%2?-1:1);
+   const next=blockedRanges(blockers,lane.y,lane.y+this.font*.94,block,width,8+progress*5+this.font*.25),previous=lane.ranges;
+   // Grow new obstructions from their centre and follow moving edges continuously.
+   // This avoids a whole sentence jumping when a single mask block enters a row.
+   const unused=new Set(previous),ranges=next.map(([a,b])=>{
+    const centre=(a+b)/2;let match=null,distance=Infinity;
+    for(const candidate of unused){const d=Math.abs((candidate[0]+candidate[1])/2-centre);if(d<distance&&d<Math.max(block*3,(b-a)*.7)){distance=d;match=candidate;}}
+    if(match)unused.delete(match);const from=match||[centre,centre];return [from[0]+(a-from[0])*blend,from[1]+(b-from[1])*blend];
+   });
+   for(const [a,b]of unused){const centre=(a+b)/2,left=a+(centre-a)*blend,right=b+(centre-b)*blend;if(right-left>.75)ranges.push([left,right]);}
+   ranges.sort((a,b)=>a[0]-b[0]);lane.ranges=ranges;
    const removed=ranges.reduce((n,[a,b])=>n+b-a,0);
    const ordered=lane.items.map(g=>{let raw=g.baseX+lane.drift;while(raw<-width*.6)raw+=lane.period;while(raw>width*1.7)raw-=lane.period;return {g,raw};}).sort((a,b)=>a.raw-b.raw);
-   let cursor=(ordered[0]?.raw||0)-removed*.5,previous=null;
+   let cursor=(ordered[0]?.raw||0)-removed*.5;
    for(const {g,raw}of ordered){
     for(const [a,b]of ranges)if(cursor+(g.atomicWidth||g.width)>a&&cursor<b)cursor=b;
     const target=cursor,targetY=lane.y+Math.sin(this.time*.55+lane.index*.8)*2.5;cursor+=g.width+this.font*BACKGROUND_TRACKING;
     if(Math.abs(g.x-target)>width*.9){g.x=target;g.vx=0;}
-    const ax=(target-g.x)*72-g.vx*16,ay=(targetY-g.y)*55-g.vy*14;
+    const ax=(target-g.x)*38-g.vx*12.5,ay=(targetY-g.y)*30-g.vy*11;
     g.vx+=ax*dt;g.vy+=ay*dt;g.x+=g.vx*dt;g.y+=g.vy*dt;
-    g.drawX=Math.max(g.x,previous?previous.drawX+previous.width+this.font*BACKGROUND_TRACKING:-Infinity);g.drawY=g.y;g.active=true;previous=g;
+    g.drawX=g.x;g.drawY=g.y;g.active=true;
    }
   }
  }

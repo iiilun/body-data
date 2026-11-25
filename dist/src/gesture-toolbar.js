@@ -1,6 +1,8 @@
 const NS='http://www.w3.org/2000/svg';
 const sides=['front','back','right','left','top','bottom'];
 const definitions=[['back','back'],['fullscreen','fullscreen'],['sources-toggle','data'],['sources-close','close']];
+export const TOOL_HAND_MARGIN=32;
+export function toolHandBounds(box,width=Infinity,height=Infinity){return {left:Math.max(0,box.left-TOOL_HAND_MARGIN),top:Math.max(0,box.top-TOOL_HAND_MARGIN),right:Math.min(width,box.right+TOOL_HAND_MARGIN),bottom:Math.min(height,box.bottom+TOOL_HAND_MARGIN)};}
 export const GESTURE_ICONS={
  back:'M27 16H6m9-9-9 9 9 9',
  close:'M27 16H6m9-9-9 9 9 9',
@@ -26,7 +28,7 @@ export class GestureToolbar{
  setLabel(id,label){const node=this.nodes.get(id);if(node)node.button.setAttribute('aria-label',label);}
  getTargets(){
   const targets=[],modal=this.root.querySelector?.('dialog[open]');
-  for(const [id,{button,kind}]of this.nodes){if(button.hidden||button.disabled||modal&&!modal.contains(button)||!button.getClientRects().length)continue;const box=button.getBoundingClientRect();if(box.width<=0||box.height<=0)continue;targets.push({id,kind,priority:100,left:box.left-7,top:box.top-7,right:box.right+7,bottom:box.bottom+7});}
+  for(const [id,{button,kind}]of this.nodes){if(button.hidden||button.disabled||modal&&!modal.contains(button)||!button.getClientRects().length)continue;const box=button.getBoundingClientRect();if(box.width<=0||box.height<=0)continue;targets.push({id,kind,priority:100,...toolHandBounds(box,this.root.defaultView?.innerWidth,this.root.defaultView?.innerHeight)});}
   return targets;
  }
  update(dwell){

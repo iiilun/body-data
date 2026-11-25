@@ -1,34 +1,36 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.8.0';
-import {clamp,pointToScreen} from './math.js?v=5.8.0';
-import {DataService} from './data.js?v=5.8.0';
-import {Renderer,demoPose} from './renderer.js?v=5.8.0';
-import {BodyTracker} from './interaction.js?v=5.8.0';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.8.0';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.8.0';
-import {sceneWords} from './scene-copy.js?v=5.8.0';
-import {previewHand} from './glass-model.js?v=5.8.0';
-import {faceAtPoint,menuPointer,menuCopy} from './menu-view.js?v=5.8.0';
-import {createTopicFace,faceLabel} from './cube-art.js?v=5.8.0';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.8.0';
-import {ArrivalView} from './arrival-view.js?v=5.8.0';
-import {UnfoldTransition} from './unfold-transition.js?v=5.8.0';
-import {UnfoldView} from './unfold-view.js?v=5.8.0';
-import {menuCubeSize} from './arrival.js?v=5.8.0';
-import {typeMetrics,vectorType} from './vector-type.js?v=5.8.0';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.8.0';
-import {freshPersonMask} from './camera-alignment.js?v=5.8.0';
-import {captureBriefing} from './briefing-snapshot.js?v=5.8.0';
-import {DwellTargets} from './gesture-targets.js?v=5.8.0';
-import {GestureToolbar} from './gesture-toolbar.js?v=5.8.0';
-import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.8.0';
-import {DataDrag} from './data-drag.js?v=5.8.0';
+import {dictionary,languages,locales} from './i18n.js?v=5.9.0';
+import {clamp,pointToScreen} from './math.js?v=5.9.0';
+import {DataService} from './data.js?v=5.9.0';
+import {Renderer,demoPose} from './renderer.js?v=5.9.0';
+import {BodyTracker} from './interaction.js?v=5.9.0';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.9.0';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.9.0';
+import {sceneWords} from './scene-copy.js?v=5.9.0';
+import {previewHand} from './glass-model.js?v=5.9.0';
+import {faceAtPoint,menuPointer,menuCopy} from './menu-view.js?v=5.9.0';
+import {createTopicFace,faceLabel} from './cube-art.js?v=5.9.0';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES,preferredControlHand} from './controls.js?v=5.9.0';
+import {ArrivalView} from './arrival-view.js?v=5.9.0';
+import {UnfoldTransition} from './unfold-transition.js?v=5.9.0';
+import {UnfoldView} from './unfold-view.js?v=5.9.0';
+import {menuCubeSize} from './arrival.js?v=5.9.0';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.9.0';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.9.0';
+import {freshPersonMask} from './camera-alignment.js?v=5.9.0';
+import {captureBriefing} from './briefing-snapshot.js?v=5.9.0';
+import {DwellTargets} from './gesture-targets.js?v=5.9.0';
+import {GestureToolbar} from './gesture-toolbar.js?v=5.9.0';
+import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.9.0';
+import {DataDrag} from './data-drag.js?v=5.9.0';
+import {FullscreenControl,fullscreenElement} from './fullscreen-control.js?v=5.9.0';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
 const sceneTransition=new UnfoldTransition({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
 const unfoldView=new UnfoldView($('unfold-scene'));
 const dwellTargets=new DwellTargets(),toolbar=new GestureToolbar(document);
-const dataDrag=new DataDrag();
+const dataDrag=new DataDrag({gain:2});
+const fullscreenControl=new FullscreenControl(document,navigator,status=>fullscreenHint(status));
 const arrival=new ArrivalView($('arrival'),{onSelect:language=>{dwellTargets.cancel();ui.language=language;translate();},menuFace:scene=>createTopicFace(scene,{label:title(scene),language:ui.language})});
 icons.fist='<path d="M17 58V43L8 29c-3-6 2-10 6-4l5 7V15c0-7 8-7 8 0v12V10c0-7 8-7 8 0v17V12c0-7 8-7 8 0v17V19c0-7 8-7 8 0v21c0 10-4 15-9 18z"/>';
 icons.thirst='<path d="M6 21V6h15M43 6h15v15M58 43v15H43M21 58H6V43M20 46V31c0-4 5-4 5 0v5-18c0-4 5-4 5 0v15-20c0-4 5-4 5 0v20-17c0-4 5-4 5 0v18-11c0-4 5-4 5 0v18c0 9-5 15-12 15s-13-5-13-10z"/>';
@@ -86,7 +88,7 @@ async function startCamera(){
  }catch(e){if(session===ui.session)error('camera',e);return;}
  if(session!==ui.session)return;
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.8.0',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.9.0',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -157,7 +159,8 @@ async function sendFrame(now){
 function coach(){ $('coach').hidden=true; }
 function screenHands(){
  if(ui.demo)return ui.mouse?[{id:'pointer',x:ui.mouse.x,y:ui.mouse.y,open:ui.dragging||ui.pointerFist&&$('sources-dialog').open?0:1,fist:ui.dragging,pinch:ui.pointerFist&&$('sources-dialog').open}]:[];
- return ui.hands.map(hand=>{const tip=$('sources-dialog').open&&hand.pinch&&hand.landmarks?.[8]?{...hand,x:(hand.landmarks[4].x+hand.landmarks[8].x)/2,y:(hand.landmarks[4].y+hand.landmarks[8].y)/2}:hand,p=menuPointer(tip,renderer.geometry($('camera').videoWidth/$('camera').videoHeight||16/9),innerWidth,innerHeight);return {...p,x:p.x*innerWidth,y:p.y*innerHeight};});
+ const hands=ui.hands.map(hand=>{const tip=$('sources-dialog').open&&hand.pinch&&hand.landmarks?.[8]?{...hand,x:(hand.landmarks[4].x+hand.landmarks[8].x)/2,y:(hand.landmarks[4].y+hand.landmarks[8].y)/2}:hand,p=menuPointer(tip,renderer.geometry($('camera').videoWidth/$('camera').videoHeight||16/9),innerWidth,innerHeight);return {...p,x:p.x*innerWidth,y:p.y*innerHeight};});
+ const preferred=preferredControlHand(hands);return preferred?[preferred,...hands.filter(h=>h.id!==preferred.id)]:hands;
 }
 function drawCursor(hand,progress=0,highlight=false,dragging=false){
  const cursor=$('hand-cursor');cursor.hidden=!hand;if(!hand)return;cursor.style.transform=`translate(${hand.x-56}px,${hand.y-56}px)`;cursor.dataset.dwelling=String(highlight);cursor.dataset.dragging=String(dragging);cursor.querySelector('.cursor-ring').style.strokeDashoffset=276.46*(1-progress);
@@ -171,7 +174,7 @@ function handControls(dt,hands){
  return {consumed,changed:before!==ui.state||dialog!==$('sources-dialog').open};
 }
 function scrollSources(dt,hands){
- if(!$('sources-dialog').open)return;const panel=$('sources-panel'),r=panel.getBoundingClientRect(),drag=dataDrag.update(dt,hands,{left:r.left,top:r.top,right:r.right,bottom:r.bottom,scrollTop:panel.scrollTop,maxScroll:panel.scrollHeight-panel.clientHeight});
+ if(!$('sources-dialog').open)return;const panel=$('sources-panel'),drag=dataDrag.update(dt,hands,{left:0,top:112,right:innerWidth,bottom:innerHeight,scrollTop:panel.scrollTop,maxScroll:panel.scrollHeight-panel.clientHeight});
  panel.scrollTop=drag.scrollTop;panel.dataset.dragging=String(drag.dragging);if(drag.dragging){dwellTargets.cancel();drawCursor(drag.cursor,0,false,true);$('hand-cursor').dataset.tool='false';}
 }
 function tick(now){
@@ -206,7 +209,7 @@ function tick(now){
  if(ui.state==='loading')$('scan-progress-fill').style.width=ui.modelProgress*100+'%';
  if(ui.state==='scanning'&&!$('sources-dialog').open){
   const hands=controls.consumed?[]:pointers.filter(p=>!dwellTargets.latchedHands.has(p.id)).map(p=>({...p,x:p.x/innerWidth,y:p.y/innerHeight}));
-  const p=hands.find(h=>h.id===ui.cube.handId)||hands[0],hit=p?faceAtPoint(p.x*innerWidth,p.y*innerHeight):-1;
+  const p=ui.cube.controlHand(hands),hit=p?faceAtPoint(p.x*innerWidth,p.y*innerHeight):-1;
   const selection=ui.cube.update(dt,hands,hit);$('cube').style.transform=`rotateZ(-7deg) rotateX(${selection.pitch}deg) rotateY(${selection.yaw}deg)`;
   $('cube-scene').dataset.dragging=String(selection.dragging);
   updateCubeCaption();document.querySelectorAll('.cube-face').forEach((el,i)=>el.dataset.selected=String(selection.highlight&&i===selection.face));
@@ -238,13 +241,13 @@ $('sources-dialog').addEventListener('close',()=>{dwellTargets.cancel();dataDrag
 $('sources-panel').addEventListener('click',event=>{if(ui.demo&&ui.dataPointerMoved){event.preventDefault();ui.dataPointerMoved=false;}});
 window.addEventListener('pointermove',e=>{if(ui.demo){ui.mouse={x:e.clientX,y:e.clientY};if(ui.dataPointerStart&&Math.hypot(e.clientX-ui.dataPointerStart.x,e.clientY-ui.dataPointerStart.y)>3)ui.dataPointerMoved=true;}});
 window.addEventListener('pointerdown',e=>{
- if(!ui.demo)return;if($('sources-dialog').open){if(e.target.closest('#sources-panel')&&!e.target.closest('button')){ui.pointerFist=true;ui.mouse={x:e.clientX,y:e.clientY};ui.dataPointerStart={...ui.mouse};ui.dataPointerMoved=false;e.preventDefault();}return;}
+ if(!ui.demo)return;if($('sources-dialog').open){if(e.clientY>=112&&!e.target.closest('button')){ui.pointerFist=true;ui.mouse={x:e.clientX,y:e.clientY};ui.dataPointerStart={...ui.mouse};ui.dataPointerMoved=false;e.preventDefault();}return;}
  if(e.target.closest('button,select,dialog'))return;ui.mouse={x:e.clientX,y:e.clientY};if(ui.state==='scanning')ui.dragging=true;if(ui.state==='active'){ui.pointerFist=true;renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);}
 });window.addEventListener('pointerup',e=>{if(ui.demo&&ui.state==='active'&&ui.pointerFist&&!$('sources-dialog').open){renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);renderer.previewGrip(e.clientX,e.clientY,false,ui.pose);}ui.dragging=false;ui.pointerFist=false;ui.dataPointerStart=null;});window.addEventListener('pointercancel',()=>{ui.dragging=false;ui.pointerFist=false;ui.dataPointerStart=null;dataDrag.reset();});
 window.addEventListener('resize',()=>{renderer.resize();arrival.resize();if(ui.state==='scene-transition'){const size=menuCubeSize(innerWidth);sceneTransition.resize(innerWidth,innerHeight,size);ui.briefBitmap=captureSceneBriefing();unfoldView.setBitmap(ui.briefBitmap);unfoldView.resize(innerWidth,innerHeight,size);renderSceneTransition(0);}else{refreshReading();fitCube();}});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
 window.addEventListener('keydown',e=>{
  if(e.target.matches('input,select,textarea')||$('sources-dialog').open)return;
- if(e.key==='Escape'&&document.fullscreenElement)return;
+ if(e.key==='Escape'&&fullscreenElement(document))return;
  if(e.key==='Escape'&&!['arrival','idle'].includes(ui.state))['scanning','loading','error'].includes(ui.state)?stop():menu();
  if(e.key.toLowerCase()==='f')toggleFullscreen();
  if(ui.demo&&e.code==='Space'){e.preventDefault();if(ui.state==='briefing')guide();else if(ui.state==='guide')align();else if(ui.state==='align'&&params.get('frame')==='1')activate();}
@@ -252,12 +255,14 @@ window.addEventListener('keydown',e=>{
 });
 window.__artwork={get state(){return ui.state},get scene(){return ui.scene},get diagnostics(){return {preview:ui.demo,inferenceMs:ui.inferenceMs,hands:ui.hands.length,modelReady:ui.visionReady,catches:renderer.physics.catches,face:ui.cube.face,cards:ui.cards.length}}};
 document.querySelectorAll('.cube-face').forEach((el,i)=>el.dataset.face=String(i));
-function fullscreenHint(){if(ui.state==='active')return;const hints={en:'CLICK ONCE',es:'HAZ CLIC UNA VEZ',fr:'CLIQUEZ UNE FOIS',zh:'點擊一次',ja:'1回クリック',ko:'한 번 클릭',ar:'انقر مرة واحدة'};text('fullscreen-hint',hints[ui.language]);$('fullscreen-hint').hidden=false;}
-async function toggleFullscreen(gesture=false){
- if(!document.fullscreenElement&&gesture&&navigator.userActivation&&!navigator.userActivation.isActive){fullscreenHint();return;}
- try{document.fullscreenElement?await document.exitFullscreen():await document.documentElement.requestFullscreen();$('fullscreen-hint').hidden=true;}catch{fullscreenHint();text('announcement',$('fullscreen-hint').textContent);}
+function fullscreenHint(status=fullscreenControl.status){
+ const hint=$('fullscreen-hint');hint.hidden=status==='idle'||ui.state==='active';if(hint.hidden)return;
+ const hints={en:['CLICK ONCE FOR FULLSCREEN','FULLSCREEN BLOCKED · OPEN IN CHROME'],es:['HAZ CLIC PARA PANTALLA COMPLETA','PANTALLA COMPLETA BLOQUEADA · ABRE CHROME'],fr:['CLIQUER POUR LE PLEIN ÉCRAN','PLEIN ÉCRAN BLOQUÉ · OUVRIR DANS CHROME'],zh:['點擊一次進入全螢幕','全螢幕受限 · 請用 Chrome 開啟'],ja:['クリックして全画面表示','全画面表示が制限中 · Chromeで開く'],ko:['클릭하여 전체 화면','전체 화면 제한 · Chrome에서 열기'],ar:['انقر لملء الشاشة','ملء الشاشة محظور · افتح في Chrome']};
+ text('fullscreen-hint',hints[ui.language][status==='needs-activation'?0:1]);text('announcement',hint.textContent);
 }
-$('fullscreen').addEventListener('click',event=>toggleFullscreen(!event.isTrusted));document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-pressed',String(!!document.fullscreenElement));$('fullscreen-hint').hidden=true;});
+function toggleFullscreen(gesture=false){return fullscreenControl.toggle({gesture});}
+$('fullscreen').addEventListener('click',event=>toggleFullscreen(!event.isTrusted));$('fullscreen-hint').addEventListener('click',event=>toggleFullscreen(!event.isTrusted));
+for(const name of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(name,()=>{$('fullscreen').setAttribute('aria-pressed',String(!!fullscreenElement(document)));fullscreenControl.changed();});
 async function loadData(){
  setState('arrival');
  try{

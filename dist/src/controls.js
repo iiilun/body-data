@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.8.0';
+import {clamp,lerp} from './math.js?v=5.9.0';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;
@@ -8,20 +8,28 @@ export function facingFace(pitch,yaw){
  return depth.indexOf(Math.max(...depth));
 }
 export const CUBE_DWELL_SECONDS=3;
+export const CUBE_DRAG_GAIN={yaw:230,pitch:185};
+const rightHand=hand=>/^right$/i.test(hand.handedness||hand.id||'')||hand.id==='r';
+export function preferredControlHand(hands=[]){return hands.find(rightHand)||hands[0]||null;}
 // A fist drags the orientation around a fixed centre; a resting open palm commits.
 export class GestureCube{
  constructor(){this.reset();}
- reset(){this.pitch=-18;this.yaw=-28;this.targetPitch=-18;this.targetYaw=-28;this.face=0;this.spin=0;this.grab=null;this.dwell=null;this.committed=false;this.highlight=false;this.handId=null;}
+ reset(){this.pitch=-18;this.yaw=-28;this.targetPitch=-18;this.targetYaw=-28;this.face=0;this.spin=0;this.grab=null;this.dwell=null;this.committed=false;this.highlight=false;this.handId=null;this.ownerLost=0;this.idleElapsed=.35;}
+ controlHand(hands=[]){return hands.find(h=>h.id===this.handId)||(this.handId!==null&&this.ownerLost<.18?null:preferredControlHand(hands));}
  update(dt,hands,hitFace=-1){
   let selected=null;
-  const hand=hands.find(h=>h.id===this.handId)||hands[0];
-  if(!hand||hand.id!==this.handId){this.grab=null;this.dwell=null;this.committed=false;this.handId=hand?.id??null;}
-  this.highlight=!!hand&&!hand.fist&&hand.open>.65&&Number.isInteger(hitFace)&&hitFace>=0&&hitFace<6;
-  if(hand?.fist){
+  let hand=this.controlHand(hands);
+  if(!hand){this.ownerLost+=dt;this.grab=null;this.dwell=null;this.committed=false;if(this.ownerLost>=.18){this.handId=null;hand=preferredControlHand(hands);}}
+  if(hand){this.ownerLost=0;if(hand.id!==this.handId){this.grab=null;this.dwell=null;this.committed=false;this.handId=hand.id;}}
+  const observed=hand?.observed!==false;
+  this.highlight=!!hand&&!hand.fist&&!hand.pinch&&hand.open>.65&&Number.isInteger(hitFace)&&hitFace>=0&&hitFace<6;
+  if(hand&&!observed){this.grab=null;}
+  else if(hand?.fist){
    this.dwell=null;this.committed=false;
    this.grab??={x:hand.x,y:hand.y,pitch:this.pitch,yaw:this.yaw};
-   this.targetYaw=this.grab.yaw+(clamp(hand.x)-this.grab.x)*300;
-   this.targetPitch=this.grab.pitch-(clamp(hand.y)-this.grab.y)*240;
+   const travel=value=>Math.sign(value)*Math.max(0,Math.abs(value)-.004);
+   this.targetYaw=this.grab.yaw+travel(clamp(hand.x)-this.grab.x)*CUBE_DRAG_GAIN.yaw;
+   this.targetPitch=this.grab.pitch-travel(clamp(hand.y)-this.grab.y)*CUBE_DRAG_GAIN.pitch;
   }else{
    this.grab=null;
    if(this.highlight){
@@ -31,8 +39,8 @@ export class GestureCube{
     if(!this.committed&&this.dwell.elapsed+1e-8>=CUBE_DWELL_SECONDS){selected=FACE_SCENES[hitFace];this.committed=true;}
    }else{this.dwell=null;this.committed=false;}
   }
-  if(!this.highlight&&!this.grab){const previous=this.spin;this.spin+=dt;const tilt=(Math.sin(this.spin*.09)-Math.sin(previous*.09))*72;this.targetYaw+=dt*5;this.targetPitch+=tilt;this.yaw+=dt*5;this.pitch+=tilt;}
-  if(this.grab){const blend=1-Math.exp(-dt*22);this.pitch=lerp(this.pitch,this.targetPitch,blend);this.yaw=lerp(this.yaw,this.targetYaw,blend);}
+  if(!this.highlight&&!this.grab&&(hand?observed:this.handId===null)){this.idleElapsed+=dt;const travel=dt*(hand?1:clamp(this.idleElapsed/.35)),previous=this.spin;this.spin+=travel;const tilt=(Math.sin(this.spin*.09)-Math.sin(previous*.09))*72;this.targetYaw+=travel*5;this.targetPitch+=tilt;this.yaw+=travel*5;this.pitch+=tilt;}else this.idleElapsed=0;
+  if(this.grab){const blend=1-Math.exp(-dt*12);this.pitch=lerp(this.pitch,this.targetPitch,blend);this.yaw=lerp(this.yaw,this.targetYaw,blend);}
   else{this.targetPitch=this.pitch;this.targetYaw=this.yaw;}
   if(!this.highlight)this.face=facingFace(this.pitch,this.yaw);
   return {pitch:this.pitch,yaw:this.yaw,dragging:!!this.grab,face:this.face,selected,highlight:this.highlight,progress:clamp((this.dwell?.elapsed||0)/CUBE_DWELL_SECONDS)};

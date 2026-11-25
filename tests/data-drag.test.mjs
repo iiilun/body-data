@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import {DataDrag} from '../dist/src/data-drag.js';
 const box={left:100,top:100,right:500,bottom:600,scrollTop:300,maxScroll:1000};
 const hand=(y=300,id='left',pinch=true,x=250)=>({id,x,y,pinch});
+test('long data pages use amplified movement while retaining ownership and stopping on release',()=>{
+ const drag=new DataDrag({gain:2});drag.update(.016,[hand()],box);
+ let result=drag.update(.016,[hand(200)],box);assert.equal(result.scrollTop,500);
+ result=drag.update(.016,[hand(210),hand(50,'right')],{...box,scrollTop:500});assert.equal(result.handId,'left');assert.equal(result.scrollTop,480);
+ assert.equal(drag.update(.016,[hand(210,'left',false)],{...box,scrollTop:480}).scrollTop,480);
+});
 test('pinching establishes a stationary grab and the page follows vertical movement',()=>{
  const drag=new DataDrag();assert.equal(drag.update(.016,[hand()],box).scrollTop,300);
  let r=drag.update(.016,[hand(250)],box);assert.equal(r.scrollTop,350);assert.equal(r.dragging,true);

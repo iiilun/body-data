@@ -1,7 +1,7 @@
-import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.8.0';
-import {createLanguageFace} from './language-face.js?v=5.8.0';
-import {FACE_SCENES} from './controls.js?v=5.8.0';
-import {DataFlow} from './spatial-type.js?v=5.8.0';
+import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.9.0';
+import {createLanguageFace} from './language-face.js?v=5.9.0';
+import {FACE_SCENES} from './controls.js?v=5.9.0';
+import {DataFlow} from './spatial-type.js?v=5.9.0';
 
 const sides=['front','back','right','left','top','bottom'];
 const fontStack='"Helvetica Neue",Helvetica,Arial,sans-serif';

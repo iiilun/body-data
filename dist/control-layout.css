@@ -7,7 +7,8 @@
 .masthead{inset-inline-end:112px}
 .hand-cursor[data-tool="true"] .pointer-target{opacity:0}
 .motion-guide #guide-count{top:96px}
-.fullscreen-hint{position:fixed;right:22px;bottom:96px;z-index:90;font-size:13px;line-height:1.2;color:#fff;mix-blend-mode:difference;pointer-events:none}
+.fullscreen-hint{position:fixed;right:22px;bottom:104px;z-index:90;max-width:min(360px,calc(100vw - 44px));min-height:64px;padding:16px 20px;border:1px solid currentColor;background:#000;font:400 15px/1.4 Helvetica,Arial,sans-serif;text-align:start;color:#fff;cursor:pointer}
+.fullscreen-hint:focus-visible{outline:2px solid #fff;outline-offset:4px}
 .sources-dialog{position:fixed;inset:0;margin:0;width:100vw;height:100svh;max-width:none;max-height:none;padding:0;border:0;background:transparent;overflow:hidden}
 .sources-panel{position:absolute;top:96px;bottom:28px;left:50%;transform:translateX(-50%);width:min(700px,calc(100% - 32px));overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#999 #222;background:#000;color:#fff;border:1px solid #444;padding:28px;touch-action:none}
 .sources-panel[data-dragging="true"]{cursor:grabbing;user-select:none}

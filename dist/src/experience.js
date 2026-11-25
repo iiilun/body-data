@@ -1,4 +1,4 @@
-import {dictionary,number,compact,countryName,locales} from './i18n.js?v=5.8.0';
+import {dictionary,number,compact,countryName,locales} from './i18n.js?v=5.9.0';
 
 export const copy={
  en:{menuHint:'MOVE A HAND TO AN ICON. HOLD TO SELECT.',begin:'BEGIN',handsHint:'BRING YOUR HANDS INTO VIEW',bodyHint:'STEP INTO VIEW',ready:'HOLD THIS GESTURE TO BEGIN',shelterTopic:'HEAT & EMISSIONS',holdTopic:'UNPAID CARE',spaceTopic:'ROOM TO LIVE',shadeAction:'RAISE A HAND. MAKE SHADE.',holdAction:'OPEN YOUR ARMS. CATCH THE NUMBERS.',spaceAction:'SPREAD YOUR HANDS. MAKE ROOM.',shadeNote:'The counter estimates emissions during your time here.',holdNote:'The two arms carry the unpaid-care workload of women and men.',careNoteSolo:'Average unpaid care hours per woman, per day.',spaceNote:'Push the numbers apart. They settle back: housing pressure persists.',catchHint:'CATCH WITH YOUR FOREARMS · TILT TO LET GO',spaceHint:'MOVE YOUR PALMS TO OPEN THE FIELD',report:'REPORT',hour:'h',day:'day',perSecond:'/ s',total:'TOTAL',available:'AVAILABLE REGIONS',intro:'THE DATA',previewHelp:'PREVIEW · MOVE THE POINTER TO EXPLORE',touch:'HOLD TO ENTER'},

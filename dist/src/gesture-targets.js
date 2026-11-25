@@ -5,7 +5,7 @@ function bounds(target){
  return {left,top,right:target.right??left+target.width,bottom:target.bottom??top+target.height};
 }
 function contains(hand,target){const b=bounds(target);return Number.isFinite(hand.x)&&Number.isFinite(hand.y)&&hand.x>=b.left&&hand.x<=b.right&&hand.y>=b.top&&hand.y<=b.bottom;}
-const eligible=hand=>hand.id!=null&&!hand.fist&&!hand.pinch&&(hand.open??0)>.65&&hand.present!==false;
+const eligible=hand=>hand.id!=null&&!hand.fist&&!hand.pinch&&(hand.open??0)>.65&&hand.present!==false&&hand.observed!==false;
 
 // Coordinates are CSS pixels. A single tracked palm owns each continuous dwell.
 export class DwellTargets{
@@ -17,6 +17,10 @@ export class DwellTargets{
   for(const [id,previous]of this.lockedTargets){const target=byId.get(id)||previous;if(!hands.some(h=>contains(h,target)))this.lockedTargets.delete(id);}
   for(const [id,target]of this.latchedHands){const hand=hands.find(h=>h.id===id);if(!hand||!contains(hand,target))this.latchedHands.delete(id);}
   const currentTarget=this.active&&byId.get(this.active.targetId),currentHand=this.active&&hands.find(h=>h.id===this.active.handId);
+  if(currentTarget&&currentHand?.observed===false&&currentHand.present!==false&&contains(currentHand,currentTarget)){
+   this.active.lost=(this.active.lost||0)+Math.min(.1,Math.max(0,Number.isFinite(dt)?dt:0));
+   if(this.active.lost<.16)return {targetId:currentTarget.id,handId:currentHand.id,progress:Math.min(1,this.active.elapsed/this.seconds),elapsed:this.active.elapsed,selected:null,highlight:true,hand:currentHand};
+  }else if(this.active)this.active.lost=0;
   let pair=currentTarget&&currentHand&&eligible(currentHand)&&contains(currentHand,currentTarget)?{target:currentTarget,hand:currentHand}:null;
   if(!pair){
    this.active=null;

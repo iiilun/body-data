@@ -5,7 +5,7 @@ const inside=(hand,box)=>hand.x>=box.left&&hand.x<=box.right&&hand.y>=box.top&&h
 
 // Hand coordinates and scroll displacement use CSS pixels. The page follows the grab.
 export class DataDrag{
- constructor({deadzone=1}={}){this.deadzone=Math.max(0,Math.min(2,finite(deadzone)?deadzone:1));this.reset();}
+ constructor({deadzone=1,gain=1}={}){this.deadzone=Math.max(0,Math.min(2,finite(deadzone)?deadzone:1));this.gain=Math.max(1,Math.min(3,finite(gain)?gain:1));this.reset();}
  reset(){this.grab=null;}
  update(dt,hands=[],box={}){
   const maxScroll=finite(box.maxScroll)?Math.max(0,box.maxScroll):0;let scrollTop=clamp(finite(box.scrollTop)?box.scrollTop:0,maxScroll);
@@ -16,7 +16,7 @@ export class DataDrag{
    if(!validHand(hand)){this.reset();return result(null);}
    if(!finite(dt)||dt<=0){this.grab.y=hand.y;return result(hand);}
    const delta=this.grab.y-hand.y;
-   if(Math.abs(delta)>this.deadzone){scrollTop=clamp(scrollTop+delta,maxScroll);this.grab.y=hand.y;}
+   if(Math.abs(delta)>this.deadzone){scrollTop=clamp(scrollTop+delta*this.gain,maxScroll);this.grab.y=hand.y;}
    return result(hand);
   }
   const hand=hands.find(hand=>validHand(hand)&&inside(hand,box));

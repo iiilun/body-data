@@ -14,6 +14,12 @@ test('another hand cannot retrigger a committed target while a hand still occupi
 test('disabled and hidden targets cannot be selected and priority resolves overlaps',()=>{const d=new DwellTargets();assert.equal(d.update(0,[palm()],[{...target,enabled:false}]).targetId,null);const control={...target,id:'data',priority:100};assert.equal(d.update(0,[palm()],[target,control]).targetId,'data');assert.equal(d.update(.01,[palm()],[]).progress,0);});
 test('a toolbar control takes priority over a language target under another uncommitted hand',()=>{const d=new DwellTargets(),control={id:'back',left:300,top:100,right:400,bottom:200,priority:100};assert.equal(d.update(0,[palm(),palm('right',350)],[target,control]).targetId,'back');});
 test('a long render stall cannot turn unobserved time into an immediate selection',()=>{const d=new DwellTargets();d.update(0,[palm()],[target]);assert.ok(d.update(15,[palm()],[target]).progress<.04);assert.equal(d.update(NaN,[palm()],[target]).selected,null);});
+test('a short predicted hand gap freezes hover without completing a dwell and a longer gap resets it',()=>{
+ const dwell=new DwellTargets();dwell.update(0,[palm()],[target]);hold(dwell,[palm()],2.95);
+ const prior=dwell.active.elapsed;for(let i=0;i<5;i++){const r=dwell.update(.02,[{...palm(),observed:false}],[target]);assert.equal(r.elapsed,prior);assert.equal(r.selected,null);assert.equal(r.highlight,true);}
+ assert.equal(dwell.update(.01,[palm()],[target]).elapsed,prior+.01);
+ for(let i=0;i<10;i++)dwell.update(.02,[{...palm(),observed:false}],[target]);assert.equal(dwell.active,null);assert.equal(dwell.update(.01,[palm()],[target]).progress,0);
+});
 
 test('a pinching hand cannot accidentally activate a three-second utility target',()=>{
  const dwell=new DwellTargets(),target={id:'back',left:0,top:0,right:100,bottom:100};

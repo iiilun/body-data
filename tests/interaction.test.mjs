@@ -10,11 +10,12 @@ test('hand landmarks refine wrists and stale hand/pose data expires',()=>{
  tracker.update(points,[hand],[[{categoryName:'Left'}]],100,100);
  assert.ok(tracker.pose(100)[15].x>.81);assert.equal(tracker.hands(100).length,1);assert.equal(tracker.hands(500).length,0);assert.equal(tracker.pose(800)[15].visibility,0);
 });
-test('thumb-index pinch has hysteresis, releases cleanly and resets after tracking loss',()=>{
+test('thumb-index pinch has forgiving thresholds, temporal hysteresis and resets after a real tracking gap',()=>{
  const tracker=new BodyTracker(),labels=[[{categoryName:'Left'}]],gestures=[[{categoryName:'Open_Palm',score:.95}]];
  const hand=ratio=>{const p=Array.from({length:21},()=>({x:.5,y:.6}));p[0]={x:.5,y:.8};p[9]={x:.5,y:.6};p[8]={x:.55,y:.4};p[4]={x:.55+ratio*.2,y:.4};return p;};
  const update=(ratio,time)=>{tracker.updateHands([hand(ratio)],labels,time,gestures);return tracker.hands(time)[0].pinch;};
- assert.equal(update(.2,100),true);assert.equal(update(.37,133),true);assert.equal(update(.5,166),false);assert.equal(update(.37,199),false);assert.equal(update(.2,233),true);tracker.updateHands([],[],266);assert.equal(update(.37,300),false);assert.equal(update(.2,333),true);assert.equal(update(.37,600),false);
+ assert.equal(update(.2,100),true);assert.equal(update(.5,133),true);assert.equal(update(.75,166),true);assert.equal(update(.75,233),false);
+ assert.equal(update(.5,266),false);assert.equal(update(.37,300),false);assert.equal(update(.37,350),true);tracker.updateHands([],[],370);assert.equal(tracker.hands(371)[0].pinch,false);assert.equal(update(.5,700),false);
 });
 test('all seven languages cover the complete onboarding and action vocabulary',()=>{
  for(const lang of Object.keys(copy))assert.deepEqual(Object.keys(copy[lang]).sort(),Object.keys(copy.en).sort());
