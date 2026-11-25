@@ -4,6 +4,7 @@
 .camera-startup>div{width:100px;height:1px;background:#454545;overflow:hidden}
 .camera-startup i{display:block;width:5%;height:100%;background:#fff;transition:width .2s}
 .hand-cursor{z-index:120}
+.masthead{inset-inline-end:112px}
 .hand-cursor[data-tool="true"] .pointer-target{opacity:0}
 .motion-guide #guide-count{top:96px}
 .fullscreen-hint{position:fixed;right:22px;bottom:96px;z-index:90;font-size:13px;line-height:1.2;color:#fff;mix-blend-mode:difference;pointer-events:none}

@@ -1,0 +1,6 @@
+/* The same vector stroke draws each frame and its reference symbol. */
+.cube-face,.language-face{outline:none}
+.framed-face-art{display:block;width:100%;height:100%;overflow:hidden;pointer-events:none}
+.language-face>span>svg{display:block;width:100%;height:100%}
+.language-face>span{letter-spacing:0}
+#cube-caption{display:none}

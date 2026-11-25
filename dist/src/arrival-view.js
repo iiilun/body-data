@@ -1,15 +1,16 @@
-import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.7.2';
-import {faceTypography} from './menu-view.js?v=5.7.2';
-import {DataFlow} from './spatial-type.js?v=5.7.2';
+import {ArrivalSequence,LANGUAGE_CUBES,languageLayout,floatingCube,mergeCube,ease} from './arrival.js?v=5.8.0';
+import {createLanguageFace} from './language-face.js?v=5.8.0';
+import {FACE_SCENES} from './controls.js?v=5.8.0';
+import {DataFlow} from './spatial-type.js?v=5.8.0';
 
 const sides=['front','back','right','left','top','bottom'];
 const fontStack='"Helvetica Neue",Helvetica,Arial,sans-serif';
 export class ArrivalView{
- constructor(root,{onSelect,titles}){
+ constructor(root,{onSelect,menuFace}){
   this.root=root;this.canvas=root.querySelector('canvas');this.ctx=this.canvas.getContext('2d');
   this.sequence=new ArrivalSequence({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
   this.flow=new DataFlow();this.layer=document.createElement('canvas');this.layerCtx=this.layer.getContext('2d');
-  this.onSelect=onSelect;this.titles=titles;this.time=0;this.loaded=false;this.inputReady=false;this.frames=[];this.nodes=[];
+  this.onSelect=onSelect;this.menuFace=menuFace;this.time=0;this.loaded=false;this.inputReady=false;this.frames=[];this.nodes=[];
   const constellation=root.querySelector('.language-constellation');
   for(const [i,language]of LANGUAGE_CUBES.entries()){
    const button=document.createElement('button');button.className='language-island';button.type='button';button.lang=language.id==='zh'?'zh-Hant':language.id;
@@ -17,8 +18,7 @@ export class ArrivalView{
    const scene=document.createElement('span');scene.className='language-scene';scene.setAttribute('aria-hidden','true');
    const cube=document.createElement('span');cube.className='language-cube';
    for(const side of sides){const face=document.createElement('span');face.className='language-face '+side;const type=document.createElement('span');face.append(type);cube.append(face);}
-   scene.append(cube);const label=document.createElement('span');label.className='language-name';label.textContent=language.name;
-   button.append(scene,label);const node={button,cube,scene,label,language};this.nodes.push(node);constellation.append(button);
+   scene.append(cube);button.append(scene);const node={button,cube,scene,language};this.nodes.push(node);constellation.append(button);
    button.addEventListener('click',()=>this.choose(i));
   }
   this.resize();
@@ -28,7 +28,7 @@ export class ArrivalView{
   this.canvas.width=Math.round(this.width*this.ratio);this.canvas.height=Math.round(this.height*this.ratio);
   this.layer.width=this.canvas.width;this.layer.height=this.canvas.height;this.layout=languageLayout(this.width,this.height);
   this.flow.key='';this.flow.atlases.clear();
-  for(const [i,node]of this.nodes.entries()){node.frozen=null;this.fit(node,[node.language.name],this.layout[i].size);}
+  for(const node of this.nodes){node.frozen=null;this.fit(node);}
   if(this.sequence.phase==='merging'){
    // Continue the same transaction using positions in the resized coordinate space.
    const sx=this.width/(this.previousWidth||this.width),sy=this.height/(this.previousHeight||this.height);
@@ -45,19 +45,13 @@ export class ArrivalView{
   this.sequence.reset({languagesOnly});this.time=0;this.origins=null;this.changed=false;this.root.dataset.phase=this.sequence.phase;
   for(const [i,node]of this.nodes.entries()){
    node.button.dataset.chosen='false';node.button.tabIndex=languagesOnly?0:-1;node.frozen=null;node.button.dataset.gestureHover='false';
-   this.fit(node,[node.language.name],this.layout[i].size);node.button.lang=node.language.id==='zh'?'zh-Hant':node.language.id;
+   this.fit(node);node.button.lang=node.language.id==='zh'?'zh-Hant':node.language.id;
   }
  }
- fit(node,names,size){
-  const font=names.some(s=>/[\u0600-\u06ff]/.test(s))?'"Noto Sans Arabic",Arial,sans-serif':fontStack;
-  for(const [i,face]of [...node.cube.children].entries()){
-   const name=names[i%names.length],layout=faceTypography(name,size,(s,px)=>{this.ctx.font=`700 ${px}px ${font}`;return this.ctx.measureText(s).width;});
-   const type=face.firstElementChild;type.replaceChildren();type.style.fontSize=layout.font+'px';type.style.lineHeight=layout.lineHeight+'px';
-   type.style.fontFamily=font;type.dir=/[\u0600-\u06ff]/.test(name)?'rtl':'ltr';
-   for(let row=0;row<layout.rows;row++){const b=document.createElement('b');b.textContent=layout.text;type.append(b);}
-  }
+ fit(node){
+  for(const face of node.cube.children)face.firstElementChild.replaceChildren(createLanguageFace(node.language.name));
  }
- fitSelected(){if(this.selectedIndex!=null)this.fit(this.nodes[this.selectedIndex],this.titles(),this.layout[this.selectedIndex].size);}
+ fitSelected(){if(this.selectedIndex!=null)for(const [i,face]of [...this.nodes[this.selectedIndex].cube.children].entries())face.firstElementChild.replaceChildren(this.menuFace(FACE_SCENES[i]));}
  choose(index){
   const node=this.nodes[index];if(!this.loaded||!this.inputReady||!node||!this.sequence.select(node.language.id))return false;
   this.selectedIndex=index;this.origins=this.frames.map(p=>({...p}));this.changed=false;
@@ -97,7 +91,7 @@ export class ArrivalView{
    node.scene.style.setProperty('--language-size',base.size+'px');node.scene.style.perspective=1200/scale+'px';node.scene.style.transform=`translate(-50%,-50%) scale(${scale})`;
    node.cube.style.transform=`rotateZ(${frame.roll}deg) rotateX(${frame.pitch}deg) rotateY(${frame.yaw}deg)`;
    node.button.style.opacity=frame.opacity;node.button.style.zIndex=phase==='merging'&&i===this.selectedIndex?'3':'1';
-   node.label.style.opacity=phase==='merging'?1-ease(p/.24):1;node.button.disabled=phase!=='languages'||!this.inputReady;node.button.tabIndex=phase==='languages'&&this.inputReady?0:-1;
+   node.button.disabled=phase!=='languages'||!this.inputReady;node.button.tabIndex=phase==='languages'&&this.inputReady?0:-1;
    return frame;
   });
   this.paintData();return completed;

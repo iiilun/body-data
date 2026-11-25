@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {GestureCube,FACE_SCENES,CUBE_DWELL_SECONDS} from '../dist/src/controls.js';
-import {faceTypography,menuCopy} from '../dist/src/menu-view.js';
+import {menuCopy} from '../dist/src/menu-view.js';
+import {TOPIC_PATHS,FACE_STROKE,faceLabel,fitFaceLabel} from '../dist/src/cube-art.js';
 import {DataFlow,SilhouetteType,backgroundType} from '../dist/src/spatial-type.js';
 import {thermalRgb,thermalColor,heatSample} from '../dist/src/heat.js';
 import {shadeAt,shelterOccluders} from '../dist/src/scene-models.js';
@@ -44,10 +45,10 @@ test('large hand motion restarts dwell while small tracking jitter preserves it'
  const cube=new GestureCube();steps(cube,palm,0,120);const before=cube.dwell.elapsed;cube.update(1/60,[{...palm,x:.51}],0);assert.ok(cube.dwell.elapsed>before);
  assert.equal(cube.update(1/60,[{...palm,x:.58}],0).progress,0);
 });
-test('all seven face layouts repeat titles beyond both edges instead of shrinking short titles',()=>{
- for(const [lang,name]of Object.entries({en:'SHELTER',zh:'遮蔽',es:'REFUGIO',fr:'ABRI',ja:'住まい',ko:'피난처',ar:'مأوى'})){
-  const size=360,measure=(text,font)=>[...text].length*font*.6,layout=faceTypography(name,size,measure);
-  assert.equal(layout.font,size*.215);assert.ok(layout.rows*layout.lineHeight>size);assert.ok(measure(layout.text,layout.font)>size);assert.ok(layout.text.split(name).length>=3);assert.ok(menuCopy[lang].dwell);assert.equal(layout.text.replaceAll(name,''),'');
+test('reference symbols cover all six faces and long translated labels fit inside the frame',()=>{
+ assert.deepEqual(Object.keys(TOPIC_PATHS).sort(),[...FACE_SCENES].sort());assert.equal(FACE_STROKE,8);assert.equal(faceLabel('shelter','en','SHELTER'),'SHELTERS');assert.equal(faceLabel('shelter','zh','遮蔽'),'遮蔽');
+ for(const [lang,name]of Object.entries({en:'SHELTERS',zh:'遮蔽',es:'INCOMUNICACIÓN',fr:'DÉCONNEXION',ja:'住まい',ko:'피난처',ar:'مأوى'})){
+  const measure=(text,font)=>[...text].length*font*.6,size=fitFaceLabel(name,measure);assert.ok(size>0&&size<=72);assert.ok(measure(name,size)<=432+1e-8);assert.ok(menuCopy[lang].dwell);
  }
 });
 test('all six background renderers share SPACE font, row count and tight tracking',()=>{

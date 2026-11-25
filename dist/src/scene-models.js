@@ -1,4 +1,4 @@
-import {clamp,lerp,hash} from './math.js?v=5.7.2';
+import {clamp,lerp,hash} from './math.js?v=5.8.0';
 
 export function materialKey(cell,pose){
  if(!pose?.[11]||!pose?.[12])return cell.id;
