@@ -1,4 +1,4 @@
-# BODY / DATA · V5.6.1
+# BODY / DATA · V5.6.2
 
 [公開作品](https://iiilun.github.io/body-data/) · [同學測試說明](TESTING.md) · [回報問題](https://github.com/iiilun/body-data/issues/new/choose)
 
@@ -47,7 +47,7 @@ http://localhost:5173/?demo=1&scene=space&time=22&still=1
 http://localhost:5173/?demo=1&scene=thirst&intro=1&frame=1
 ```
 
-`intro=1`停在數據介紹，空白鍵進示範；`guide=1`停在動作示範，空白鍵進鏡頭對位；`frame=1`停在對位，預覽空白鍵可進關。`step=guide`或`step=align`可直接檢查該頁；`ready=1&frame=1`可在預覽固定綠色輪廓與數字3。`still=1`與`time=`供固定排版檢查；正式鏡頭流程沒有這些捷徑。
+數據介紹6秒後自動進入動作示範；舊的`intro=1`不再停住流程。`guide=1`停在動作示範，空白鍵進鏡頭對位；`frame=1`停在對位，預覽空白鍵可進關。`step=guide`或`step=align`可直接檢查該頁；`ready=1&frame=1`可在預覽固定綠色輪廓與數字3。`still=1`與`time=`供固定排版檢查；正式鏡頭流程沒有這些捷徑。
 
 ## 驗證與部署
 
@@ -73,4 +73,4 @@ V5.5：[`research/v55-portal-onboarding.md`](research/v55-portal-onboarding.md)�
 
 V5.6以立體刀模展開取代V5.5的黑色空隙轉場，並加粗、穩定相機外輪廓。實作與驗證：[`research/v56-unfold-and-contour.md`](research/v56-unfold-and-contour.md)。
 
-V5.6.1：六面保持相連，整張展開圖一起前進；修正轉場完成時兩個大數值短暫空白。
+V5.6.1–5.6.2：六面保持相連，整張展開圖一起前進；閱讀期間沿用同一張內頁畫面，更新第二組數據與閱讀進度，避免切換圖層造成文字短暫空白。數據頁6秒後自動進入動作示範，即使舊預覽網址帶有`intro=1`也會繼續。

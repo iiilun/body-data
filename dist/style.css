@@ -123,7 +123,8 @@ body[data-state="arrival"] #stage{visibility:hidden}
 /* Native reading layouts remain still until the carton unfolding completes. */
 
 
-.briefing{animation:none;transform-origin:50% 50%}
+.briefing{animation:none;transform-origin:50% 50%;will-change:transform}
+body[data-state="scene-transition"] #stage{z-index:8}
 body[data-state="scene-transition"] .briefing{pointer-events:none;will-change:transform}
 body[data-state="scene-transition"] .cube-face{transition:none;text-rendering:geometricPrecision}
 body[data-state="result"] .briefing{animation:brief-enter .55s ease both}
@@ -163,3 +164,4 @@ body[data-state="align"] #align-status{color:#fff;opacity:.7}
 .unfold-ghost{opacity:.16}
 .unfold-core .unfold-inside{outline-color:rgba(180,180,180,var(--edge,1))}
 .unfold-preview{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block}
+.unfold-scene[data-flat="true"]{left:0;top:0;width:100%;height:100%;transform:none;perspective:none}

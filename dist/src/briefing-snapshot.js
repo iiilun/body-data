@@ -19,5 +19,7 @@ export function captureBriefing(root,width,height){
   const box=svg.getBoundingClientRect();ctx.save();ctx.translate(box.x,box.y);ctx.scale(box.width/64,box.height/64);ctx.strokeStyle=getComputedStyle(svg).color;ctx.lineWidth=1.45;ctx.lineCap='round';ctx.lineJoin='round';for(const path of svg.querySelectorAll('path'))ctx.stroke(new Path2D(path.getAttribute('d')));ctx.restore();
  }
  const progress=root.querySelector('#brief-progress'),box=progress.getBoundingClientRect();ctx.fillStyle=getComputedStyle(progress).backgroundColor;ctx.fillRect(box.x,box.y,box.width,Math.max(1,box.height));
+ canvas.readingProgress={x:box.x,y:box.y,width:box.width,height:Math.max(1,box.height),ratio,track:getComputedStyle(progress).backgroundColor,fill:getComputedStyle(progress.querySelector('i')).backgroundColor};
+ canvas.readingPixels=ctx.getImageData(0,0,canvas.width,canvas.height);
  return canvas;
 }

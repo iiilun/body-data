@@ -1,23 +1,23 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.6.1';
-import {clamp,pointToScreen} from './math.js?v=5.6.1';
-import {DataService} from './data.js?v=5.6.1';
-import {Renderer,demoPose} from './renderer.js?v=5.6.1';
-import {BodyTracker} from './interaction.js?v=5.6.1';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.6.1';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.6.1';
-import {sceneWords} from './scene-copy.js?v=5.6.1';
-import {previewHand} from './glass-model.js?v=5.6.1';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.6.1';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.6.1';
-import {ArrivalView} from './arrival-view.js?v=5.6.1';
-import {UnfoldTransition} from './unfold-transition.js?v=5.6.1';
-import {UnfoldView} from './unfold-view.js?v=5.6.1';
-import {menuCubeSize} from './arrival.js?v=5.6.1';
-import {typeMetrics,vectorType} from './vector-type.js?v=5.6.1';
-import {GUIDE_SECONDS} from './human-guide.js?v=5.6.1';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.6.1';
-import {freshPersonMask} from './camera-alignment.js?v=5.6.1';
-import {captureBriefing} from './briefing-snapshot.js?v=5.6.1';
+import {dictionary,languages,locales} from './i18n.js?v=5.6.2';
+import {clamp,pointToScreen} from './math.js?v=5.6.2';
+import {DataService} from './data.js?v=5.6.2';
+import {Renderer,demoPose} from './renderer.js?v=5.6.2';
+import {BodyTracker} from './interaction.js?v=5.6.2';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.6.2';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.6.2';
+import {sceneWords} from './scene-copy.js?v=5.6.2';
+import {previewHand} from './glass-model.js?v=5.6.2';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.6.2';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.6.2';
+import {ArrivalView} from './arrival-view.js?v=5.6.2';
+import {UnfoldTransition} from './unfold-transition.js?v=5.6.2';
+import {UnfoldView} from './unfold-view.js?v=5.6.2';
+import {menuCubeSize} from './arrival.js?v=5.6.2';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.6.2';
+import {GUIDE_SECONDS} from './human-guide.js?v=5.6.2';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.6.2';
+import {freshPersonMask} from './camera-alignment.js?v=5.6.2';
+import {captureBriefing} from './briefing-snapshot.js?v=5.6.2';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
@@ -31,16 +31,16 @@ icons.vacant='<path d="M7 58V24L32 5l25 19v34H7zM25 58V36h15v22M14 25h10v10H14zM
 const text=(id,value)=>{const el=$(id),next=String(value??'');if(el.textContent!==next)el.textContent=next;};
 function title(scene){return dictionary(ui.language)[scene]?.title||words[ui.language][scene];}
 function datum(scene){const m=catalogue.primary(scene,ui.language);if(scene==='shelter'&&m)m.rate=data.metric('en','shelter')?.rate||0;return m;}
-function setState(state){
- if(state!=='scene-transition')clearSceneTransition();
+function setState(state,{keepTransition=false}={}){
+ if(state!=='scene-transition'&&!keepTransition)clearSceneTransition();
  ui.state=state;if(['idle','scanning'].includes(state))text('announcement','');if(state!=='scanning')document.querySelectorAll('.cube-face').forEach(el=>el.dataset.selected='false');document.body.dataset.state=state;document.body.dataset.scene=ui.scene;
  const menu=['idle','loading','scanning','error'].includes(state),ready=state==='scanning';
  $('arrival').hidden=state!=='arrival';$('entrance').hidden=state!=='error';$('cube-scene').hidden=!['idle','loading','scanning'].includes(state);$('cube-guidance').hidden=!['idle','scanning'].includes(state);
- $('scan-copy').hidden=state!=='loading';$('error').hidden=state!=='error';$('briefing').hidden=!['briefing','result'].includes(state);$('alignment').hidden=state!=='align';$('motion-guide').hidden=state!=='guide';
+ $('scan-copy').hidden=state!=='loading';$('error').hidden=state!=='error';$('briefing').hidden=!['briefing','result','scene-transition'].includes(state);$('alignment').hidden=state!=='align';$('motion-guide').hidden=state!=='guide';
  $('scene-context').hidden=true;$('coach').hidden=true;$('hand-cursor').hidden=true;
  document.querySelector('.masthead').hidden=!(menu||ui.demo&&state==='align');document.querySelector('.footer').hidden=!['idle','scanning','error'].includes(state);
  $('back').hidden=['arrival','idle'].includes(state);$('end').hidden=!ready;$('preview').hidden=state!=='error'||!ui.loaded||!ui.entranceComplete;
- document.body.dataset.theme=['briefing','guide','align','active','result'].includes(state)?ui.scene:'menu';translate();
+ document.body.dataset.theme=['briefing','guide','align','active','result','scene-transition'].includes(state)?ui.scene:'menu';translate();
 }
 function translate(){
  const d=dictionary(ui.language),w=words[ui.language],c=copy[ui.language];document.documentElement.lang=ui.language==='zh'?'zh-Hant':ui.language;document.body.dir=ui.language==='ar'?'rtl':'ltr';
@@ -80,7 +80,7 @@ async function startCamera(){
   stream.getVideoTracks()[0].addEventListener('ended',()=>{if(session===ui.session)error('camera','Camera disconnected')});
  }catch(e){if(session===ui.session)error('camera',e);return;}
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.6.1',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.6.2',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -97,11 +97,11 @@ function clearSceneTransition(){
  sceneTransition.cancel();unfoldView.clear();ui.briefBitmap=null;delete document.body.dataset.transitionPhase;
 }
 function captureSceneBriefing(){
- $('briefing').hidden=false;document.body.dataset.theme=ui.scene;fitFacts();const bitmap=captureBriefing($('briefing'),innerWidth,innerHeight);$('briefing').hidden=true;document.body.dataset.theme='menu';return bitmap;
+ const wasHidden=$('briefing').hidden,theme=document.body.dataset.theme;$('briefing').hidden=false;document.body.dataset.theme=ui.scene;fitFacts();const bitmap=captureBriefing($('briefing'),innerWidth,innerHeight);$('briefing').hidden=wasHidden;document.body.dataset.theme=theme;return bitmap;
 }
 function renderSceneTransition(dt){
  const frame=sceneTransition.update(dt);if(!frame)return;document.body.dataset.transitionPhase=frame.phase;unfoldView.draw(frame);
- if(frame.done){ui.keepBriefing=true;setState('briefing');ui.keepBriefing=false;text('announcement',ui.metric.title);}
+ if(frame.done){unfoldView.showFullPage();ui.keepBriefing=true;setState('briefing',{keepTransition:true});ui.keepBriefing=false;text('announcement',ui.metric.title);}
 }
 function openBriefing(scene){
  if(!ui.loaded||!ui.entranceComplete||ui.state==='scene-transition')return;
@@ -118,8 +118,9 @@ function renderBriefing(){
  const container=$('brief-facts');container.replaceChildren();container.classList.toggle('single',items.length===1);container.classList.toggle('triple',items.length===3);container.classList.toggle('quad',items.length===4);
  for(const fact of items){const div=document.createElement('div');div.className='brief-fact';const value=document.createElement('span');value.className='fact-value';value.textContent=fact.value;const label=document.createElement('p');label.className='fact-label';label.textContent=fact.label;div.append(value,label);container.append(div)}
  text('brief-unit','');$('brief-gesture').innerHTML=icon(ui.scene==='space'?'spread':ui.scene);
- text('brief-action',result?(ui.scene==='thirst'?sceneWords[ui.language].waterResult:m.note):m.action);text('brief-note',result?'':m.note);text('brief-source',result&&ui.scene==='thirst'?'WHO / UNICEF JMP · 2024':[...new Set(shown.map(c=>c.source))].join(' / '));requestAnimationFrame(fitFacts);
+ text('brief-action',result?(ui.scene==='thirst'?sceneWords[ui.language].waterResult:m.note):m.action);text('brief-note',result?'':m.note);text('brief-source',result&&ui.scene==='thirst'?'WHO / UNICEF JMP · 2024':[...new Set(shown.map(c=>c.source))].join(' / '));requestAnimationFrame(refreshReading);
 }
+function refreshReading(){fitFacts();if(ui.state==='briefing'&&unfoldView.isFullPage){ui.briefBitmap=captureBriefing($('briefing'),innerWidth,innerHeight);unfoldView.setBitmap(ui.briefBitmap);}}
 function fitFacts(){if($('briefing').hidden)return;const values=[...document.querySelectorAll('.fact-value')];if(!values.length)return;const ctx=document.createElement('canvas').getContext('2d');const base=Math.min(innerHeight*(values.length>2?.10:.15),innerWidth*.105,145);let size=base;ctx.font=`300 ${base}px ${ui.language==='ar'?'"Noto Sans Arabic",Arial,sans-serif':'"Helvetica Neue",Helvetica,Arial,sans-serif'}`;for(const el of values)if(el.parentElement.clientWidth)size=Math.min(size,base*el.parentElement.clientWidth*.97/Math.max(1,ctx.measureText(el.textContent).width));$('brief-facts').style.setProperty('--fact-size',Math.max(36,size)+'px');
  for(const el of values){const value=el.dataset.value||el.textContent;el.dataset.value=value;const px=parseFloat(getComputedStyle(el).fontSize),width=el.clientWidth/px*512,metrics=typeMetrics(value,{size:512,family:ui.language==='ar'?'"Noto Sans Arabic",Arial,sans-serif':'"Helvetica Neue",Helvetica,Arial,sans-serif',weight:300,tracking:-.045,row:1});const svg=vectorType(metrics,width,512);svg.removeAttribute('aria-hidden');svg.setAttribute('role','img');svg.setAttribute('aria-label',value);el.replaceChildren(svg);}
 }
@@ -184,7 +185,7 @@ function tick(now){
   $('hand-cursor').hidden=!p;if(p){$('hand-cursor').style.transform=`translate(${p.x*innerWidth-56}px,${p.y*innerHeight-56}px)`;$('hand-cursor').dataset.dwelling=String(selection.highlight);$('hand-cursor').dataset.dragging=String(selection.dragging);$('hand-cursor').querySelector('.cursor-ring').style.strokeDashoffset=276.46*(1-selection.progress);}
   if(selection.selected){openBriefing(selection.selected);requestAnimationFrame(tick);return;}
  }else if(ui.state==='briefing'){
-  ui.introElapsed+=dt;const page=Math.min(1,Math.floor(ui.introElapsed/3));if(page!==ui.introPage){ui.introPage=page;renderBriefing();}$('brief-progress').querySelector('i').style.width=clamp(ui.introElapsed/6)*100+'%';if(ui.introElapsed>=6&&!(ui.demo&&params.get('intro')==='1'))guide();
+  ui.introElapsed+=dt;const page=Math.min(1,Math.floor(ui.introElapsed/3));if(page!==ui.introPage){ui.introPage=page;renderBriefing();}$('brief-progress').querySelector('i').style.width=clamp(ui.introElapsed/6)*100+'%';unfoldView.readingProgress(ui.introElapsed/6);if(ui.introElapsed>=6)guide();
  }else if(ui.state==='guide'){
   ui.guideElapsed+=dt;text('guide-count',new Intl.NumberFormat(locales[ui.language]).format(Math.max(1,Math.ceil(GUIDE_SECONDS-ui.guideElapsed))));document.querySelector('.guide-progress i').style.width=clamp(ui.guideElapsed/GUIDE_SECONDS)*100+'%';if(ui.guideElapsed>=GUIDE_SECONDS&&!(ui.demo&&params.get('guide')==='1'))align();
  }else if(ui.state==='align'){
@@ -208,7 +209,7 @@ $('sources-toggle').addEventListener('click',()=>{if(ui.loaded){renderSources();
 $('sources-dialog').addEventListener('click',e=>{if(e.target===$('sources-dialog'))$('sources-dialog').close()});
 window.addEventListener('pointermove',e=>{if(ui.demo)ui.mouse={x:e.clientX,y:e.clientY};});
 window.addEventListener('pointerdown',e=>{if(!ui.demo||e.target.closest('button,select,dialog'))return;ui.mouse={x:e.clientX,y:e.clientY};if(ui.state==='scanning')ui.dragging=true;if(ui.state==='active'){ui.pointerFist=true;renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);}});window.addEventListener('pointerup',e=>{if(ui.demo&&ui.state==='active'&&ui.pointerFist){renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);renderer.previewGrip(e.clientX,e.clientY,false,ui.pose);}ui.dragging=false;ui.pointerFist=false;});window.addEventListener('pointercancel',()=>{ui.dragging=false;ui.pointerFist=false;});
-window.addEventListener('resize',()=>{renderer.resize();arrival.resize();if(ui.state==='scene-transition'){const size=menuCubeSize(innerWidth);sceneTransition.resize(innerWidth,innerHeight,size);ui.briefBitmap=captureSceneBriefing();unfoldView.setBitmap(ui.briefBitmap);unfoldView.resize(innerWidth,innerHeight,size);renderSceneTransition(0);}else{fitFacts();fitCube();}});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
+window.addEventListener('resize',()=>{renderer.resize();arrival.resize();if(ui.state==='scene-transition'){const size=menuCubeSize(innerWidth);sceneTransition.resize(innerWidth,innerHeight,size);ui.briefBitmap=captureSceneBriefing();unfoldView.setBitmap(ui.briefBitmap);unfoldView.resize(innerWidth,innerHeight,size);renderSceneTransition(0);}else{refreshReading();fitCube();}});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
 window.addEventListener('keydown',e=>{
  if(e.target.matches('input,select,textarea')||$('sources-dialog').open)return;
  if(e.key==='Escape'&&document.fullscreenElement)return;

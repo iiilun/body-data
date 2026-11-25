@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.6.1';
+import {clamp,lerp} from './math.js?v=5.6.2';
 export const FACE_SCENES=['shelter','space','hold','thirst','offline','vacant'];
 const normals=[[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,-1,0],[0,1,0]];
 const radians=d=>d*Math.PI/180;

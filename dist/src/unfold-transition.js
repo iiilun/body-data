@@ -1,4 +1,4 @@
-import {clamp,lerp} from './math.js?v=5.6.1';
+import {clamp,lerp} from './math.js?v=5.6.2';
 const ease=t=>{t=clamp(t);return t*t*t*(t*(t*6-15)+10);};
 const wrap=angle=>((angle+180)%360+360)%360-180;
 const near=(from,to)=>to+360*Math.round((from-to)/360);
