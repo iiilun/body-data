@@ -1,4 +1,4 @@
-import {previewSize} from './unfold-transition.js?v=5.6.2';
+import {previewSize} from './unfold-transition.js?v=5.6.3';
 
 export class UnfoldView{
  constructor(root){this.root=root;this.rig=root.querySelector('.unfold-rig');this.net=root.querySelector('.unfold-net');this.hinges={};}

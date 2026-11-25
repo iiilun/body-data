@@ -1,4 +1,4 @@
-import {clamp,lerp,hash,smoothstep} from './math.js?v=5.6.2';
+import {clamp,lerp,hash,smoothstep} from './math.js?v=5.6.3';
 export const FOG_RETURN_DELAY=5;
 export const FOG_RETURN_RATE=.14;
 
