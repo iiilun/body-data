@@ -20,7 +20,5 @@ export function captureBriefing(root,width,height){
   const box=svg.getBoundingClientRect();ctx.save();ctx.translate(box.x,box.y);ctx.scale(box.width/64,box.height/64);ctx.strokeStyle=getComputedStyle(svg).color;ctx.lineWidth=1.45;ctx.lineCap='round';ctx.lineJoin='round';for(const path of svg.querySelectorAll('path'))ctx.stroke(new Path2D(path.getAttribute('d')));ctx.restore();
  }
  const progress=root.querySelector('#brief-progress'),box=progress.getBoundingClientRect();ctx.fillStyle=getComputedStyle(progress).backgroundColor;ctx.fillRect(box.x,box.y,box.width,Math.max(1,box.height));
- // This rectangle lies entirely inside existing black ink; keep its core exact.
- for(const rect of root.querySelectorAll('.type-aperture')){const b=rect.getBoundingClientRect();ctx.fillStyle='#000';ctx.fillRect(b.x,b.y,b.width,b.height);}
  return canvas;
 }

@@ -1,26 +1,28 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.5.0';
-import {clamp,pointToScreen} from './math.js?v=5.5.0';
-import {DataService} from './data.js?v=5.5.0';
-import {Renderer,demoPose} from './renderer.js?v=5.5.0';
-import {BodyTracker} from './interaction.js?v=5.5.0';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.5.0';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.5.0';
-import {sceneWords} from './scene-copy.js?v=5.5.0';
-import {previewHand} from './glass-model.js?v=5.5.0';
-import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.5.0';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.5.0';
-import {ArrivalView} from './arrival-view.js?v=5.5.0';
-import {SceneTransition,cubeRasterDetail,rectanglePortal} from './scene-transition.js?v=5.5.0';
-import {menuCubeSize} from './arrival.js?v=5.5.0';
-import {typeMetrics,vectorType,darkAperture} from './vector-type.js?v=5.5.0';
-import {GUIDE_SECONDS} from './human-guide.js?v=5.5.0';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.5.0';
-import {freshPersonMask} from './camera-alignment.js?v=5.5.0';
-import {captureBriefing} from './briefing-snapshot.js?v=5.5.0';
+import {dictionary,languages,locales} from './i18n.js?v=5.6.0';
+import {clamp,pointToScreen} from './math.js?v=5.6.0';
+import {DataService} from './data.js?v=5.6.0';
+import {Renderer,demoPose} from './renderer.js?v=5.6.0';
+import {BodyTracker} from './interaction.js?v=5.6.0';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.6.0';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.6.0';
+import {sceneWords} from './scene-copy.js?v=5.6.0';
+import {previewHand} from './glass-model.js?v=5.6.0';
+import {faceAtPoint,menuPointer,faceTypography,menuCopy} from './menu-view.js?v=5.6.0';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES} from './controls.js?v=5.6.0';
+import {ArrivalView} from './arrival-view.js?v=5.6.0';
+import {UnfoldTransition} from './unfold-transition.js?v=5.6.0';
+import {UnfoldView} from './unfold-view.js?v=5.6.0';
+import {menuCubeSize} from './arrival.js?v=5.6.0';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.6.0';
+import {GUIDE_SECONDS} from './human-guide.js?v=5.6.0';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.6.0';
+import {freshPersonMask} from './camera-alignment.js?v=5.6.0';
+import {captureBriefing} from './briefing-snapshot.js?v=5.6.0';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
-const sceneTransition=new SceneTransition({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
+const sceneTransition=new UnfoldTransition({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
+const unfoldView=new UnfoldView($('unfold-scene'));
 const arrival=new ArrivalView($('arrival'),{onSelect:language=>{ui.language=language;translate();},titles:()=>FACE_SCENES.map(title)});
 icons.fist='<path d="M17 58V43L8 29c-3-6 2-10 6-4l5 7V15c0-7 8-7 8 0v12V10c0-7 8-7 8 0v17V12c0-7 8-7 8 0v17V19c0-7 8-7 8 0v21c0 10-4 15-9 18z"/>';
 icons.thirst='<path d="M6 21V6h15M43 6h15v15M58 43v15H43M21 58H6V43M20 46V31c0-4 5-4 5 0v5-18c0-4 5-4 5 0v15-20c0-4 5-4 5 0v20-17c0-4 5-4 5 0v18-11c0-4 5-4 5 0v18c0 9-5 15-12 15s-13-5-13-10z"/>';
@@ -33,7 +35,7 @@ function setState(state){
  if(state!=='scene-transition')clearSceneTransition();
  ui.state=state;if(['idle','scanning'].includes(state))text('announcement','');if(state!=='scanning')document.querySelectorAll('.cube-face').forEach(el=>el.dataset.selected='false');document.body.dataset.state=state;document.body.dataset.scene=ui.scene;
  const menu=['idle','loading','scanning','error'].includes(state),ready=state==='scanning';
- $('arrival').hidden=state!=='arrival';$('entrance').hidden=state!=='error';$('cube-scene').hidden=!['idle','loading','scanning','scene-transition'].includes(state);$('cube-guidance').hidden=!['idle','scanning'].includes(state);
+ $('arrival').hidden=state!=='arrival';$('entrance').hidden=state!=='error';$('cube-scene').hidden=!['idle','loading','scanning'].includes(state);$('cube-guidance').hidden=!['idle','scanning'].includes(state);
  $('scan-copy').hidden=state!=='loading';$('error').hidden=state!=='error';$('briefing').hidden=!['briefing','result'].includes(state);$('alignment').hidden=state!=='align';$('motion-guide').hidden=state!=='guide';
  $('scene-context').hidden=true;$('coach').hidden=true;$('hand-cursor').hidden=true;
  document.querySelector('.masthead').hidden=!(menu||ui.demo&&state==='align');document.querySelector('.footer').hidden=!['idle','scanning','error'].includes(state);
@@ -78,7 +80,7 @@ async function startCamera(){
   stream.getVideoTracks()[0].addEventListener('ended',()=>{if(session===ui.session)error('camera','Camera disconnected')});
  }catch(e){if(session===ui.session)error('camera',e);return;}
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.5.0',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.6.0',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -92,40 +94,20 @@ async function startCamera(){
 }
 function preview(){if(!ui.loaded||!ui.entranceComplete)return;cleanup();ui.previewRequested=true;ui.demo=true;ui.cube.reset();ui.scene='';ui.metric=null;ui.cards=[];setState('scanning');}
 function clearSceneTransition(){
- sceneTransition.cancel();
- for(const property of ['transform','width','height','perspective','--cube','--cube-detail'])$('cube-scene').style.removeProperty(property);ui.transitionDetail=0;ui.briefPortal=false;ui.briefBitmap=null;
- document.querySelectorAll('#cube .type-aperture').forEach(el=>el.remove());
- $('briefing').style.removeProperty('transform');delete document.body.dataset.transitionPhase;
+ sceneTransition.cancel();unfoldView.clear();ui.briefBitmap=null;delete document.body.dataset.transitionPhase;
 }
-function prepareBriefPortal(){
- $('briefing').hidden=false;$('briefing').style.removeProperty('transform');document.body.dataset.theme=ui.scene;fitFacts();
- let rect;
- if(['hold','thirst'].includes(ui.scene)){
-  const svg=document.querySelector('.fact-value svg'),slot=darkAperture(svg,{ink:true}),box=svg.getBoundingClientRect(),m=svg.typeLayout;
-  rect={x:box.x+slot.x/m.width*box.width,y:box.y+slot.y/m.height*box.height,width:slot.width/m.width*box.width,height:slot.height/m.height*box.height};
- }else{
-  const padding=parseFloat(getComputedStyle($('briefing')).paddingLeft);rect={x:2,y:innerHeight*.25,width:Math.max(6,padding-6),height:innerHeight*.5};
- }
- sceneTransition.setReveal(rectanglePortal(rect,innerWidth,innerHeight));ui.briefBitmap=captureBriefing($('briefing'),innerWidth,innerHeight);$('briefing').hidden=true;ui.briefPortal=true;
+function captureSceneBriefing(){
+ $('briefing').hidden=false;document.body.dataset.theme=ui.scene;fitFacts();const bitmap=captureBriefing($('briefing'),innerWidth,innerHeight);$('briefing').hidden=true;document.body.dataset.theme='menu';return bitmap;
 }
 function renderSceneTransition(dt){
- let frame=sceneTransition.update(dt);if(!frame)return;
- document.body.dataset.transitionPhase=frame.phase;
- if(frame.phase!=='expand'&&!ui.briefPortal){prepareBriefPortal();frame=sceneTransition.update(0);}
- $('cube-scene').hidden=!['expand','black'].includes(frame.phase);
- if(frame.phase==='expand'||frame.phase==='black'){
-  const detail=cubeRasterDetail(frame.zoom),size=sceneTransition.size*detail;
-  if(detail!==ui.transitionDetail){ui.transitionDetail=detail;for(const property of ['width','height'])$('cube-scene').style.setProperty(property,size+'px');$('cube-scene').style.setProperty('--cube',size+'px');$('cube-scene').style.perspective=1200*detail+'px';}
-  $('cube-scene').style.transform=`translate(-50%,-50%) translate(${frame.x}px,${frame.y}px) scale(${frame.zoom/detail})`;
- }
- $('briefing').hidden=true;if(frame.phase==='reveal'||frame.phase==='done')renderer.zoomBriefing(ui.briefBitmap,frame);
+ const frame=sceneTransition.update(dt);if(!frame)return;document.body.dataset.transitionPhase=frame.phase;unfoldView.draw(frame);
  if(frame.done){ui.keepBriefing=true;setState('briefing');ui.keepBriefing=false;text('announcement',ui.metric.title);}
 }
 function openBriefing(scene){
  if(!ui.loaded||!ui.entranceComplete||ui.state==='scene-transition')return;
  const fromCube=ui.state==='scanning';ui.scene=scene;ui.metric=datum(scene);if(!ui.metric){error('model','No source data for '+scene);return;}
  ui.cards=catalogue.cards(scene,ui.language);ui.elapsed=0;ui.introElapsed=0;ui.introPage=0;ui.gate.reset();ui.gestureSeen=false;ui.resultReason='time';ui.exitHold=0;renderer.reset(scene);$('brief-progress').querySelector('i').style.width='0%';
- if(fromCube){const face=ui.cube.face,svg=document.querySelectorAll('#cube .cube-face svg')[face],aperture=darkAperture(svg);sceneTransition.start(scene,{width:innerWidth,height:innerHeight,size:$('cube-scene').offsetWidth,face,aperture,pitch:ui.cube.pitch,yaw:ui.cube.yaw,roll:-7});setState('scene-transition');renderSceneTransition(0);}
+ if(fromCube){const size=$('cube-scene').offsetWidth;sceneTransition.start(scene,{width:innerWidth,height:innerHeight,size,pitch:ui.cube.pitch,yaw:ui.cube.yaw,roll:-7});setState('scene-transition');ui.briefBitmap=captureSceneBriefing();unfoldView.start({faces:[...document.querySelectorAll('#cube .cube-face svg')],bitmap:ui.briefBitmap,size,light:['hold','thirst'].includes(scene),width:innerWidth,height:innerHeight});renderer.clearTransition();renderSceneTransition(0);}
  else{setState('briefing');text('announcement',ui.metric.title);}
 }
 function renderBriefing(){
@@ -142,7 +124,7 @@ function fitFacts(){const values=[...document.querySelectorAll('.fact-value')];i
  for(const el of values){const value=el.dataset.value||el.textContent;el.dataset.value=value;const px=parseFloat(getComputedStyle(el).fontSize),width=el.clientWidth/px*512,metrics=typeMetrics(value,{size:512,family:ui.language==='ar'?'"Noto Sans Arabic",Arial,sans-serif':'"Helvetica Neue",Helvetica,Arial,sans-serif',weight:300,tracking:-.045,row:1});const svg=vectorType(metrics,width,512);svg.removeAttribute('aria-hidden');svg.setAttribute('role','img');svg.setAttribute('aria-label',value);el.replaceChildren(svg);}
 }
 function guide(){ui.guideElapsed=0;setState('guide');}
-function align(){ui.gate.reset();ui.alignment={ready:false,count:3,progress:0};setState('align');}
+function align(){ui.gate.reset();renderer.cameraAlignment.reset();ui.alignment={ready:false,count:3,progress:0};setState('align');}
 function activate(){if(ui.state!=='align')return;ui.elapsed=ui.demo?clamp(Number(params.get('time')||0),0,44):0;renderer.reset(ui.scene);setState('active');text('announcement',ui.metric.action);}
 function finish(reason='time'){ui.resultReason=reason;ui.resultElapsed=0;ui.observer[ui.scene]++;setState('result');}
 function renderContext(){ui.statsKey='';text('context-unit',ui.metric.title);text('context-scope',sceneWords[ui.language].globalData+' · '+words[ui.language].variousYears);renderStats();}
@@ -218,7 +200,7 @@ function tick(now){
  }else if(ui.state==='result'){ui.resultElapsed+=dt;if(ui.resultElapsed>7&&!(ui.demo&&params.get('result')==='1'))menu();}
  if(['idle','loading'].includes(ui.state)){const spin=ui.cube.update(dt,[]);$('cube').style.transform=`rotateZ(-7deg) rotateX(${spin.pitch}deg) rotateY(${spin.yaw}deg)`;}
  const paused=$('sources-dialog').open||!present||ui.state==='result'||ui.demo&&params.get('still')==='1';
- renderer.render({time:ui.time,dt:paused?0:dt,state:ui.state,scene:ui.scene,elapsed:ui.elapsed,progress:clamp(ui.elapsed/45),pose:ui.pose,hands:ui.hands,mask:ui.mask,video:$('camera'),demo:ui.demo,dict:dictionary(ui.language),lang:ui.language,metric:ui.metric,cards:ui.cards,rules:catalogue.rules,present,alignment:ui.alignment,guideElapsed:ui.guideElapsed});
+ renderer.render({now,time:ui.time,dt:paused?0:dt,state:ui.state,scene:ui.scene,elapsed:ui.elapsed,progress:clamp(ui.elapsed/45),pose:ui.pose,hands:ui.hands,mask:ui.mask,video:$('camera'),demo:ui.demo,dict:dictionary(ui.language),lang:ui.language,metric:ui.metric,cards:ui.cards,rules:catalogue.rules,present,alignment:ui.alignment,guideElapsed:ui.guideElapsed});
  requestAnimationFrame(tick);
 }
 $('retry').addEventListener('click',()=>ui.loaded?startCamera():loadData());$('preview').addEventListener('click',preview);$('end').addEventListener('click',stop);$('back').addEventListener('click',()=>['scanning','loading','error'].includes(ui.state)?stop():menu());
@@ -226,7 +208,7 @@ $('sources-toggle').addEventListener('click',()=>{if(ui.loaded){renderSources();
 $('sources-dialog').addEventListener('click',e=>{if(e.target===$('sources-dialog'))$('sources-dialog').close()});
 window.addEventListener('pointermove',e=>{if(ui.demo)ui.mouse={x:e.clientX,y:e.clientY};});
 window.addEventListener('pointerdown',e=>{if(!ui.demo||e.target.closest('button,select,dialog'))return;ui.mouse={x:e.clientX,y:e.clientY};if(ui.state==='scanning')ui.dragging=true;if(ui.state==='active'){ui.pointerFist=true;renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);}});window.addEventListener('pointerup',e=>{if(ui.demo&&ui.state==='active'&&ui.pointerFist){renderer.previewGrip(e.clientX,e.clientY,true,ui.pose);renderer.previewGrip(e.clientX,e.clientY,false,ui.pose);}ui.dragging=false;ui.pointerFist=false;});window.addEventListener('pointercancel',()=>{ui.dragging=false;ui.pointerFist=false;});
-window.addEventListener('resize',()=>{renderer.resize();arrival.resize();if(ui.state==='scene-transition'){sceneTransition.resize(innerWidth,innerHeight,menuCubeSize(innerWidth));ui.transitionDetail=0;ui.briefPortal=false;ui.briefBitmap=null;renderSceneTransition(0);}else{fitFacts();fitCube();}});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
+window.addEventListener('resize',()=>{renderer.resize();arrival.resize();if(ui.state==='scene-transition'){const size=menuCubeSize(innerWidth);sceneTransition.resize(innerWidth,innerHeight,size);ui.briefBitmap=captureSceneBriefing();unfoldView.setBitmap(ui.briefBitmap);unfoldView.resize(innerWidth,innerHeight,size);renderSceneTransition(0);}else{fitFacts();fitCube();}});window.addEventListener('pagehide',cleanup);document.addEventListener('visibilitychange',()=>ui.lastFrame=performance.now());
 window.addEventListener('keydown',e=>{
  if(e.target.matches('input,select,textarea')||$('sources-dialog').open)return;
  if(e.key==='Escape'&&document.fullscreenElement)return;

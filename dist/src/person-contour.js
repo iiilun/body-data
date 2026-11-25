@@ -1,12 +1,12 @@
 const cases=[[],[[3,0]],[[0,1]],[[3,1]],[[1,2]],[[3,0],[1,2]],[[0,2]],[[3,2]],[[2,3]],[[0,2]],[[0,1],[2,3]],[[1,2]],[[1,3]],[[0,1]],[[3,0]],[]];
-const key=p=>`${Math.round(p.x*2)},${Math.round(p.y*2)}`;
 export function maskContours(data,width,height){
  if(!data||!width||!height)return [];
- const edges=new Map(),points=new Map(),sample=(x,y)=>x>=0&&y>=0&&x<width&&y<height&&data[y*width+x]>0?1:0;
+ const edges=new Map(),points=new Map(),sample=(x,y)=>x>=0&&y>=0&&x<width&&y<height?data[y*width+x]:0;
+ const fraction=(a,b)=>Math.max(0,Math.min(1,(.5-a)/(b-a||1)));
  for(let y=-1;y<height;y++)for(let x=-1;x<width;x++){
-  const code=sample(x,y)|sample(x+1,y)<<1|sample(x+1,y+1)<<2|sample(x,y+1)<<3;if(code===0||code===15)continue;
-  const ends=[{x:x+.5,y},{x:x+1,y:y+.5},{x:x+.5,y:y+1},{x,y:y+.5}];
-  for(const [a,b]of cases[code]){const p=ends[a],q=ends[b],pk=key(p),qk=key(q);points.set(pk,p);points.set(qk,q);if(!edges.has(pk))edges.set(pk,[]);if(!edges.has(qk))edges.set(qk,[]);edges.get(pk).push(qk);edges.get(qk).push(pk);}
+  const a=sample(x,y),b=sample(x+1,y),c=sample(x+1,y+1),d=sample(x,y+1),code=Number(a>=.5)|Number(b>=.5)<<1|Number(c>=.5)<<2|Number(d>=.5)<<3;if(code===0||code===15)continue;
+  const ends=[{x:x+fraction(a,b),y},{x:x+1,y:y+fraction(b,c)},{x:x+fraction(d,c),y:y+1},{x,y:y+fraction(a,d)}],keys=[`h:${x}:${y}`,`v:${x+1}:${y}`,`h:${x}:${y+1}`,`v:${x}:${y}`];
+  for(const [a,b]of cases[code]){const p=ends[a],q=ends[b],pk=keys[a],qk=keys[b];points.set(pk,p);points.set(qk,q);if(!edges.has(pk))edges.set(pk,[]);if(!edges.has(qk))edges.set(qk,[]);edges.get(pk).push(qk);edges.get(qk).push(pk);}
  }
  const visited=new Set(),loops=[];
  for(const start of edges.keys()){
