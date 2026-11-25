@@ -1,14 +1,14 @@
-import {clamp} from './math.js?v=5.6.3';
-import {artworkGeometry} from './visual-system.js?v=5.6.3';
-import {TemporalSilhouette} from './temporal-silhouette.js?v=5.6.3';
-import {maskContours,strokeContours} from './person-contour.js?v=5.6.3';
+import {clamp} from './math.js?v=5.6.4';
+import {artworkGeometry} from './visual-system.js?v=5.6.4';
+import {TemporalSilhouette} from './temporal-silhouette.js?v=5.6.4';
+import {maskContours,strokeContours} from './person-contour.js?v=5.6.4';
 export const alignmentStyle=ready=>({color:ready?'#35ef86':'#fff',width:ready?20:12});
 export const blendedAlignmentStyle=blend=>({color:`rgb(${Math.round(255-202*blend)},${Math.round(255-16*blend)},${Math.round(255-121*blend)})`,width:12+8*blend});
 export function freshPersonMask(mask,now){return !!mask?.data&&mask.width>0&&mask.height>0&&Number.isFinite(mask.timestamp)&&now>=mask.timestamp&&now-mask.timestamp<700&&(mask.hasPerson??mask.data.some(v=>v>0));}
 export class CameraAlignment{
  constructor(){
   this.preview=new Image();this.preview.src='./assets/alignment-preview.jpg';this.reset();
-  fetch('./assets/alignment-mask.json?v=5.6.3').then(r=>r.ok?r.json():null).then(m=>{if(m)this.previewMask={...m,data:Uint8Array.from(atob(m.bytes),c=>c.charCodeAt(0))};}).catch(()=>{});
+  fetch('./assets/alignment-mask.json?v=5.6.4').then(r=>r.ok?r.json():null).then(m=>{if(m)this.previewMask={...m,data:Uint8Array.from(atob(m.bytes),c=>c.charCodeAt(0))};}).catch(()=>{});
  }
  reset(){this.stamp=null;this.contours=[];this.silhouette=new TemporalSilhouette();this.readyMix=0;this.offsetX=0;this.offsetY=0;this.lastTrace=-Infinity;}
  draw(ctx,c){
@@ -34,7 +34,10 @@ export class CameraAlignment{
   const targetX=!c.demo&&origin&&a&&b?clamp((a.x+b.x)/2-origin.x,-.05,.05):0,targetY=!c.demo&&origin&&a&&b?clamp((a.y+b.y)/2-origin.y,-.05,.05):0;
   this.offsetX+=(targetX-this.offsetX)*follow;this.offsetY+=(targetY-this.offsetY)*follow;
   this.readyMix+=((c.alignment?.ready?1:0)-this.readyMix)*(1-Math.exp(-dt/.12));
-  const visibility=this.silhouette.visibility(now);if(visibility>0){ctx.globalAlpha=visibility;strokeContours(ctx,this.contours,g,{...blendedAlignmentStyle(this.readyMix),offsetX:this.offsetX,offsetY:this.offsetY});}
+  const visibility=this.silhouette.visibility(now);if(visibility>0&&this.contours.length){
+   this.outlineCanvas??=document.createElement('canvas');const layer=this.outlineCanvas,ratio=Math.min(2,ctx.canvas?.width/c.width||1),w=Math.round(c.width*ratio),h=Math.round(c.height*ratio);if(layer.width!==w||layer.height!==h){layer.width=w;layer.height=h;}
+   const outline=layer.getContext('2d');outline.setTransform(ratio,0,0,ratio,0,0);outline.clearRect(0,0,c.width,c.height);strokeContours(outline,this.contours,g,{...blendedAlignmentStyle(this.readyMix),offsetX:this.offsetX,offsetY:this.offsetY,gap:12,smooth:true});ctx.globalAlpha=visibility;ctx.drawImage(layer,0,0,c.width,c.height);
+  }
   ctx.restore();
  }
 }

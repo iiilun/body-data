@@ -16,9 +16,16 @@ export function maskContours(data,width,height){
  }
  return loops;
 }
-export function strokeContours(ctx,contours,geometry,{color='#fff',width=3,offsetX=0,offsetY=0}={}){
+export function smoothClosedContour(points,spacing=5){
+ if(points.length<3)return points;const lengths=points.map((p,i)=>Math.hypot(p.x-points[(i+1)%points.length].x,p.y-points[(i+1)%points.length].y)),length=lengths.reduce((a,b)=>a+b,0);if(!length)return points;
+ const count=Math.min(2048,Math.max(12,Math.ceil(length/spacing))),sampled=[];let edge=0,start=0;
+ for(let i=0;i<count;i++){const distance=i*length/count;while(edge<points.length-1&&start+lengths[edge]<distance){start+=lengths[edge++];}const p=points[edge],q=points[(edge+1)%points.length],t=(distance-start)/(lengths[edge]||1);sampled.push({x:p.x+(q.x-p.x)*t,y:p.y+(q.y-p.y)*t});}
+ const weights=[1,2,3,4,3,2,1];return sampled.map((_,i)=>{let x=0,y=0;for(let j=-3;j<=3;j++){const p=sampled[(i+j+count)%count],w=weights[j+3]/16;x+=p.x*w;y+=p.y*w;}return {x,y};});
+}
+export function strokeContours(ctx,contours,geometry,{color='#fff',width=3,offsetX=0,offsetY=0,gap=0,smooth=false}={}){
  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';
  const map=p=>({x:geometry.x+(1-p.x-offsetX)*geometry.width,y:geometry.y+(p.y+offsetY)*geometry.height});
- for(const loop of contours){const points=loop.map(map),first=points[0],last=points.at(-1);ctx.beginPath();ctx.moveTo((first.x+last.x)/2,(first.y+last.y)/2);for(let i=0;i<points.length;i++){const p=points[i],q=points[(i+1)%points.length];ctx.quadraticCurveTo(p.x,p.y,(p.x+q.x)/2,(p.y+q.y)/2);}ctx.closePath();ctx.stroke();}
+ for(const loop of contours){const mapped=loop.map(map),points=smooth?smoothClosedContour(mapped):mapped,first=points[0],last=points.at(-1);ctx.beginPath();ctx.moveTo((first.x+last.x)/2,(first.y+last.y)/2);for(let i=0;i<points.length;i++){const p=points[i],q=points[(i+1)%points.length];ctx.quadraticCurveTo(p.x,p.y,(p.x+q.x)/2,(p.y+q.y)/2);}ctx.closePath();
+  if(gap>0){ctx.fillStyle=color;ctx.lineWidth=2*(gap+width);ctx.fill();ctx.stroke();ctx.globalCompositeOperation='destination-out';ctx.lineWidth=2*gap;ctx.fill();ctx.stroke();ctx.globalCompositeOperation='source-over';}else ctx.stroke();}
  ctx.restore();
 }
