@@ -1,4 +1,4 @@
-import {createFaceRoot} from './cube-art.js?v=5.10.0';
+import {createFaceRoot} from './cube-art.js?v=5.10.1';
 
 const NS='http://www.w3.org/2000/svg',contexts=new WeakMap();
 const latin='"Helvetica Neue",Helvetica,Arial,"Noto Sans TC","Noto Sans JP","Noto Sans KR",sans-serif';

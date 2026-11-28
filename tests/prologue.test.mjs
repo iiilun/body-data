@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PrologueSequence,PROLOGUE_TIMING,graphemes} from '../dist/src/prologue.js';
 import {prologueCopy} from '../dist/src/prologue-copy.js';
+import {OPENING_FACTS,openingFacts} from '../dist/src/prologue-facts.js';
 
 const facts=[{value:1234567,label:'SELECTED FACT A',source:'OFFICIAL SOURCE A',year:2024,url:'https://example.org/a'},{value:'42%',label:'SELECTED FACT B',source:'OFFICIAL SOURCE B',year:2023,url:'https://example.org/b'}];
 test('large Chinese opening figures retain two meaningful decimal places',()=>{
@@ -9,6 +10,11 @@ test('large Chinese opening figures retain two meaningful decimal places',()=>{
  assert.equal(sequence.start({facts:[{...facts[0],value:708000000},facts[1]],language:'zh'}).fact.value,'7.08億');
 });
 function advance(sequence,seconds){let result;for(let i=0;i<Math.round(seconds*100);i++)result=sequence.update(.01);return result;}
+test('the selected opening keeps F then C, with global estimates and the correct observation years in every language',()=>{
+ assert.deepEqual(OPENING_FACTS.map(fact=>[fact.id,fact.value,fact.year]),[['offline-world-2026',2000000000,2026],['child-labour-world-2024',138000000,2024]]);
+ for(const language of Object.keys(prologueCopy)){const selected=openingFacts(language);assert.equal(selected.length,2);assert.ok(selected.every(fact=>fact.label&&fact.year&&fact.estimate));const sequence=new PrologueSequence();assert.equal(sequence.start({facts:selected,language}).phase,'fact');advance(sequence,5.5);assert.equal(sequence.snapshot().fact.source,'ILO / UNICEF');}
+ assert.equal(openingFacts('zh')[0].year,'2026 估計');assert.equal(openingFacts('zh')[1].year,'2024 估計');
+});
 
 test('the prologue cannot start without exactly two explicitly selected and sourced facts',()=>{
  const sequence=new PrologueSequence();assert.equal(sequence.snapshot().phase,'idle');assert.throws(()=>sequence.start(),RangeError);assert.throws(()=>sequence.start({facts:[]}),RangeError);assert.throws(()=>sequence.start({facts:[facts[0]]}),RangeError);

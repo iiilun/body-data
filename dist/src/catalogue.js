@@ -1,7 +1,7 @@
-import {dictionary,number,compact,countryName} from './i18n.js?v=5.10.0';
-import {copy} from './experience.js?v=5.10.0';
-import {extraLabels,scopes} from './extra-labels.js?v=5.10.0';
-import {sceneWords} from './scene-copy.js?v=5.10.0';
+import {dictionary,number,compact,countryName} from './i18n.js?v=5.10.1';
+import {copy} from './experience.js?v=5.10.1';
+import {extraLabels,scopes} from './extra-labels.js?v=5.10.1';
+import {sceneWords} from './scene-copy.js?v=5.10.1';
 export const words={
  en:{thirst:'THIRST',offline:'OFFLINE',vacant:'VACANT',thirstTopic:'ACCESS TO WATER',offlineTopic:'DIGITAL ACCESS',vacantTopic:'EMPTY HOMES',turn:'MOVE AN OPEN HAND TO TURN',grip:'CLOSE YOUR FIST TO ENTER',preview:'DRAG TO TURN · SPACE TO GRIP',align:'MATCH THE OUTLINE',holdPose:'HOLD THE POSE',reading:'THE DATA',thirstAction:'CUP YOUR HANDS. CATCH THE FLOW.',offlineAction:'RAISE BOTH HANDS. RECONNECT.',vacantAction:'REACH OUT. TRY TO OCCUPY THE ROOM.',thirstNote:'Gather the flow. Access arrives in interruptions.',offlineNote:'Sweep across the missing image to reconnect its pieces.',vacantNote:'The room exists. Reaching it does not make it yours.',safeWater:'SAFELY MANAGED WATER',withoutWater:'WITHOUT SAFELY MANAGED WATER',online:'USING THE INTERNET',offlinePeople:'NOT USING THE INTERNET',coverage:'COVERAGE',selected:'SELECTED CENSUSES',homes:'HOMES',careRatio:'CARE TIME GAP',womenHours:'WOMEN · CARE HOURS / DAY',menHours:'MEN · CARE HOURS / DAY',gapHours:'DAILY CARE TIME GAP',housingShare:'URBAN RESIDENTS IN SLUMS',housingPeople:'SLUM RESIDENTS',mortgage:'MORTGAGE / INCOME',housePrice:'HOME PRICE / ANNUAL INCOME',waterSupply:'PUBLIC WATER COVERAGE',field:'MAKE ROOM WITH YOUR BODY',reconnect:'SWEEP TO RECONNECT',cup:'BRING YOUR HANDS TOGETHER',reach:'REACH INTO THE EMPTY ROOMS'},
  zh:{thirst:'飲水',offline:'離線',vacant:'空屋',thirstTopic:'飲水的取得',offlineTopic:'數位落差',vacantTopic:'空置的住宅',turn:'張開手掌，移動以轉動方塊',grip:'握拳，進入正面的議題',preview:'拖曳轉動・空白鍵模擬握拳',align:'將身體對齊輪廓',holdPose:'維持這個姿勢',reading:'這些數據',thirstAction:'雙手靠攏，接住水流。',offlineAction:'舉起雙手，重新連結。',vacantAction:'伸出雙手，嘗試進入空屋。',thirstNote:'用雙手匯集水流，供給卻時有中斷。',offlineNote:'揮過缺失的影像，讓片段重新同步。',vacantNote:'住宅存在，卻不代表能夠入住。',safeWater:'安全管理飲水服務比例',withoutWater:'缺乏安全管理飲水服務的人數',online:'使用網路的人口比例',offlinePeople:'未使用網路的人數',coverage:'涵蓋範圍',selected:'各地住宅普查',homes:'住宅',careRatio:'男女無酬照顧時數差距',womenHours:'女性・每日照顧時數',menHours:'男性・每日照顧時數',gapHours:'每日照顧時數差',housingShare:'都市人口居住於貧民窟的比例',housingPeople:'居住於貧民窟的人數',mortgage:'房貸還款／可支配所得',housePrice:'房價／家戶年所得',waterSupply:'自來水普及率',field:'移動身體，留出居住的空間',reconnect:'揮手，讓影像重新連結',cup:'雙手靠攏，匯集水流',reach:'伸手，嘗試進入空置的房間'},
@@ -14,7 +14,7 @@ export const words={
 export function scopeName(scope,lang){if(scope==='World'||scope==='WORLD'||scope==='global')return dictionary(lang).scopes.en===dictionary(lang).scopes[lang]?dictionary(lang).scopes[lang]:({zh:'全球',es:'MUNDO',fr:'MONDE',ja:'世界',ko:'전 세계',ar:'العالم'})[lang]||'WORLD';if(scope==='Taiwan'||scope==='TW')return lang==='zh'?'臺灣':countryName('TW',lang);return /^[A-Z]{2}$/.test(scope||'')?countryName(scope,lang):scope;}
 export class Catalogue{
  async load(){
-  const response=await fetch('./assets/global-facts.json?v=5.10.0');if(!response.ok)throw Error('Global data unavailable');
+  const response=await fetch('./assets/global-facts.json?v=5.10.1');if(!response.ok)throw Error('Global data unavailable');
   const payload=await response.json();this.global=payload.cards;this.retrievedAt=payload.retrievedAt;this.rules=payload.interactionRules;
  }
  format(c,lang){

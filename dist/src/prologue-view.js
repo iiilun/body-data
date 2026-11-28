@@ -1,4 +1,4 @@
-import {prologueCopy,PROLOGUE_LOCALES,prologueLanguage} from './prologue-copy.js?v=5.10.0';
+import {prologueCopy,PROLOGUE_LOCALES,prologueLanguage} from './prologue-copy.js?v=5.10.1';
 
 const NS='http://www.w3.org/2000/svg',sides=['front','back','right','left','top','bottom'];
 function node(doc,tag,className){const element=doc.createElement(tag);if(className)element.className=className;return element;}

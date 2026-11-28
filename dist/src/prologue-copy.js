@@ -23,11 +23,11 @@ export const prologueCopy={
   'Nous espérons que tu repartiras avec un chiffre en mémoire et une attention pour les personnes qu’il représente.'
  ]},
  zh:{title:'為什麼',continue:'進入',stories:[
-  '世界在前進，生活的基本條件卻還沒有抵達每一個人。',
-  '這件作品，想讓遙遠的數據，成為身體感覺得到的現實。',
+  '世界在前進，生活的基本條件\n卻還沒有抵達每一個人。',
+  '這件作品，想讓遙遠的數據，\n成為身體感覺得到的現實。',
   '這裡，數據成為熱、重量、阻力與距離。',
-  '用一個身體，走進水、照顧、居住與連線的現實。',
-  '希望你離開時，記住一個數字，也開始在意數字裡的人。'
+  '用一個身體，走進水、照顧、\n居住與連線的現實。',
+  '希望你離開時，記住一個數字，\n也開始在意數字裡的人。'
  ]},
  ja:{title:'なぜ',continue:'入る',stories:[
   '世界は前へ進んでいる。それでも、生きるための基本は、まだすべての人に届いていない。',

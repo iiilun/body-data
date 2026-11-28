@@ -1,4 +1,4 @@
-import {prologueCopy,PROLOGUE_LOCALES,prologueLanguage} from './prologue-copy.js?v=5.10.0';
+import {prologueCopy,PROLOGUE_LOCALES,prologueLanguage} from './prologue-copy.js?v=5.10.1';
 
 export const PROLOGUE_TIMING=Object.freeze({fact:5.5,minimumStory:4.5,readingTail:2.2,graphemesPerSecond:26,maxDelta:.1});
 const clamp=value=>Math.max(0,Math.min(1,value));

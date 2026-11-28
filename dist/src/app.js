@@ -1,31 +1,32 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.10.0';
-import {clamp,pointToScreen} from './math.js?v=5.10.0';
-import {DataService} from './data.js?v=5.10.0';
-import {Renderer,demoPose} from './renderer.js?v=5.10.0';
-import {BodyTracker} from './interaction.js?v=5.10.0';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.10.0';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.10.0';
-import {sceneWords} from './scene-copy.js?v=5.10.0';
-import {previewHand} from './glass-model.js?v=5.10.0';
-import {faceAtPoint,menuPointer,menuCopy} from './menu-view.js?v=5.10.0';
-import {createTopicFace,faceLabel} from './cube-art.js?v=5.10.0';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES,preferredControlHand} from './controls.js?v=5.10.0';
-import {ArrivalView} from './arrival-view.js?v=5.10.0';
-import {UnfoldTransition} from './unfold-transition.js?v=5.10.0';
-import {UnfoldView} from './unfold-view.js?v=5.10.0';
-import {menuCubeSize} from './arrival.js?v=5.10.0';
-import {typeMetrics,vectorType} from './vector-type.js?v=5.10.0';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.10.0';
-import {freshPersonMask} from './camera-alignment.js?v=5.10.0';
-import {captureBriefing} from './briefing-snapshot.js?v=5.10.0';
-import {DwellTargets} from './gesture-targets.js?v=5.10.0';
-import {GestureToolbar} from './gesture-toolbar.js?v=5.10.0';
-import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.10.0';
-import {DataDrag} from './data-drag.js?v=5.10.0';
-import {FullscreenControl,fullscreenElement} from './fullscreen-control.js?v=5.10.0';
-import {PrologueSequence} from './prologue.js?v=5.10.0';
-import {PrologueView} from './prologue-view.js?v=5.10.0';
-import {OPENING_FACTS} from './prologue-facts.js?v=5.10.0';
+import {dictionary,languages,locales} from './i18n.js?v=5.10.1';
+import {clamp,pointToScreen} from './math.js?v=5.10.1';
+import {DataService} from './data.js?v=5.10.1';
+import {Renderer,demoPose} from './renderer.js?v=5.10.1';
+import {BodyTracker} from './interaction.js?v=5.10.1';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.10.1';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.10.1';
+import {sceneWords} from './scene-copy.js?v=5.10.1';
+import {previewHand} from './glass-model.js?v=5.10.1';
+import {faceAtPoint,menuPointer,menuCopy} from './menu-view.js?v=5.10.1';
+import {createTopicFace,faceLabel} from './cube-art.js?v=5.10.1';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES,preferredControlHand} from './controls.js?v=5.10.1';
+import {ArrivalView} from './arrival-view.js?v=5.10.1';
+import {UnfoldTransition} from './unfold-transition.js?v=5.10.1';
+import {UnfoldView} from './unfold-view.js?v=5.10.1';
+import {menuCubeSize} from './arrival.js?v=5.10.1';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.10.1';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.10.1';
+import {freshPersonMask} from './camera-alignment.js?v=5.10.1';
+import {captureBriefing} from './briefing-snapshot.js?v=5.10.1';
+import {DwellTargets} from './gesture-targets.js?v=5.10.1';
+import {GestureToolbar} from './gesture-toolbar.js?v=5.10.1';
+import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.10.1';
+import {DataDrag} from './data-drag.js?v=5.10.1';
+import {FullscreenControl,fullscreenElement} from './fullscreen-control.js?v=5.10.1';
+import {PrologueSequence} from './prologue.js?v=5.10.1';
+import {PrologueView} from './prologue-view.js?v=5.10.1';
+import {OPENING_FACTS,openingFacts} from './prologue-facts.js?v=5.10.1';
+import {prologueCopy} from './prologue-copy.js?v=5.10.1';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
@@ -80,7 +81,7 @@ function cleanup(){ui.session++;ui.worker?.terminate();ui.worker=null;ui.visionR
 function stop(){ui.entranceComplete=false;prologueSequence.reset();ui.cube=new GestureCube();ui.scene='';ui.metric=null;ui.cards=[];ui.dragging=false;ui.pointerFist=false;renderer.reset('');renderer.cells=[];arrival.reset();setState('arrival');if(!ui.loaded)loadData();if(!ui.demo&&!ui.stream&&!ui.booting)startCamera();}
 function startPrologue(){
  if(OPENING_FACTS.length!==2){menu(true);return;}
- const facts=OPENING_FACTS.map(fact=>({...fact,label:typeof fact.label==='object'?fact.label[ui.language]||fact.label.en:fact.label}));
+ const facts=openingFacts(ui.language);
  const snapshot=prologueSequence.start({facts,language:ui.language});setState('prologue');prologueView.start(snapshot);
 }
 function menu(preserveOrientation=false){if(!ui.stream&&!ui.demo){stop();return;}ui.scene='';ui.metric=null;ui.cards=[];ui.elapsed=0;if(!preserveOrientation)ui.cube.reset();ui.exitHold=0;renderer.reset('');setState('scanning');}
@@ -97,7 +98,7 @@ async function startCamera(){
  }catch(e){if(session===ui.session)error('camera',e);return;}
  if(session!==ui.session)return;
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.10.0',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.10.1',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
@@ -152,6 +153,7 @@ function renderStats(){
 }
 function renderSources(){
  const list=$('source-list'),d=dictionary(ui.language);list.replaceChildren();text('sources-scope',sceneWords[ui.language].globalData);
+ if(OPENING_FACTS.length===2){const section=document.createElement('section');section.className='source-entry';const heading=document.createElement('h3');heading.textContent=prologueCopy[ui.language].title;section.append(heading);for(const fact of openingFacts(ui.language)){const p=document.createElement('p');p.textContent=new Intl.NumberFormat(locales[ui.language]).format(fact.value)+' · '+fact.label+' · '+fact.year;const source=document.createElement('a');source.href=fact.url;source.textContent=fact.source;source.target='_blank';source.rel='noopener noreferrer';section.append(p,source);}list.append(section);}
  for(const scene of topics){const m=datum(scene);if(!m)continue;const section=document.createElement('section');section.className='source-entry';const h=document.createElement('h3');h.textContent=m.title;section.append(h);
   const cards=catalogue.cards(scene,ui.language);
   for(const card of cards){for(const s of [card.value+' · '+card.label,card.scope+' · '+(card.yearText||card.year)+(card.coverage?' · '+d.coverage+' '+card.coverage:'')]){const p=document.createElement('p');p.textContent=s;section.append(p)}const a=document.createElement('a');a.href=card.url;a.textContent=card.source;a.target='_blank';a.rel='noopener noreferrer';section.append(a);}
