@@ -1,33 +1,37 @@
-import {dictionary,languages,locales} from './i18n.js?v=5.9.0';
-import {clamp,pointToScreen} from './math.js?v=5.9.0';
-import {DataService} from './data.js?v=5.9.0';
-import {Renderer,demoPose} from './renderer.js?v=5.9.0';
-import {BodyTracker} from './interaction.js?v=5.9.0';
-import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.9.0';
-import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.9.0';
-import {sceneWords} from './scene-copy.js?v=5.9.0';
-import {previewHand} from './glass-model.js?v=5.9.0';
-import {faceAtPoint,menuPointer,menuCopy} from './menu-view.js?v=5.9.0';
-import {createTopicFace,faceLabel} from './cube-art.js?v=5.9.0';
-import {GestureCube,PoseGate,poseMatch,FACE_SCENES,preferredControlHand} from './controls.js?v=5.9.0';
-import {ArrivalView} from './arrival-view.js?v=5.9.0';
-import {UnfoldTransition} from './unfold-transition.js?v=5.9.0';
-import {UnfoldView} from './unfold-view.js?v=5.9.0';
-import {menuCubeSize} from './arrival.js?v=5.9.0';
-import {typeMetrics,vectorType} from './vector-type.js?v=5.9.0';
-import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.9.0';
-import {freshPersonMask} from './camera-alignment.js?v=5.9.0';
-import {captureBriefing} from './briefing-snapshot.js?v=5.9.0';
-import {DwellTargets} from './gesture-targets.js?v=5.9.0';
-import {GestureToolbar} from './gesture-toolbar.js?v=5.9.0';
-import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.9.0';
-import {DataDrag} from './data-drag.js?v=5.9.0';
-import {FullscreenControl,fullscreenElement} from './fullscreen-control.js?v=5.9.0';
+import {dictionary,languages,locales} from './i18n.js?v=5.10.0';
+import {clamp,pointToScreen} from './math.js?v=5.10.0';
+import {DataService} from './data.js?v=5.10.0';
+import {Renderer,demoPose} from './renderer.js?v=5.10.0';
+import {BodyTracker} from './interaction.js?v=5.10.0';
+import {copy,icon,icons,experienceMetric,facts,displayYear} from './experience.js?v=5.10.0';
+import {Catalogue,words,vacantDefinitions} from './catalogue.js?v=5.10.0';
+import {sceneWords} from './scene-copy.js?v=5.10.0';
+import {previewHand} from './glass-model.js?v=5.10.0';
+import {faceAtPoint,menuPointer,menuCopy} from './menu-view.js?v=5.10.0';
+import {createTopicFace,faceLabel} from './cube-art.js?v=5.10.0';
+import {GestureCube,PoseGate,poseMatch,FACE_SCENES,preferredControlHand} from './controls.js?v=5.10.0';
+import {ArrivalView} from './arrival-view.js?v=5.10.0';
+import {UnfoldTransition} from './unfold-transition.js?v=5.10.0';
+import {UnfoldView} from './unfold-view.js?v=5.10.0';
+import {menuCubeSize} from './arrival.js?v=5.10.0';
+import {typeMetrics,vectorType} from './vector-type.js?v=5.10.0';
+import {poseInstructions,alignmentTitles,alignmentHints} from './onboarding-copy.js?v=5.10.0';
+import {freshPersonMask} from './camera-alignment.js?v=5.10.0';
+import {captureBriefing} from './briefing-snapshot.js?v=5.10.0';
+import {DwellTargets} from './gesture-targets.js?v=5.10.0';
+import {GestureToolbar} from './gesture-toolbar.js?v=5.10.0';
+import {PAGE_DURATIONS,pageProgress,pageCountdown} from './page-timing.js?v=5.10.0';
+import {DataDrag} from './data-drag.js?v=5.10.0';
+import {FullscreenControl,fullscreenElement} from './fullscreen-control.js?v=5.10.0';
+import {PrologueSequence} from './prologue.js?v=5.10.0';
+import {PrologueView} from './prologue-view.js?v=5.10.0';
+import {OPENING_FACTS} from './prologue-facts.js?v=5.10.0';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),topics=['shelter','hold','space','thirst','offline','vacant'];
 const data=new DataService(),catalogue=new Catalogue(),renderer=new Renderer($('stage'));
 const ui={state:'arrival',entranceComplete:false,previewRequested:params.get('demo')==='1',scene:'',language:languages[params.get('lang')]?params.get('lang'):'en',demo:false,tracker:new BodyTracker(),cube:new GestureCube(),gate:new PoseGate(),pose:[],hands:[],mask:null,worker:null,stream:null,busy:false,visionReady:false,session:0,time:0,elapsed:0,introElapsed:0,guideElapsed:0,resultElapsed:0,lastFrame:performance.now(),lastInference:0,lastVideoTime:-1,inferenceMs:0,frameErrors:0,modelProgress:0,booting:false,errorType:null,metric:null,cards:[],introPage:0,mouse:null,pointerFist:false,dragging:false,gestureSeen:false,observer:{shelter:0,hold:0,space:0,thirst:0,offline:0,vacant:0},alignment:null,exitHold:0,loaded:false,statsKey:'',resultReason:'time'};
 const sceneTransition=new UnfoldTransition({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
 const unfoldView=new UnfoldView($('unfold-scene'));
+const prologueSequence=new PrologueSequence({reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches}),prologueView=new PrologueView($('prologue'));
 const dwellTargets=new DwellTargets(),toolbar=new GestureToolbar(document);
 const dataDrag=new DataDrag({gain:2});
 const fullscreenControl=new FullscreenControl(document,navigator,status=>fullscreenHint(status));
@@ -45,7 +49,7 @@ function setState(state,{keepTransition=false}={}){
  ui.state=state;if(['idle','scanning'].includes(state))text('announcement','');if(state!=='scanning')document.querySelectorAll('.cube-face').forEach(el=>el.dataset.selected='false');document.body.dataset.state=state;document.body.dataset.scene=ui.scene;
  const menu=['idle','loading','scanning','error'].includes(state);
  $('arrival').hidden=state!=='arrival';$('entrance').hidden=state!=='error';$('cube-scene').hidden=!['idle','loading','scanning'].includes(state);$('cube-guidance').hidden=!['idle','scanning'].includes(state);
- $('scan-copy').hidden=state!=='loading';$('error').hidden=state!=='error';$('briefing').hidden=!['briefing','result','scene-transition'].includes(state);$('alignment').hidden=state!=='align';$('motion-guide').hidden=state!=='guide';
+ $('scan-copy').hidden=state!=='loading';$('error').hidden=state!=='error';$('briefing').hidden=!['briefing','result','scene-transition'].includes(state);$('alignment').hidden=state!=='align';$('motion-guide').hidden=state!=='guide';$('prologue').hidden=state!=='prologue';
  $('scene-context').hidden=true;$('coach').hidden=true;$('hand-cursor').hidden=true;
  document.querySelector('.masthead').hidden=!(menu||ui.demo&&state==='align');document.querySelector('.footer').hidden=true;
  $('back').hidden=['arrival','idle','active'].includes(state);$('fullscreen').hidden=state==='active';if(state==='active')$('fullscreen-hint').hidden=true;$('preview').hidden=state!=='error'||!ui.loaded;
@@ -73,7 +77,12 @@ function fitCube(){
 }
 function updateCubeCaption(){const scene=FACE_SCENES[ui.cube.face],name=faceLabel(scene,ui.language,title(scene));text('cube-caption',name);$('cube-scene').setAttribute('aria-label',name+' · '+menuCopy[ui.language].dwell);}
 function cleanup(){ui.session++;ui.worker?.terminate();ui.worker=null;ui.visionReady=false;ui.busy=false;ui.booting=false;ui.stream?.getTracks().forEach(t=>t.stop());ui.stream=null;$('camera').srcObject=null;ui.tracker=new BodyTracker();ui.pose=[];ui.hands=[];ui.mask=null;}
-function stop(){ui.entranceComplete=false;ui.cube=new GestureCube();ui.scene='';ui.metric=null;ui.cards=[];ui.dragging=false;ui.pointerFist=false;renderer.reset('');renderer.cells=[];arrival.reset();setState('arrival');if(!ui.loaded)loadData();if(!ui.demo&&!ui.stream&&!ui.booting)startCamera();}
+function stop(){ui.entranceComplete=false;prologueSequence.reset();ui.cube=new GestureCube();ui.scene='';ui.metric=null;ui.cards=[];ui.dragging=false;ui.pointerFist=false;renderer.reset('');renderer.cells=[];arrival.reset();setState('arrival');if(!ui.loaded)loadData();if(!ui.demo&&!ui.stream&&!ui.booting)startCamera();}
+function startPrologue(){
+ if(OPENING_FACTS.length!==2){menu(true);return;}
+ const facts=OPENING_FACTS.map(fact=>({...fact,label:typeof fact.label==='object'?fact.label[ui.language]||fact.label.en:fact.label}));
+ const snapshot=prologueSequence.start({facts,language:ui.language});setState('prologue');prologueView.start(snapshot);
+}
 function menu(preserveOrientation=false){if(!ui.stream&&!ui.demo){stop();return;}ui.scene='';ui.metric=null;ui.cards=[];ui.elapsed=0;if(!preserveOrientation)ui.cube.reset();ui.exitHold=0;renderer.reset('');setState('scanning');}
 function error(type,message){console.error('[BODY / DATA]',type,message);cleanup();ui.errorType=type;setState('error');}
 async function startCamera(){
@@ -88,11 +97,11 @@ async function startCamera(){
  }catch(e){if(session===ui.session)error('camera',e);return;}
  if(session!==ui.session)return;
  try{
-  ui.worker=new Worker(new URL('../vision-worker.js?v=5.9.0',import.meta.url));
+  ui.worker=new Worker(new URL('../vision-worker.js?v=5.10.0',import.meta.url));
   const timeout=setTimeout(()=>{if(session===ui.session&&!ui.visionReady)error('model','Vision initialization timed out')},90000);
   ui.worker.onmessage=({data:r})=>{
    if(session!==ui.session)return;if(r.type==='progress'){ui.modelProgress=r.value;return;}
-   if(r.type==='ready'){clearTimeout(timeout);ui.visionReady=true;ui.booting=false;if(ui.entranceComplete&&ui.loaded)menu(true);return;}
+   if(r.type==='ready'){clearTimeout(timeout);ui.visionReady=true;ui.booting=false;if(ui.entranceComplete&&ui.loaded&&['arrival','idle','loading'].includes(ui.state))menu(true);return;}
    if(r.type==='hands'){ui.tracker.updateHands(r.hands,r.handedness,r.timestamp,r.gestures);return;}
    if(r.type==='result'){ui.busy=false;ui.frameErrors=0;ui.inferenceMs=r.elapsed;ui.tracker.update(r.landmarks,r.hands,r.handedness,r.timestamp,r.handTime,r.gestures);if(r.mask)ui.mask={data:r.mask,hasPerson:r.mask.some(v=>v>0),width:r.width,height:r.height,origin:r.landmarks?.[11]&&r.landmarks?.[12]?{x:(r.landmarks[11].x+r.landmarks[12].x)/2,y:(r.landmarks[11].y+r.landmarks[12].y)/2}:null,timestamp:r.timestamp};}
    else if(r.type==='skipped'){ui.busy=false;if(r.elapsed)ui.inferenceMs=r.elapsed;}else if(r.type==='frame-error'){ui.busy=false;if(++ui.frameErrors>=5)error('model',r.message)}else if(r.type==='error'){clearTimeout(timeout);error('model',r.message)}
@@ -154,7 +163,7 @@ function renderSources(){
 async function sendFrame(now){
  const v=$('camera');if(!ui.visionReady||ui.busy||!ui.worker||v.readyState<2||document.hidden)return;if(now-ui.lastInference<Math.max(28,ui.inferenceMs*.85)||v.currentTime===ui.lastVideoTime)return;
  ui.busy=true;ui.lastInference=now;ui.lastVideoTime=v.currentTime;const session=ui.session;
- try{const bitmap=await createImageBitmap(v,{resizeWidth:480,resizeHeight:Math.round(480*v.videoHeight/v.videoWidth),resizeQuality:'low'});if(session!==ui.session||!ui.worker){bitmap.close();return;}ui.worker.postMessage({type:'frame',bitmap,timestamp:now,mode:['arrival','scanning'].includes(ui.state)||$('sources-dialog').open?'menu':ui.state==='align'?'align':'active'},[bitmap]);}catch(e){ui.busy=false;if(++ui.frameErrors>=5)error('model',e)}
+ try{const bitmap=await createImageBitmap(v,{resizeWidth:480,resizeHeight:Math.round(480*v.videoHeight/v.videoWidth),resizeQuality:'low'});if(session!==ui.session||!ui.worker){bitmap.close();return;}ui.worker.postMessage({type:'frame',bitmap,timestamp:now,mode:['arrival','scanning','prologue'].includes(ui.state)||$('sources-dialog').open?'menu':ui.state==='align'?'align':'active'},[bitmap]);}catch(e){ui.busy=false;if(++ui.frameErrors>=5)error('model',e)}
 }
 function coach(){ $('coach').hidden=true; }
 function screenHands(){
@@ -201,10 +210,11 @@ function tick(now){
  if(ui.state==='arrival'){
   $('camera-startup').hidden=ui.demo||ui.visionReady;$('camera-startup').querySelector('i').style.width=Math.max(5,ui.modelProgress*100)+'%';
   const chosen=arrival.tick(dt);handControls(dt,pointers);scrollSources(dt,pointers);
-  if(chosen){ui.entranceComplete=true;ui.cube.reset();$('cube').style.transform='rotateZ(-7deg) rotateX(-18deg) rotateY(-28deg)';menu(true);}
+  if(chosen){ui.entranceComplete=true;ui.cube.reset();$('cube').style.transform='rotateZ(-7deg) rotateX(-18deg) rotateY(-28deg)';startPrologue();}
   requestAnimationFrame(tick);return;
  }
  const controls=handControls(dt,pointers);scrollSources(dt,pointers);if(controls.changed){requestAnimationFrame(tick);return;}const pageDt=$('sources-dialog').open||controls.consumed?0:dt;
+ if(ui.state==='prologue'){prologueView.update(prologueSequence.update(pageDt));requestAnimationFrame(tick);return;}
  if(ui.state==='scene-transition'){renderSceneTransition(dt);requestAnimationFrame(tick);return;}
  if(ui.state==='loading')$('scan-progress-fill').style.width=ui.modelProgress*100+'%';
  if(ui.state==='scanning'&&!$('sources-dialog').open){
@@ -235,7 +245,8 @@ function tick(now){
  renderer.render({now,time:ui.time,dt:paused?0:dt,state:ui.state,scene:ui.scene,elapsed:ui.elapsed,progress:clamp(ui.elapsed/45),pose:ui.pose,hands:ui.hands,mask:ui.mask,video:$('camera'),demo:ui.demo,dict:dictionary(ui.language),lang:ui.language,metric:ui.metric,cards:ui.cards,rules:catalogue.rules,present,alignment:ui.alignment,guideElapsed:ui.guideElapsed});
  requestAnimationFrame(tick);
 }
-$('retry').addEventListener('click',()=>ui.loaded?startCamera():loadData());$('preview').addEventListener('click',preview);$('back').addEventListener('click',()=>['scanning','loading','error'].includes(ui.state)?stop():menu());
+$('retry').addEventListener('click',()=>ui.loaded?startCamera():loadData());$('preview').addEventListener('click',preview);$('back').addEventListener('click',()=>['scanning','loading','error','prologue'].includes(ui.state)?stop():menu());
+prologueView.continueButton.addEventListener('click',()=>{if(ui.state==='prologue'&&prologueSequence.snapshot().ready)menu(true);});
 $('sources-toggle').addEventListener('click',()=>{if(ui.loaded&&!$('sources-dialog').open){dwellTargets.cancel();dataDrag.reset();ui.pointerFist=false;ui.dataPointerStart=null;ui.dataPointerMoved=false;renderSources();$('sources-dialog').showModal();$('sources-panel').scrollTop=0;$('sources-dialog').append($('hand-cursor'));}});$('sources-close').addEventListener('click',()=>$('sources-dialog').close());
 $('sources-dialog').addEventListener('close',()=>{dwellTargets.cancel();dataDrag.reset();ui.pointerFist=false;ui.dataPointerStart=null;ui.dataPointerMoved=false;$('sources-panel').dataset.dragging='false';document.body.append($('hand-cursor'));});
 $('sources-panel').addEventListener('click',event=>{if(ui.demo&&ui.dataPointerMoved){event.preventDefault();ui.dataPointerMoved=false;}});
@@ -248,10 +259,10 @@ window.addEventListener('resize',()=>{renderer.resize();arrival.resize();if(ui.s
 window.addEventListener('keydown',e=>{
  if(e.target.matches('input,select,textarea')||$('sources-dialog').open)return;
  if(e.key==='Escape'&&fullscreenElement(document))return;
- if(e.key==='Escape'&&!['arrival','idle'].includes(ui.state))['scanning','loading','error'].includes(ui.state)?stop():menu();
+ if(e.key==='Escape'&&!['arrival','idle'].includes(ui.state))['scanning','loading','error','prologue'].includes(ui.state)?stop():menu();
  if(e.key.toLowerCase()==='f')toggleFullscreen();
  if(ui.demo&&e.code==='Space'){e.preventDefault();if(ui.state==='briefing')guide();else if(ui.state==='guide')align();else if(ui.state==='align'&&params.get('frame')==='1')activate();}
- if(ui.demo&&!['arrival','scene-transition'].includes(ui.state)&&/^[1-6]$/.test(e.key)){openBriefing(topics[Number(e.key)-1]);}
+ if(ui.demo&&!['arrival','scene-transition','prologue'].includes(ui.state)&&/^[1-6]$/.test(e.key)){openBriefing(topics[Number(e.key)-1]);}
 });
 window.__artwork={get state(){return ui.state},get scene(){return ui.scene},get diagnostics(){return {preview:ui.demo,inferenceMs:ui.inferenceMs,hands:ui.hands.length,modelReady:ui.visionReady,catches:renderer.physics.catches,face:ui.cube.face,cards:ui.cards.length}}};
 document.querySelectorAll('.cube-face').forEach((el,i)=>el.dataset.face=String(i));

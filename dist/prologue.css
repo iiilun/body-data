@@ -1,0 +1,21 @@
+.prologue{position:fixed;inset:0;z-index:30;background:#000;color:#fff;padding:clamp(24px,4.5vw,64px);font-family:"Helvetica Neue",Helvetica,Arial,"Noto Sans Arabic",sans-serif;overflow:hidden;isolation:isolate}
+.prologue-brand{position:absolute;inset-block-start:32px;inset-inline:120px;text-align:center;margin:0;font-size:14px;line-height:1;font-weight:400;letter-spacing:-.025em;color:#aaa}
+.prologue-content{display:grid;place-items:center;width:100%;height:100%;will-change:opacity}
+.prologue-fact{width:100%;max-width:1600px;text-align:center}
+.prologue-value{margin:0;font-size:var(--prologue-value-size,clamp(100px,24vw,400px));font-weight:300;line-height:.9;letter-spacing:-.065em;font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+.prologue-label{max-width:1000px;margin:clamp(26px,5vh,54px) auto 0;font-weight:400;font-size:clamp(21px,2.6vw,42px);line-height:1.15;letter-spacing:-.025em;text-wrap:balance}
+.prologue-citation{max-width:1100px;margin:24px auto 0;color:#aaa;font-size:clamp(12px,1.15vw,16px);font-weight:400;line-height:1.45}
+.prologue-citation a{color:inherit;text-decoration:none;text-underline-offset:4px}.prologue-citation a:hover,.prologue-citation a:focus-visible{text-decoration:underline}
+.prologue-story{width:min(100%,1080px);display:grid;align-content:center;grid-template-columns:minmax(0,1fr);font-size:clamp(28px,4.1vw,68px);font-weight:400;line-height:1.3;letter-spacing:-.035em}
+.prologue-story-sizer,.prologue-story-text{grid-area:1/1;margin:0;white-space:pre-wrap;overflow-wrap:break-word;text-wrap:pretty}
+.prologue-story-sizer{visibility:hidden;pointer-events:none}
+.prologue-readable{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.prologue[dir="rtl"] .prologue-story,.prologue[dir="rtl"] .prologue-label{letter-spacing:0;line-height:1.45}
+.prologue-continue.gesture-cube-button{position:absolute;left:50%;right:auto;top:auto;bottom:24px;width:88px;height:88px;color:#fff;mix-blend-mode:normal;z-index:2;transform:translateX(-50%)}
+.prologue-continue-icon{width:72%;height:72%;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+.prologue-continue>.gesture-control-progress{position:absolute;inset:0;width:100%;height:100%;display:block;fill:none;stroke:currentColor;transform:rotate(-90deg);pointer-events:none;overflow:visible}
+.prologue[dir="rtl"] .prologue-continue-icon{transform:rotate(180deg)}
+.prologue-progress{position:absolute;inset-inline:0;inset-block-end:0;height:2px;background:#363636;overflow:hidden}
+.prologue-progress i{display:block;width:0;height:100%;background:currentColor}
+@media(max-height:540px){.prologue-brand{inset-block-start:18px}.prologue-label{margin-top:24px;font-size:clamp(18px,2.4vw,30px)}.prologue-citation{margin-top:16px}.prologue-story{font-size:clamp(24px,3.6vw,48px)}}
+@media(prefers-reduced-motion:reduce){.prologue-content{will-change:auto}.prologue-continue .gesture-action-cube{animation:none}.prologue-continue .gesture-control-stage{animation:none}}

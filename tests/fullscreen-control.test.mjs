@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {FullscreenControl} from '../dist/src/fullscreen-control.js';
-import {toolHandBounds} from '../dist/src/gesture-toolbar.js';
+import {GestureToolbar,toolHandBounds} from '../dist/src/gesture-toolbar.js';
 
 test('camera dwell offers an actionable click instead of silently requesting restricted fullscreen',async()=>{
  let requests=0;const control=new FullscreenControl({documentElement:{requestFullscreen(){requests++;}}},{userActivation:{isActive:false}});
@@ -21,4 +21,9 @@ test('gesture may exit fullscreen without a new click and repeated requests cann
 test('small utility cubes have spacious hand targets clipped to the display',()=>{
  assert.deepEqual(toolHandBounds({left:12,top:8,right:92,bottom:88},1280,720),{left:0,top:0,right:124,bottom:120});
  assert.deepEqual(toolHandBounds({left:1188,top:632,right:1268,bottom:712},1280,720),{left:1156,top:600,right:1280,bottom:720});
+});
+test('fullscreen remains visible and clickable but never captures a hand or pauses the page',()=>{
+ const button={hidden:false,disabled:false,getClientRects:()=>[{}],getBoundingClientRect:()=>({left:100,top:100,right:180,bottom:180})};
+ const toolbar={root:{querySelector:()=>null,defaultView:{innerWidth:1280,innerHeight:720}},nodes:new Map([['fullscreen',{button,kind:'fullscreen'}],['back',{button,kind:'back'}],['sources-toggle',{button,kind:'data'}]])};
+ const targets=GestureToolbar.prototype.getTargets.call(toolbar);assert.deepEqual(targets.map(t=>t.id),['back','sources-toggle']);assert.equal(button.hidden,false);
 });
